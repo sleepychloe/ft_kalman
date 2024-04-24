@@ -6,7 +6,7 @@
 #    By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/23 23:34:22 by yhwang            #+#    #+#              #
-#    Updated: 2024/04/24 01:30:16 by yhwang           ###   ########.fr        #
+#    Updated: 2024/04/24 12:46:22 by yhwang           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,8 @@ CPP = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++17
 RM = rm -f
 
-FILES = ./main
+FILES = ./main \
+		./Utils
 
 INCS_DIR = ./matrix/incs/
 

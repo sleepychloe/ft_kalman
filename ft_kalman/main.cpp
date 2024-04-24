@@ -6,16 +6,13 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/24 02:08:58 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/24 14:37:44 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <cstring>
-#include <unistd.h>
-#include "./Color.hpp"
+#include "./Utils.hpp"
+
+bool	g_running_flag;
 
 int	main(int argc, char **argv)
 {
@@ -26,39 +23,25 @@ int	main(int argc, char **argv)
 	}
 	(void)argv;
 
-	int	client_sock = socket(AF_INET, SOCK_DGRAM, 0);
-	if (client_sock < 0)
+	g_running_flag = true;
+
+	int			client_sock = create_sock();
+	struct sockaddr_in	servaddr = create_sockaddr_in(4242);
+
+	signal(SIGINT, signal_handler);
+    	signal(SIGQUIT, signal_handler);
+
+	if (!send_handshake(client_sock, servaddr) || !is_serv_available(client_sock, 1))
+		return (close(client_sock), 1);
+
+	std::string	buf;
+
+	while (g_running_flag)
 	{
-		std::cerr << RED << "error: socket creation failed" << BLACK << std::endl;
-		return (1);
+		if (!recv_from_serv(client_sock, buf) || !is_serv_available(client_sock, 3))
+			return (close(client_sock), 1);
+		//parse
 	}
-	std::cout << CYAN << "socket successfully created" << BLACK << std::endl;
-	
-	struct sockaddr_in	servaddr;
-	memset(&servaddr, 0, sizeof(servaddr));
-	servaddr.sin_family = AF_INET;
-	servaddr.sin_addr.s_addr = htonl(2130706433); //127.0.0.1
-	servaddr.sin_port = htons(4242);
-
-	const char*	handshake = "READY";
-	sendto(client_sock, handshake, strlen(handshake), 0, (struct sockaddr*)&servaddr, sizeof(servaddr));
-
-	char	buf[1024];
-	int	i = 0;//
-	while (1)
-	{
-		ssize_t	recieve = recvfrom(client_sock, buf, sizeof(buf), 0, NULL, NULL);
-		if (recieve < 0)
-		{
-			std::cerr << RED << "error: failed to recieve from server" << BLACK << std::endl;
-			close(client_sock);
-			return (1);
-		}
-
-		buf[recieve] = '\0';
-		std::cout << i++ << ": " << buf << std::endl;
-	}
-
 	close(client_sock);
 	return (0);
 }
