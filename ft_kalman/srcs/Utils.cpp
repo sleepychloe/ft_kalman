@@ -6,11 +6,11 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 12:37:34 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/24 14:37:28 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/24 20:01:49 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./Utils.hpp"
+#include "../incs/Utils.hpp"
 
 void	signal_handler(int signo)
 {
@@ -84,7 +84,7 @@ bool	is_serv_available(int sock, int time_sec)
 
 bool	recv_from_serv(int sock, std::string &buf)
 {
-	char	tmp[1024];
+	char	tmp[1024 * 255];
 	ssize_t	byte = recvfrom(sock, tmp, sizeof(tmp), 0, NULL, NULL);
 	if (byte < 0)
 	{
@@ -93,6 +93,5 @@ bool	recv_from_serv(int sock, std::string &buf)
 	}
 	tmp[byte] = '\0';
 	buf = tmp;
-	std::cout << buf << std::endl;
 	return (true);
 }

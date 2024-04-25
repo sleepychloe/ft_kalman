@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 19:06:08 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/16 21:19:35 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/25 16:44:25 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,33 @@ Matrix<K>	Matrix<K>::mul_mat(const Matrix<K> &matrix) const
 		{
 			for (size_t n = 0; n < this->_column; n++)
 				res[m][p] += this->_matrix[m][n] * matrix.getMatrix()[n][p];
+		}
+	}
+	return (Matrix<K>(res));
+}
+
+template <typename K>
+Matrix<K>	Matrix<K>::identity(void) const
+{
+	if (isSquare() == false)
+	{
+		std::string	msg = "error: cannot define identity matrix of non-square matrix";
+		throw (msg);
+	}
+
+	std::vector<std::vector<K>>	res(this->_row, std::vector<K>(this->_column));
+
+	for (size_t r = 0; r <this->_row; r++)
+	{
+		for (size_t c = 0; c < this->_column; c++)
+		{
+			if (r == c)
+			{
+				if constexpr (std::is_arithmetic<K>::value)
+					res[r][c] = 1;
+				else
+					res[r][c] = K(1, 0);
+			}
 		}
 	}
 	return (Matrix<K>(res));

@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 07:16:15 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/24 14:34:26 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/25 17:00:41 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,7 @@
 #include <cstring>
 #include <string>
 #include <csignal>
-
-# define BLACK			"\x1b[0m"
-# define RED			"\x1b[31m"
-# define CYAN			"\x1b[36m"
-# define YELLOW			"\x1b[33m"
-# define MAGENTA		"\x1b[35m"
+#include "../incs/Color.hpp"
 
 extern bool		g_running_flag;
 
