@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 02:18:30 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/15 22:00:03 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/25 22:14:33 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ template <typename K>
 class Vector
 {
 public:
+	Vector() {};
 	Vector(const std::vector<K> &vector);
 	Vector(const Vector<K> &vector);
 	Vector& operator=(const Vector<K> &vector);
@@ -42,8 +43,6 @@ public:
 	Vector<K>			conjugate(void) const;
 	
 private:
-	Vector();
-
 	size_t				_size;
 	std::vector<K>			_vector;
 };

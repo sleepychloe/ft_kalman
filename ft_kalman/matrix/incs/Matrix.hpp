@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 02:18:09 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/25 16:44:35 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/25 22:14:29 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ template <typename K>
 class Matrix
 {
 public:
+	Matrix() {};
 	Matrix(const std::vector<std::vector<K>> &matrix);
 	Matrix(const Matrix<K> &matrix);
 	Matrix &operator=(const Matrix<K> &matrix);
@@ -55,8 +56,6 @@ public:
 	size_t				rank(void) const;
 
 private:
-	Matrix();
-
 	size_t				_row;
 	size_t				_column;
 	std::vector<std::vector<K>>	_matrix;

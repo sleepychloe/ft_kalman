@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 01:15:47 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/25 16:54:10 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/25 21:55:04 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,7 @@ private:
 	Matrix<K>		_process_noise_covariance;
 	Matrix<K>		_measurement_noise_covariance;
 };
+
+#include "../srcs/KalmanFilter.cpp"
 
 #endif

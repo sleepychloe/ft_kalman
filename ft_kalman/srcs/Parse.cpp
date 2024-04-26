@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 17:16:52 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/25 17:00:13 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/25 20:44:34 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void	Parse::parseScala(std::string &buf, double &data)
 	std::string		tmp;
 
 	getline(ss, tmp, '\n');
-	data = stold(tmp);
+	data = stold(tmp) * 10 / 36;
 }
 
 void	Parse::parse(std::string &buf)

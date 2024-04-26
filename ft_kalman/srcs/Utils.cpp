@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 12:37:34 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/24 20:01:49 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/26 16:45:36 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,16 +46,15 @@ struct sockaddr_in	create_sockaddr_in(int port)
 	return (addr);
 }
 
-bool	send_handshake(int sock, struct sockaddr_in servaddr)
+bool	send_msg(int sock, struct sockaddr_in servaddr, std::string msg)
 {
-	const char*	handshake = "READY";
-	ssize_t		byte = sendto(sock, handshake, strlen(handshake), 0, (struct sockaddr*)&servaddr, sizeof(servaddr));
+	ssize_t		byte = sendto(sock, msg.c_str(), msg.length(), 0, (struct sockaddr*)&servaddr, sizeof(servaddr));
 	if (byte < 0)
 	{
-		std::cerr << RED << "error: cannot send handshake" << BLACK << std::endl;
+		std::cerr << RED << "error: cannot send message to server" << BLACK << std::endl;
 		return (false);
 	}
-	std::cout << CYAN << "successfully sent handshake to server" << BLACK << std::endl;
+	std::cout << CYAN << "successfully sent message to server: " << msg << BLACK << std::endl;
 	return (true);
 }
 
