@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 17:16:52 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/25 20:44:34 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/26 23:58:28 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ std::vector<double>	Parse::getAcc(void) const
 	return (this->_acc);
 }
 
-std::vector<double>	Parse::getDir(void) const
+std::vector<double>	Parse::getVelocity(void) const
 {
-	return (this->_dir);
+	return (this->_velocity);
 }
 
 void	Parse::print(void) const
@@ -95,6 +95,7 @@ void	Parse::parseVec(std::string &buf, std::vector<double> &data)
 	std::stringstream	ss(buf);
 	std::string		tmp[3];
 
+	data.clear();
 	for (int i = 0; i < 3; i++)
 	{
 		getline(ss, tmp[i], '\n');
@@ -112,6 +113,23 @@ void	Parse::parseScala(std::string &buf, double &data)
 	data = stold(tmp) * 10 / 36;
 }
 
+void	Parse:: computeVelocity(void)
+{
+	double	roll = this->_pos[0];
+	double	pitch = this->_pos[1];
+	double	yaw = this->_pos[2];
+
+	Matrix<double>	rotation_matrix({
+	{std::cos(yaw) * std::cos(pitch), std::cos(yaw) * std::sin(pitch) * std::sin(roll) - std::sin(yaw) * std::cos(roll), std::cos(yaw) * std::sin(pitch) * std::cos(roll) + std::sin(yaw) * std::sin(roll)},
+	{std::sin(yaw) * std::cos(pitch), std::sin(yaw) * std::sin(pitch) * std::sin(roll) + std::cos(yaw) * std::cos(roll), std::sin(yaw) * std::sin(pitch) * std::cos(roll) - std::cos(yaw) * std::sin(roll)},
+	{-std::sin(pitch), std::cos(pitch) * std::sin(roll), std::cos(pitch) * std::cos(roll)}});
+
+	this->_velocity.clear();
+	this->_velocity.push_back(this->_acc[0] * 0.01 * rotation_matrix.getMatrix()[0][2]);
+	this->_velocity.push_back(this->_acc[1] * 0.01 * rotation_matrix.getMatrix()[1][2]);
+	this->_velocity.push_back(this->_acc[2] * 0.01 * rotation_matrix.getMatrix()[2][2]);
+}
+
 void	Parse::parse(std::string &buf)
 {
 	if (buf.find("TRUE POSITION") != std::string::npos)
@@ -121,5 +139,8 @@ void	Parse::parse(std::string &buf)
 	else if (buf.find("ACCELERATION") != std::string::npos)
 		parseVec(buf, this->_acc);
 	else if (buf.find("DIRECTION") != std::string::npos)
+	{
 		parseVec(buf, this->_dir);
+		computeVelocity();
+	}
 }

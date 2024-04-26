@@ -6,11 +6,23 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 18:55:36 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/16 21:01:52 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/26 17:44:40 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/Vector.hpp"
+
+template <typename K>
+Vector<K>::Vector(): _size(0)
+{
+}
+
+template <typename K>
+Vector<K>::Vector(size_t size): _size(size)
+{
+	std::vector<K>	res(size);
+	this->_vector = res;
+}
 
 template <typename K>
 Vector<K>::Vector(const std::vector<K> &vector): _size(vector.size()), _vector(vector)
@@ -229,6 +241,56 @@ Vector<K>	corss_product(const Vector<K> &u, const Vector<K> &v)
 	res[0] = u.getVector()[1] * v.getVector()[2] - u.getVector()[2] * v.getVector()[1];
 	res[1] = u.getVector()[2] * v.getVector()[0] - u.getVector()[0] * v.getVector()[2];
 	res[2] = u.getVector()[0] * v.getVector()[1] - u.getVector()[1] * v.getVector()[0];
+	return (Vector<K>(res));
+}
+
+template <typename K>
+Vector<K>	operator+(const Vector<K> &l, const Vector<K> &r)
+{
+	if (l.getSize() != r.getSize())
+	{
+		std::string	msg = "error: cannot add vectors of different sizes";
+		throw (msg);
+	}
+
+	std::vector<K>	res(l.getSize());
+	for (size_t i = 0; i < l.getSize(); i++)
+		res[i] = l.getVector()[i] + r.getVector()[i];
+	return (Vector<K>(res));
+}
+
+template <typename K>
+Vector<K>	operator-(const Vector<K> &l, const Vector<K> &r)
+{
+	if (l.getSize() != r.getSize())
+	{
+		std::string	msg = "error: cannot add vectors of different sizes";
+		throw (msg);
+	}
+
+	std::vector<K>	res(l.getSize());
+	for (size_t i = 0; i < l.getSize(); i++)
+		res[i] = l.getVector()[i] - r.getVector()[i];
+	return (Vector<K>(res));
+}
+
+template <typename K, typename T>
+Vector<K>	operator*(const T &l, const Vector<K> &r)
+{
+	std::vector<K>	res(r.getSize());
+	
+	for (size_t i = 0; i < r.getSize(); i++)
+		res[i] = l * r.getVector()[i];
+	return (Vector<K>(res));
+}
+
+template <typename K, typename T>
+Vector<K>	operator*(const Vector<K> &l, const T &r)
+{
+	std::vector<K>	res(l.getSize());
+	
+	for (size_t i = 0; i < l.getSize(); i++)
+		res[i] = l.getVector()[i] * r;
 	return (Vector<K>(res));
 }
 

@@ -6,11 +6,23 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 19:06:08 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/25 16:44:25 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/26 18:19:53 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/Matrix.hpp"
+
+template <typename K>
+Matrix<K>::Matrix(): _row(0), _column(0)
+{
+}
+
+template <typename K>
+Matrix<K>::Matrix(size_t row, size_t column): _row(row), _column(column)
+{
+	std::vector<std::vector<K>>	res(row, std::vector<K>(column));
+	this->_matrix = res;
+}
 
 template <typename K>
 Matrix<K>::Matrix(const std::vector<std::vector<K>> &matrix)
@@ -168,33 +180,6 @@ Matrix<K>	Matrix<K>::mul_mat(const Matrix<K> &matrix) const
 		{
 			for (size_t n = 0; n < this->_column; n++)
 				res[m][p] += this->_matrix[m][n] * matrix.getMatrix()[n][p];
-		}
-	}
-	return (Matrix<K>(res));
-}
-
-template <typename K>
-Matrix<K>	Matrix<K>::identity(void) const
-{
-	if (isSquare() == false)
-	{
-		std::string	msg = "error: cannot define identity matrix of non-square matrix";
-		throw (msg);
-	}
-
-	std::vector<std::vector<K>>	res(this->_row, std::vector<K>(this->_column));
-
-	for (size_t r = 0; r <this->_row; r++)
-	{
-		for (size_t c = 0; c < this->_column; c++)
-		{
-			if (r == c)
-			{
-				if constexpr (std::is_arithmetic<K>::value)
-					res[r][c] = 1;
-				else
-					res[r][c] = K(1, 0);
-			}
 		}
 	}
 	return (Matrix<K>(res));
@@ -481,6 +466,27 @@ size_t	Matrix<K>::rank(void) const
 }
 
 template <typename K>
+Matrix<K>	identity(size_t size)
+{
+	std::vector<std::vector<K>>	res(size, std::vector<K>(size));
+
+	for (size_t r = 0; r < size; r++)
+	{
+		for (size_t c = 0; c < size; c++)
+		{
+			if (r == c)
+			{
+				if constexpr (std::is_arithmetic<K>::value)
+					res[r][c] = 1;
+				else
+					res[r][c] = K(1, 0);
+			}
+		}
+	}
+	return (Matrix<K>(res));
+}
+
+template <typename K>
 Matrix<K>	projection(K fov, K ratio, K near, K far)
 {
 	std::vector<std::vector<K>>	res(4, std::vector<K>(4));
@@ -502,6 +508,108 @@ Matrix<K>	projection(K fov, K ratio, K near, K far)
 	res[2][2] = -1 * far / (far - near); // remap z to [0,1]: 0(near)
 	res[3][2] = -1 * far * near / (far - near); // remap z to [0,1]: 1(far)
 	res[2][3] = -1; //set w = -z
+	return (Matrix<K>(res));
+}
+
+template <typename K>
+Matrix<K>	operator+(const Matrix<K> &l, const Matrix<K> &r)
+{
+	if (l.getRowSize() != r.getRowSize() || l.getColumnSize() != r.getColumnSize())
+	{
+		std::string	msg = "error: cannot add matrices of different sizes";
+		throw (msg);
+	}
+
+	std::vector<std::vector<K>>	res(l.getRowSize(), std::vector<K>(l.getColumnSize()));
+	for (size_t i = 0; i < l.getRowSize(); i++)
+	{
+		for (size_t j = 0; j < l.getColumnSize(); j++)
+			res[i][j] = l.getMatrix()[i][j] + r.getMatrix()[i][j];
+	}
+	return (Matrix<K>(res));
+}
+
+template <typename K>
+Matrix<K>	operator-(const Matrix<K> &l, const Matrix<K> &r)
+{
+	if (l.getRowSize() != r.getRowSize() || l.getColumnSize() != r.getColumnSize())
+	{
+		std::string	msg = "error: cannot add matrices of different sizes";
+		throw (msg);
+	}
+
+	std::vector<std::vector<K>>	res(l.getRowSize(), std::vector<K>(l.getColumnSize()));
+	for (size_t i = 0; i < l.getRowSize(); i++)
+	{
+		for (size_t j = 0; j < l.getColumnSize(); j++)
+			res[i][j] = l.getMatrix()[i][j] - r.getMatrix()[i][j];
+	}
+	return (Matrix<K>(res));
+}
+
+template <typename K, typename T>
+Matrix<K>	operator*(const T &l, const Matrix<K> &r)
+{
+	std::vector<std::vector<K>>	res(r.getRowSize(), std::vector<K>(r.getColumnSize()));
+
+	for (size_t i = 0; i < r.getRowSize(); i++)
+	{
+		for (size_t j = 0; j < r.getColumnSize(); j++)
+			res[i][j] = l * r.getMatrix()[i][j];
+	}
+	return (Matrix<K>(res));
+}
+
+template <typename K, typename T>
+Matrix<K>	operator*(const Matrix<K> &l, const T &r)
+{
+	std::vector<std::vector<K>>	res(l.getRowSize(), std::vector<K>(l.getColumnSize()));
+
+	for (size_t i = 0; i < l.getRowSize(); i++)
+	{
+		for (size_t j = 0; j < l.getColumnSize(); j++)
+			res[i][j] = l.getMatrix()[i][j] * r;
+	}
+	return (Matrix<K>(res));
+}
+
+template <typename K>
+Vector<K>	operator*(const Matrix<K> &l, const Vector<K> &r)
+{
+	if (l.getColumnSize() != r.getSize())
+	{
+		std::string	msg = "error: cannot multiply m by n matrices with non-n-demension vector";
+		throw (msg);
+	}
+
+	std::vector<K>	res(l.getRowSize());
+
+	for (size_t m = 0; m < l.getRowSize(); m++)
+	{
+		for (size_t n = 0; n < l.getColumnSize(); n++)
+			res[m] += l.getMatrix()[m][n] * r.getVector()[n];
+	}
+	return (Vector<K>(res));
+}
+
+template <typename K>
+Matrix<K>	operator*(const Matrix<K> &l, const Matrix<K> &r)
+{
+	if (l.getColumnSize() != r.getRowSize())
+	{
+		std::string	msg = "error: cannot multiply m by n matrix with non-n-by-p matrix";
+		throw (msg);
+	}
+
+	std::vector<std::vector<K>>	res(l.getRowSize(), std::vector<K>(r.getColumnSize()));
+	for (size_t m = 0; m < l.getRowSize(); m++)
+	{
+		for (size_t p = 0; p < r.getColumnSize(); p++)
+		{
+			for (size_t n = 0; n < l.getColumnSize(); n++)
+				res[m][p] += l.getMatrix()[m][n] * r.getMatrix()[n][p];
+		}
+	}
 	return (Matrix<K>(res));
 }
 

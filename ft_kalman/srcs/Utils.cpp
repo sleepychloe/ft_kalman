@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 12:37:34 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/26 16:45:36 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/27 00:36:04 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,12 @@ struct sockaddr_in	create_sockaddr_in(int port)
 bool	send_msg(int sock, struct sockaddr_in servaddr, std::string msg)
 {
 	ssize_t		byte = sendto(sock, msg.c_str(), msg.length(), 0, (struct sockaddr*)&servaddr, sizeof(servaddr));
+
 	if (byte < 0)
 	{
 		std::cerr << RED << "error: cannot send message to server" << BLACK << std::endl;
 		return (false);
 	}
-	std::cout << CYAN << "successfully sent message to server: " << msg << BLACK << std::endl;
 	return (true);
 }
 
@@ -85,6 +85,7 @@ bool	recv_from_serv(int sock, std::string &buf)
 {
 	char	tmp[1024 * 255];
 	ssize_t	byte = recvfrom(sock, tmp, sizeof(tmp), 0, NULL, NULL);
+
 	if (byte < 0)
 	{
 		std::cerr << RED << "error: failed to recieve from server" << BLACK << std::endl;

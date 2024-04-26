@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 17:16:44 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/25 16:59:14 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/26 22:33:19 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@
 #include <cstdlib>
 #include <iomanip>
 #include <limits>
+#include <cmath>
+#include "../matrix/incs/Vector.hpp"
+#include "../matrix/incs/Matrix.hpp"
 #include "./Color.hpp"
 
 # define	POS		1
@@ -38,19 +41,21 @@ public:
 	std::vector<double>		getPos(void) const;
 	double				getSpeed(void) const;
 	std::vector<double>		getAcc(void) const;
-	std::vector<double>		getDir(void) const;
+	std::vector<double>		getVelocity(void) const;
 
 	void				parse(std::string &buf);
 	void				print(void) const;
 
 private:
-	void			parseVec(std::string &buf, std::vector<double> &data);
-	void			parseScala(std::string &buf, double &data);
+	void				parseVec(std::string &buf, std::vector<double> &data);
+	void				parseScala(std::string &buf, double &data);
+	void				computeVelocity(void);
 
 	std::vector<double>		_pos;
 	double				_speed;
 	std::vector<double>		_acc;
 	std::vector<double>		_dir;
+	std::vector<double>		_velocity;
 };
 
 #endif

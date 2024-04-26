@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 02:18:09 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/25 22:14:29 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/26 18:19:06 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ template <typename K>
 class Matrix
 {
 public:
-	Matrix() {};
+	Matrix();
+	Matrix(size_t row, size_t column);
 	Matrix(const std::vector<std::vector<K>> &matrix);
 	Matrix(const Matrix<K> &matrix);
 	Matrix &operator=(const Matrix<K> &matrix);
@@ -43,7 +44,6 @@ public:
 	void				scale(const K scalar);
 	Vector<K>			mul_vec(const Vector<K> &vector) const;
 	Matrix<K>			mul_mat(const Matrix<K> &matrix) const;
-	Matrix<K>			identity(void) const;
 	K				trace(void) const;
 	Matrix<K>			transpose(void) const;
 	Matrix<K>			conjugate(void) const;
@@ -66,7 +66,28 @@ private:
 };
 
 template <typename K>
-Matrix<K>			projection(K fov, K ratio, K near, K far);
+Matrix<K>	identity(size_t size);
+
+template <typename K>
+Matrix<K>	projection(K fov, K ratio, K near, K far);
+
+template <typename K>
+Matrix<K>	operator+(const Matrix<K> &l, const Matrix<K> &r);
+
+template <typename K>
+Matrix<K>	operator-(const Matrix<K> &l, const Matrix<K> &r);
+
+template <typename K, typename T>
+Matrix<K>	operator*(const T &l, const Matrix<K> &r);
+
+template <typename K, typename T>
+Matrix<K>	operator*(const Matrix<K> &l, const T &r);
+
+template <typename K>
+Vector<K>	operator*(const Matrix<K> &l, const Vector<K> &r);
+
+template <typename K>
+Matrix<K>	operator*(const Matrix<K> &l, const Matrix<K> &r);
 
 template <typename K>
 std::ostream	&operator<<(std::ostream &ostream, const Matrix<K> &matrix);

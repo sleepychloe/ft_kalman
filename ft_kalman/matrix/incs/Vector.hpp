@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 02:18:30 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/25 22:14:33 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/26 17:38:38 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ template <typename K>
 class Vector
 {
 public:
-	Vector() {};
+	Vector();
+	Vector(size_t size);
 	Vector(const std::vector<K> &vector);
 	Vector(const Vector<K> &vector);
 	Vector& operator=(const Vector<K> &vector);
@@ -52,6 +53,18 @@ K		angle_cos(const Vector<K> &u, const Vector<K> &v);
 
 template <typename K>
 Vector<K>	corss_product(const Vector<K> &u, const Vector<K> &v);
+
+template <typename K>
+Vector<K>	operator+(const Vector<K> &l, const Vector<K> &r);
+
+template <typename K>
+Vector<K>	operator-(const Vector<K> &l, const Vector<K> &r);
+
+template <typename K, typename T>
+Vector<K>	operator*(const T &l, const Vector<K> &r);
+
+template <typename K, typename T>
+Vector<K>	operator*(const Vector<K> &l, const T &r);
 
 template <typename K>
 std::ostream	&operator<<(std::ostream &ostream, const Vector<K> &vector);

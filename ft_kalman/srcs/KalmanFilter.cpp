@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 01:15:54 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/25 22:09:56 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/27 00:06:32 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,16 +56,16 @@ Vector<K>	KalmanFilter<K>::getState(void) const
 	return (this->_state);
 }
 
-/* - predicted state x̂ₖ = Fₖ * x̂ₖ₋₁()
+/* - predicted state x̂ₖ = Fₖ * x̂ₖ₋₁
    - predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ
    (F: transition matrix, Q: process noise covariance matrix) */
 template <typename K>
 void	KalmanFilter<K>::predict(void)
 {
-	this->_state = this->_transition_matrix.mul_vec(this->_state);
-	Matrix<K>	tmp = this->_transition_matrix.mul_mat(this->_covariance).mul_mat(this->_transition_matrix.transpose());
-	tmp.add(_process_noise_covariance);
-	this->_covariance = tmp;
+	this->_state
+		= this->_transition_matrix * this->_state;
+	this->_covariance = this->_transition_matrix * this->_covariance * this->_transition_matrix.transpose()
+				+ _process_noise_covariance;
 }
 
 /* - innovation ỹₖ = zₖ - Hₖ * x̂ₖ
@@ -77,18 +77,12 @@ void	KalmanFilter<K>::predict(void)
 template <typename K>
 void	KalmanFilter<K>::update(Vector<K> measurement)
 {
-	Vector<K>	tmp_vec = measurement;
-	tmp_vec.sub(this->_observation_matrix.mul_vec(this->_state));
-	Vector<K>	innovation = tmp_vec;
-	Matrix<K>	tmp = this->_observation_matrix.mul_mat(this->_covariance).mul_mat(this->_observation_matrix.transpose());
-	tmp.add(this->_measurement_noise_covariance);
-	Matrix<K>	innovation_covariance = tmp;
-	Matrix<K>	kalman_gain = this->_covariance.mul_mat(this->_observation_matrix.transpose()).mul_mat(innovation_covariance.inverse());
+	Vector<K>	innovation = measurement - this->_observation_matrix * this->_state;
+	Matrix<K>	innovation_covariance = this->_observation_matrix * this->_covariance * this->_observation_matrix.transpose()
+						+ this->_measurement_noise_covariance;
+	Matrix<K>	kalman_gain = this->_covariance * this->_observation_matrix.transpose() * innovation_covariance.inverse();
 
-	tmp_vec = this->_state;
-	tmp_vec.add(kalman_gain.mul_vec(innovation));
-	this->_state = tmp_vec;
-	tmp = this->_covariance.identity();
-	tmp.sub(kalman_gain.mul_mat(this->_observation_matrix));
-	this->_covariance = tmp.mul_mat(this->_covariance);
+	this->_state = this->_state + kalman_gain * innovation;
+	Matrix<K>	tmp = identity<double>(this->_state.getSize()) - kalman_gain * _observation_matrix;
+	this->_covariance = tmp * this->_covariance;
 }
