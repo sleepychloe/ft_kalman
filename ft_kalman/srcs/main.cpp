@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/27 00:39:07 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/27 20:38:19 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,11 @@ int	main(int argc, char **argv)
 		+ std::to_string(p.getPos()[2]);
 	if (!send_msg(client_sock, servaddr, msg) || !is_serv_available(client_sock, 3))
 		return (close(client_sock), 1);
+	std::cout << CYAN << "successfully sent message to server: " << std::endl
+		<< std::setprecision(std::numeric_limits<long double>::digits10)
+		<< p.getPos()[0] << " " << p.getPos()[1] << " " << p.getPos()[2] << BLACK << std::endl;
 	
-	Vector<double>	init_state({p.getSpeed() * DT, 0, 0});
+	Vector<double>	init_state({p.getSpeed(), 0, 0});
 	Matrix<double>	init_covariance({{1, 0, 0},
 					{0, 1, 0},
 					{0, 0, 1}});
@@ -71,8 +74,8 @@ int	main(int argc, char **argv)
 					{0, 1, 0},
 					{0, 0, 1}});
 	Matrix<double>	observation_matrix({{1, 0, 0},
-					{0, 1, 0},
-					{0, 0, 1}});
+						{0, 0, 0},
+						{0, 0, 0}});
 	Matrix<double>	process_accelerometer_noise({{pow(ACCELEROMETER_NOISE, 2), 0, 0},
 						{0, pow(ACCELEROMETER_NOISE, 2), 0},
 						{0, 0, pow(ACCELEROMETER_NOISE, 2)}});
@@ -80,17 +83,16 @@ int	main(int argc, char **argv)
 						{0, pow(GYROSCOPE_NOISE, 2), 0},
 						{0, 0, pow(GYROSCOPE_NOISE, 2)}});
 
-	Matrix<double>	process_noise_covariance = (process_accelerometer_noise + process_gyroscope_noise) * 0.5;
+	Matrix<double>	process_noise_covariance = process_accelerometer_noise * DT + (process_gyroscope_noise * pow(DT, 2) * 0.5);
 	Matrix<double>	measurement_noise_covariance({{pow(GPS_NOISE, 2), 0, 0},
 						{0, pow(GPS_NOISE, 2), 0},
 						{0, 0, pow(GPS_NOISE, 2)}});
 
-	KalmanFilter<double>	kalman(init_state, init_covariance, transition_matrix, observation_matrix, process_noise_covariance, measurement_noise_covariance);
+	KalmanFilter<double>	kalman(init_state, init_covariance,
+					transition_matrix, observation_matrix,
+					process_noise_covariance, measurement_noise_covariance);
 	std::vector<double>	pos = p.getPos();
-	// pos[0] += init_state.getVector()[0] * DT;
-	// pos[1] += init_state.getVector()[1] * DT;
-	// pos[2] += init_state.getVector()[2] * DT;
-	
+
 	while (g_running_flag)
 	{
 		if (!recv_from_serv(client_sock, buf) || !is_serv_available(client_sock, 3))
@@ -100,10 +102,6 @@ int	main(int argc, char **argv)
 
 		kalman.predict();
 		std::cout << "predict" << std::endl;
-		Vector<double>	measurement(p.getAcc());
-		kalman.update(measurement * DT);
-		std::cout << "update" << std::endl;
-
 		pos[0] += kalman.getState().getVector()[0] * DT;
 		pos[1] += kalman.getState().getVector()[1] * DT;
 		pos[2] += kalman.getState().getVector()[2] * DT;
@@ -115,6 +113,22 @@ int	main(int argc, char **argv)
 		std::cout << CYAN << "successfully sent message to server: " << std::endl
 			<< std::setprecision(std::numeric_limits<long double>::digits10)
 			<< pos[0] << " " << pos[1] << " " << pos[2] << BLACK << std::endl;
+
+		Vector<double>	measurement({p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
+		kalman.update(measurement * DT);
+		std::cout << "update" << std::endl;
+
+		// pos[0] += kalman.getState().getVector()[0] * DT;
+		// pos[1] += kalman.getState().getVector()[1] * DT;
+		// pos[2] += kalman.getState().getVector()[2] * DT;
+		// msg = std::to_string(pos[0]) + " "
+		// 	+ std::to_string(pos[1]) + " "
+		// 	+ std::to_string(pos[2]);
+		// if (!send_msg(client_sock, servaddr, msg) || !is_serv_available(client_sock, 3))
+		// 	return (close(client_sock), 1);
+		// std::cout << CYAN << "successfully sent message to server: " << std::endl
+		// 	<< std::setprecision(std::numeric_limits<long double>::digits10)
+		// 	<< pos[0] << " " << pos[1] << " " << pos[2] << BLACK << std::endl;
 	}
 	close(client_sock);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 01:15:54 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/27 00:06:32 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/27 20:04:28 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ Vector<K>	KalmanFilter<K>::getState(void) const
 
 /* - predicted state x̂ₖ = Fₖ * x̂ₖ₋₁
    - predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ
-   (F: transition matrix, Q: process noise covariance matrix) */
+   (F: transition matrix, B: control matrix, Q: process noise covariance matrix) */
 template <typename K>
 void	KalmanFilter<K>::predict(void)
 {
