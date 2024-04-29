@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 01:15:54 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/29 02:24:51 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/30 00:42:52 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,6 @@ void	KalmanFilter<K>::update(Vector<K> measurement)
 						+ this->_measurement_noise_covariance;
 	Matrix<K>	kalman_gain = this->_covariance * this->_observation_matrix.transpose() * innovation_covariance.inverse();
 	this->_state = this->_state + kalman_gain * innovation;
-	Matrix<K>	tmp = identity<double>(this->_state.getSize()) - kalman_gain * _observation_matrix;
-	this->_covariance = tmp * this->_covariance;
+	this->_covariance = (identity<double>(this->_state.getSize()) - kalman_gain * _observation_matrix)
+				* this->_covariance;
 }
