@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 17:16:52 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/28 02:15:59 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/29 00:03:24 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,10 +108,18 @@ void	Parse:: computeVelocity(void)
 	{std::sin(yaw) * std::cos(pitch), std::sin(yaw) * std::sin(pitch) * std::sin(roll) + std::cos(yaw) * std::cos(roll), std::sin(yaw) * std::sin(pitch) * std::cos(roll) - std::cos(yaw) * std::sin(roll)},
 	{-std::sin(pitch), std::cos(pitch) * std::sin(roll), std::cos(pitch) * std::cos(roll)}});
 
-	this->_velocity.clear();
-	this->_velocity.push_back(this->_acc[0] * 0.01 * rotation_matrix.getMatrix()[0][2]);
-	this->_velocity.push_back(this->_acc[1] * 0.01 * rotation_matrix.getMatrix()[1][2]);
-	this->_velocity.push_back(this->_acc[2] * 0.01 * rotation_matrix.getMatrix()[2][2]);
+	if (this->_velocity.size() == 0)
+	{
+		this->_velocity.push_back(this->_speed + this->_acc[0] * 0.01 * rotation_matrix.getMatrix()[0][2]);
+		this->_velocity.push_back(this->_acc[1] * 0.01 * rotation_matrix.getMatrix()[1][2]);
+		this->_velocity.push_back(this->_acc[2] * 0.01 * rotation_matrix.getMatrix()[2][2]);
+	}
+	else
+	{
+		this->_velocity[0] = this->_acc[0] * 0.01 * rotation_matrix.getMatrix()[0][2];
+		this->_velocity[1] = this->_acc[1] * 0.01 * rotation_matrix.getMatrix()[1][2];
+		this->_velocity[2] = this->_acc[2] * 0.01 * rotation_matrix.getMatrix()[2][2];
+	}
 }
 
 void	Parse::print(void) const
