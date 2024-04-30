@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 17:16:52 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/29 00:03:24 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/30 06:29:17 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,22 +103,32 @@ void	Parse:: computeVelocity(void)
 	double	pitch = this->_pos[1];
 	double	yaw = this->_pos[2];
 
-	Matrix<double>	rotation_matrix({
-	{std::cos(yaw) * std::cos(pitch), std::cos(yaw) * std::sin(pitch) * std::sin(roll) - std::sin(yaw) * std::cos(roll), std::cos(yaw) * std::sin(pitch) * std::cos(roll) + std::sin(yaw) * std::sin(roll)},
-	{std::sin(yaw) * std::cos(pitch), std::sin(yaw) * std::sin(pitch) * std::sin(roll) + std::cos(yaw) * std::cos(roll), std::sin(yaw) * std::sin(pitch) * std::cos(roll) - std::cos(yaw) * std::sin(roll)},
-	{-std::sin(pitch), std::cos(pitch) * std::sin(roll), std::cos(pitch) * std::cos(roll)}});
+	Matrix<double>	rotation_x({{1, 0, 0},
+					{0, std::cos(roll), -1 * std::sin(roll)},
+					{0, std::sin(roll), std::cos(roll)}});
+	Matrix<double>	rotation_y({{std::cos(pitch), 0, std::sin(pitch)},
+					{0, 1, 0},
+					{-1 * std::sin(pitch), 0, std::cos(pitch)}});
+	Matrix<double>	rotation_z({{std::cos(yaw), -1 * std::sin(yaw), 0},
+					{std::sin(yaw), std::cos(yaw), 0},
+					{0, 0, 1}});
+	Matrix<double>	rotation = rotation_z * rotation_y * rotation_x;
+	
+	double	acc_x = rotation.getMatrix()[0][0] * this->getAcc()[0] + rotation.getMatrix()[0][1] * this->getAcc()[1] + rotation.getMatrix()[0][2] * this->getAcc()[2];
+	double	acc_y = rotation.getMatrix()[1][0] * this->getAcc()[0] + rotation.getMatrix()[1][1] * this->getAcc()[1] + rotation.getMatrix()[1][2] * this->getAcc()[2];
+	double	acc_z = rotation.getMatrix()[2][0] * this->getAcc()[0] + rotation.getMatrix()[2][1] * this->getAcc()[1] + rotation.getMatrix()[2][2] * this->getAcc()[2];
 
 	if (this->_velocity.size() == 0)
 	{
-		this->_velocity.push_back(this->_speed + this->_acc[0] * 0.01 * rotation_matrix.getMatrix()[0][2]);
-		this->_velocity.push_back(this->_acc[1] * 0.01 * rotation_matrix.getMatrix()[1][2]);
-		this->_velocity.push_back(this->_acc[2] * 0.01 * rotation_matrix.getMatrix()[2][2]);
+		this->_velocity.push_back(this->_speed + acc_x * 0.01);
+		this->_velocity.push_back(acc_y * 0.01);
+		this->_velocity.push_back(acc_z * 0.01);
 	}
 	else
 	{
-		this->_velocity[0] = this->_acc[0] * 0.01 * rotation_matrix.getMatrix()[0][2];
-		this->_velocity[1] = this->_acc[1] * 0.01 * rotation_matrix.getMatrix()[1][2];
-		this->_velocity[2] = this->_acc[2] * 0.01 * rotation_matrix.getMatrix()[2][2];
+		this->_velocity[0] += acc_x * 0.01;
+		this->_velocity[1] += acc_y * 0.01;
+		this->_velocity[2] += acc_z * 0.01;
 	}
 }
 

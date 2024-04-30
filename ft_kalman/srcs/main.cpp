@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/30 01:33:13 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/04/30 06:48:20 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,15 +71,15 @@ int	main(int argc, char **argv)
 	Vector<double>	init_state({p.getPos()[0], p.getPos()[1], p.getPos()[2], p.getVelocity()[0], p.getVelocity()[1], p.getVelocity()[2], p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
 
 	// init covariance: n * n
-	Matrix<double>	init_covariance({{1, 0, 0, 0, 0, 0, 0, 0, 0},
-					{0, 1, 0, 0, 0, 0, 0, 0, 0},
-					{0, 0, 1, 0, 0, 0, 0, 0, 0},
-					{0, 0, 0, 1, 0, 0, 0, 0, 0},
-					{0, 0, 0, 0, 1, 0, 0, 0, 0},
-					{0, 0, 0, 0, 0, 1, 0, 0, 0},
-					{0, 0, 0, 0, 0, 0, 1, 0, 0},
-					{0, 0, 0, 0, 0, 0, 0, 1, 0},
-					{0, 0, 0, 0, 0, 0, 0, 0, 1}});
+	Matrix<double>	init_covariance({{pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0, 0, 0},
+					{0, pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0, 0},
+					{0, 0, pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0},
+					{0, 0, 0, pow(GYROSCOPE_NOISE, 2) + DT * pow(ACCELEROMETER_NOISE, 2), 0, 0, 0, 0, 0},
+					{0, 0, 0, 0, pow(GYROSCOPE_NOISE, 2) + DT * pow(ACCELEROMETER_NOISE, 2), 0, 0, 0, 0},
+					{0, 0, 0, 0, 0, pow(GYROSCOPE_NOISE, 2) + DT * pow(ACCELEROMETER_NOISE, 2), 0, 0, 0},
+					{0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2), 0, 0},
+					{0, 0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2), 0},
+					{0, 0, 0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2)}});
 
 	// transition: n * n
 	Matrix<double>	transition_matrix({{1, 0, 0, DT, 0, 0, DT * DT / 2, 0, 0},
@@ -92,8 +92,8 @@ int	main(int argc, char **argv)
 						{0, 0, 0, 0, 0, 0, 0, 1, 0},
 						{0, 0, 0, 0, 0, 0, 0, 0, 1}});
 
-	/* (measurement: 1 * m	-> pos: stopped at 00:00:17.570
-				-> pos, acc: stopped at 00:05:33.740) */
+	// measurement: 1 * m: for updating below
+
 	// observation: m * n
 	Matrix<double>	observation_matrix({{1, 0, 0, 0, 0, 0, 0, 0, 0},
 						{0, 1, 0, 0, 0, 0, 0, 0, 0},
@@ -104,10 +104,10 @@ int	main(int argc, char **argv)
 
 	// process noise: n * n
 	Matrix<double>	Q1({{DT * DT * DT / 6}, {0}, {0}, {DT * DT / 2}, {0}, {0}, {DT}, {0}, {0}});
-	Matrix<double>	Q2({{0}, {DT * DT * DT / 6}, {0}, {0}, {DT * DT / 2}, {0}, {0}, {DT}, {0}});	
+	Matrix<double>	Q2({{0}, {DT * DT * DT / 6}, {0}, {0}, {DT * DT / 2}, {0}, {0}, {DT}, {0}});
 	Matrix<double>	Q3({{0}, {0}, {DT * DT * DT / 6}, {0}, {0}, {DT * DT / 2}, {0}, {0}, {DT}});
 	Q1 = pow(GPS_NOISE, 2) * Q1 * Q1.transpose();
-	Q2 = (pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2)) * Q2 * Q2.transpose();
+	Q2 = (pow(GYROSCOPE_NOISE, 2) + DT * pow(ACCELEROMETER_NOISE, 2)) * Q2 * Q2.transpose();
 	Q3 = pow(ACCELEROMETER_NOISE, 2) * Q3 * Q3.transpose();
 	Matrix<double>	process_noise_covariance = Q1 + Q2 + Q3;
 
@@ -185,6 +185,7 @@ int	main(int argc, char **argv)
 		}
 		p.parse(buf);
 		p.computeVelocity();
+		std::cout << "yes" << std::endl;
 		
 		// measurement: 1 * m
 		Vector<double>	measurement({p.getPos()[0], p.getPos()[1], p.getPos()[2], p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
@@ -193,12 +194,7 @@ int	main(int argc, char **argv)
 
 		kalman.predict();
 		std::cout << "predict" << std::endl;
-		pos[0] = kalman.getState().getVector()[0];
-		pos[1] = kalman.getState().getVector()[1];
-		pos[2] = kalman.getState().getVector()[2];
-		msg = std::to_string(pos[0]) + " "
-			+ std::to_string(pos[1]) + " "
-			+ std::to_string(pos[2]);
+
 		if (!send_msg(client_sock, servaddr, msg) || !is_serv_available(client_sock, 3))
 			return (close(client_sock), 1);
 		std::cout << CYAN << "successfully sent message to server: " << std::endl
