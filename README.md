@@ -22,14 +22,14 @@ currently working on the project
 &nbsp;&nbsp;(F: transition matrix, Q: process noise covariance matrix)
 
 ```
-  template <typename K>
-  void	KalmanFilter<K>::predict(void)
-  {
+template <typename K>
+void	KalmanFilter<K>::predict(void)
+{
 	this->_state
 		= this->_transition_matrix * this->_state;
 	this->_covariance = this->_transition_matrix * this->_covariance * this->_transition_matrix.transpose()
 				+ _process_noise_covariance;
-  }
+}
 ```
 #### update
  ⋅ innovation ỹₖ = zₖ - Hₖ * x̂ₖ<br>
@@ -39,9 +39,9 @@ currently working on the project
  ⋅ updated estimated state x̂ₖ = x̂ₖ + Kₖ * ỹₖ<br>
  ⋅ updated estimated covariance Pₖ = (I - Kₖ * Hₖ) * Pₖ<br>
 ```
-  template <typename K>
-  void	KalmanFilter<K>::update(Vector<K> measurement)
-  {
+template <typename K>
+void	KalmanFilter<K>::update(Vector<K> measurement)
+{
 	Vector<K>	innovation = measurement - this->_observation_matrix * this->_state;
 	Matrix<K>	innovation_covariance = this->_observation_matrix * this->_covariance * this->_observation_matrix.transpose()
 						+ this->_measurement_noise_covariance;
@@ -49,7 +49,7 @@ currently working on the project
 	this->_state = this->_state + kalman_gain * innovation;
 	this->_covariance = (identity<double>(this->_state.getSize()) - kalman_gain * _observation_matrix)
 				* this->_covariance;
-  }
+}
 ```
 ### How to calculate
 After sending "READY" to server, you can get<br>
@@ -68,10 +68,10 @@ Thus, the true initial velocity of the vehicle in m/s will be one of three cases
 &nbsp;&nbsp;1. v(true initial speed in m/s, 0, 0)<br>
 &nbsp;&nbsp;2. v(0, true initial speed in m/s, 0)<br>
 &nbsp;&nbsp;3. (0, 0, true initial speed in m/s)<br>
-(try it from the first case - the actual velocity was (true initial speed in m/s, 0, 0))
+(try it from the first case - the actual velocity was (true initial speed in m/s, 0, 0) when I tried)
 <br>
 <br>
-Even though server doesn't give you vehicle's velocity directly, you can calculate it from direction and acceleration.
+Even though server does not give us vehicle's velocity directly, you can calculate it from direction and acceleration.
 ```
 	┏		      ┓
 	┃   1      0      0   ┃
@@ -93,7 +93,7 @@ R = Rz(φ)Ry(θ)Rx(ψ)
  ₂
  ∑ global_a[k] = r[k][i] * a[i] (k = x, y, z)
 ⁱ⁼⁰
-v[k] = v[k] + global_a[k] *  ∆t
+v[k] = v[k] + global_a[k] * ∆t
 ```
 Now you have initial position, initial velocity, and acceleration,<br>
 and you can calculate the position after 0.01 second(=∆t) with Newton's laws of motion.<br>
@@ -102,6 +102,92 @@ Compute until the GPS position is received from the server(Kalman filter predict
 You can compare the calculation result and the actual position every 3 seconds.(Kalman filter update)<br>
 <br>
 ### How to initialize Kalman filter
+⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁<br>
+The position, velocity, and acceleration of the vehicle are described by the linear state space.<br>
+Thus, vector x̂ₖ can be defined as (kₖ(=position), k̇ₖ(=velocity), k̈̈ₖ(=acceleration)) (k = x, y, z).<br><br>
+By Newton's laws of motion,<br>
+kₖ = kₖ₋₁ + k̇ₖ₋₁∆t + k̈̈ₖ₋₁∆t²/2<br>
+k̇ₖ = k̇ₖ₋₁ + k̈̈ₖ₋₁∆t<br>
+k̈̈ₖ = k̈̈ₖ₋₁<br>
+```
+x̂ₖ = (kₖ, k̇ₖ, k̈̈ₖ)
+    ┏                      ┓
+    ┃   1      ∆t   0.5∆t² ┃
+F = ┃   0      1     ∆t    ┃
+    ┃   0      0      1    ┃
+    ┗                      ┛
+```
+
+<br>
+⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
+We already know the init state of the vehicle.<br>
+so make diagonal matrix with GPS, gyroscope, and accelerometer noise instead of using appropriately large value.<br>
+
+```
+    ┏                      ┓
+    ┃   σ²ₚ    0      0    ┃
+P = ┃   0      σ²ᵥ    0    ┃
+    ┃   0      0      σ²ₐ  ┃
+    ┗                      ┛
+(Since when I calculated velocity, i used this formula: vₖ = vₖ₋₁ + global_aₖ * ∆t,
+I set σ²ᵥ = σ_gyroscope² + σ_accelerometer² * ∆t)
+```
+This is kinematic system, and it is continuous. So you can apply continuous white noise model for Q.<br>
+FQcFᵀ is a projection of the continuous noise based on F.<br>
+Since the noise is changing continuously, and e want to know how much noise is added to the system over the interver [0, ∆t],<br>
+you need to integrate FQ'Fᵀ.<br>
+```
+Q =  ∫₀ΔᵗFQcFᵀ
+(Qc: continuous noise)
+```
+when I tried, filter worked as expected with following matrix Qc:<br>
+```
+     ┏                     ┓   ┏                            ┓
+     ┃ ∆t²/2     0       0 ┃   ┃ σ²ₚ∆t³/6     0         0   ┃
+Qc = ┃   0       ∆t      0 ┃ * ┃    0      σ²ᵥ∆t²/2     0   ┃
+     ┃   0       0       1 ┃   ┃    0         0       σ²ₐ∆t ┃
+     ┗                     ┛   ┗                            ┛
+```
+To express integrate the expression I used Riemann sum method:<br>
+```
+	    ₙ
+∫ₐᵇf(x)dx ≈ ∑f(a + i*(b - a)/n) * (b-a)/n
+	   ⁱ⁼¹
+```
+```
+Matrix<double>	integrate(Matrix<double> m, double start, double end)
+{
+	size_t	n = 10000;
+	double	dx = (end - start) / n;
+	
+	std::vector<std::vector<double>>	res(m.getRowSize(), std::vector<double>(m.getColumnSize()));
+	for (size_t i = 0; i < n; i++)
+	{
+		for (size_t r = 0; r < m.getRowSize(); r++)
+		{
+			for (size_t c = 0; c < m.getColumnSize(); c++)
+				res[r][c] += m.getMatrix()[r][c] * dx;
+		}
+	}
+	return (Matrix<double>(res));
+}
+```
+⋅ innovation ỹₖ = zₖ - Hₖ * x̂ₖ<br>
+⋅ innovation covariance Sₖ = Hₖ * Pₖ * Hₖᵀ + Rₖ<br>
+When GPS position is received from server, you can update the filter.<br>
+I did not use velocity information to update kalman filter, because I wanted to use raw data which I do not have to compute.<br>
+```
+zₖ = (kₖ, k̈̈ₖ)
+    ┏           ┓
+    ┃ 1   0   0 ┃
+H = ┃ 0   0   1 ┃
+    ┗           ┛
+    ┏          ┓
+    ┃ σ²ₚ   0  ┃
+R = ┃  0   σ²ₐ ┃
+    ┗          ┛
+```
+
 <br>
 <br>
 
