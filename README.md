@@ -2,7 +2,7 @@ currently working on the project
 
 ## Installation
 ```
-  https://github.com/sleepychloe/ft_kalman.git
+  git clone https://github.com/sleepychloe/ft_kalman.git
   cd ft_kalman/ft_kalman
   make
 ```
