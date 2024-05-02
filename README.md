@@ -69,6 +69,7 @@ Thus, the true initial velocity of the vehicle in m/s will be one of three cases
 &nbsp;&nbsp;3. (0, 0, true initial speed in m/s)<br>
 (try it from the first case - the actual velocity was (true initial speed in m/s, 0, 0))
 <br>
+<br>
 Even though server doesn't give you vehicle's velocity directly, you can calculate it from direction and acceleration.<br>
 
 ```
@@ -93,7 +94,6 @@ R = Rz(φ)Ry(θ)Rx(ψ)
 ⁱ⁼⁰
 v[k] = v[k] + global_a[k] *  ∆t
 ```
-
 <br>
 Now you have initial position, initial velocity, and acceleration,<br>
 and you can calculate the position after 0.01 second(=∆t) with Newton's laws of motion.<br>
