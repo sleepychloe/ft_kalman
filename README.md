@@ -25,11 +25,10 @@ currently working on the project
   template <typename K>
   void	KalmanFilter<K>::predict(void)
   {
-      this->_state = this->_transition_matrix * this->_state;
-    	this->_covariance = this->_transition_matrix
-                            * this->_covariance
-                            * this->_transition_matrix.transpose()
-                            + _process_noise_covariance;
+      this->_state
+		= this->_transition_matrix * this->_state;
+	this->_covariance = this->_transition_matrix * this->_covariance * this->_transition_matrix.transpose()
+				+ _process_noise_covariance;
   }
 ```
 
@@ -45,16 +44,12 @@ currently working on the project
   void	KalmanFilter<K>::update(Vector<K> measurement)
   {
   	  Vector<K>	innovation = measurement - this->_observation_matrix * this->_state;
-  	  Matrix<K>	innovation_covariance = this->_observation_matrix
-                                          * this->_covariance
-                                          * this->_observation_matrix.transpose()
-  					                            	+ this->_measurement_noise_covariance;
-  	  Matrix<K>	kalman_gain = this->_covariance
-                                * this->_observation_matrix.transpose()
-                                * innovation_covariance.inverse();
-  	this->_state = this->_state + kalman_gain * innovation;
-  	this->_covariance = (identity<double>(this->_state.getSize())- kalman_gain * _observation_matrix)
-  				                * this->_covariance;
+	Matrix<K>	innovation_covariance = this->_observation_matrix * this->_covariance * this->_observation_matrix.transpose()
+						+ this->_measurement_noise_covariance;
+	Matrix<K>	kalman_gain = this->_covariance * this->_observation_matrix.transpose() * innovation_covariance.inverse();
+	this->_state = this->_state + kalman_gain * innovation;
+	this->_covariance = (identity<double>(this->_state.getSize()) - kalman_gain * _observation_matrix)
+				* this->_covariance;
   }
 ```
 
