@@ -177,6 +177,7 @@ Matrix<double>	integrate(Matrix<double> m, double start, double end)
 ⋅ innovation covariance Sₖ = Hₖ * Pₖ * Hₖᵀ + Rₖ<br>
 When GPS position is received from server, you can update the filter.<br>
 I did not use velocity information to update kalman filter, because I wanted to use raw data which I do not have to compute.<br>
+
 ```
 zₖ = (kₖ, k̈̈ₖ)
     ┏           ┓
