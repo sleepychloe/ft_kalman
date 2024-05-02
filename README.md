@@ -63,6 +63,7 @@ If you send correct estimated position to server, you can also get<br>
 <br>
 Subject said that vehicle moves only on its longitudinal axis (in front of it),<br>
 which means the vehicle moves towards +x, +y, or +z aixs.<br>
+<br>
 Thus, the true initial velocity of the vehicle in m/s will be one of three cases:<br>
 &nbsp;&nbsp;1. v(true initial speed in m/s, 0, 0)<br>
 &nbsp;&nbsp;2. v(0, true initial speed in m/s, 0)<br>
@@ -70,7 +71,7 @@ Thus, the true initial velocity of the vehicle in m/s will be one of three cases
 (try it from the first case - the actual velocity was (true initial speed in m/s, 0, 0))
 <br>
 <br>
-Even though server doesn't give you vehicle's velocity directly, you can calculate it from direction and acceleration.<br>
+Even though server doesn't give you vehicle's velocity directly, you can calculate it from direction and acceleration.
 
 ```
 	┏		      ┓
