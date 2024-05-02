@@ -31,7 +31,6 @@ currently working on the project
 				+ _process_noise_covariance;
   }
 ```
-<br>
 #### update
  ⋅ innovation ỹₖ = zₖ - Hₖ * x̂ₖ<br>
  ⋅ innovation covariance Sₖ = Hₖ * Pₖ * Hₖᵀ + Rₖ<br>
@@ -52,7 +51,6 @@ currently working on the project
 				* this->_covariance;
   }
 ```
-<br>
 ### How to calculate
 After sending "READY" to server, you can get<br>
 &nbsp;&nbsp;⋅ true initial position(x, y, z in meters)<br>
@@ -72,6 +70,7 @@ Thus, the true initial velocity of the vehicle in m/s will be one of three cases
 (try it from the first case - the actual velocity was (true initial speed in m/s, 0, 0))
 <br>
 Even though server doesn't give you vehicle's velocity directly, you can calculate it from direction and acceleration.<br>
+
 ```
 	┏		      ┓
 	┃   1      0      0   ┃
@@ -94,6 +93,7 @@ R = Rz(φ)Ry(θ)Rx(ψ)
 ⁱ⁼⁰
 v[k] = v[k] + global_a[k] *  ∆t
 ```
+
 <br>
 Now you have initial position, initial velocity, and acceleration,<br>
 and you can calculate the position after 0.01 second(=∆t) with Newton's laws of motion.<br>
