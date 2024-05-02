@@ -88,13 +88,13 @@ Ry(θ) = ┃   0      1      0   ┃
 Rz(φ) = ┃  sinφ   cosφ    0   ┃
 	┃   0      0      1   ┃
 	┗		      ┛
+
+R = Rz(φ)Ry(θ)Rx(ψ)
+ ₂
+ ∑ global_a[k] = r[k][i] * a[i] (k = x, y, z)
+ⁱ⁼⁰
+v[k] = v[k] + global_a[k] *  ∆t
 ```
-R = Rz(φ)Ry(θ)Rx(ψ)<br>
- ₂<br>
- ∑ global_a[k] = r[k][i] * a[i] (k = x, y, z)<br>
-ⁱ⁼⁰<br>
-v[k] = v[k] + global_a[k] *  ∆t<br>
-<br>
 Now you have initial position, initial velocity, and acceleration,<br>
 and you can calculate the position after 0.01 second(=∆t) with Newton's laws of motion.<br>
 <br>
