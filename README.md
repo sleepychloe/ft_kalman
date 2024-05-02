@@ -108,13 +108,13 @@ and you can compare the calculation result and the actual position every 3 secon
 ### How to initialize Kalman filter
 ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁<br>
 The position, velocity, and acceleration of the vehicle are described by the linear state space.<br>
-Thus, vector x̂ₖ can be defined as (kₖ(=position), k̇ₖ(=velocity), k̈̈ₖ(=acceleration)) (k = x, y, z).<br><br>
+Thus, vector x̂ₖ can be defined as (kₖ(=position), k̇ₖ(=velocity), k̈ₖ(=acceleration)) (k = x, y, z).<br><br>
 By Newton's laws of motion,<br>
-kₖ = kₖ₋₁ + k̇ₖ₋₁∆t + k̈̈ₖ₋₁∆t²/2<br>
-k̇ₖ = k̇ₖ₋₁ + k̈̈ₖ₋₁∆t<br>
-k̈̈ₖ = k̈̈ₖ₋₁<br>
+kₖ = kₖ₋₁ + k̇ₖ₋₁∆t + k̈ₖ₋₁∆t²/2<br>
+k̇ₖ = k̇ₖ₋₁ + k̈ₖ₋₁∆t<br>
+k̈ₖ = k̈ₖ₋₁<br>
 ```
-x̂ₖ = (kₖ, k̇ₖ, k̈̈ₖ)
+x̂ₖ = (kₖ, k̇ₖ, k̈ₖ)
     ┏                      ┓
     ┃   1      ∆t   0.5∆t² ┃
 F = ┃   0      1     ∆t    ┃
@@ -154,7 +154,7 @@ Qc = ┃   0     ∆t    0 ┃*┃    0      σ²ᵥ∆t²/2     0   ┃
      ┃   0     0     1 ┃ ┃    0         0       σ²ₐ∆t ┃
      ┗                 ┛ ┗                            ┛
 ```
-To express integrate the expression I used Riemann sum method:<br>
+To express definite integral of the expression I used Riemann sum method:<br>
 ```
 	    ₙ
 ∫ₐᵇf(x)dx ≈ ∑f(a + i*(b - a)/n) * (b-a)/n
