@@ -129,24 +129,24 @@ so make diagonal matrix with GPS, gyroscope, and accelerometer noise instead of 
 P = ┃   0      σ²ᵥ    0    ┃
     ┃   0      0      σ²ₐ  ┃
     ┗                      ┛
-(Since when I calculated velocity, i used this formula: vₖ = vₖ₋₁ + global_aₖ * ∆t,
-I set σ²ᵥ = σ_gyroscope² + σ_accelerometer² * ∆t)
+(σ²ᵥ = σ_gyroscope² + σ_accelerometer² * ∆t)
 ```
 This is kinematic system, and it is continuous. So you can apply continuous white noise model for Q.<br>
 FQcFᵀ is a projection of the continuous noise based on F.<br>
-Since the noise is changing continuously, and e want to know how much noise is added to the system over the interver [0, ∆t],<br>
+Since the noise is changing continuously, and e want to know how much noise is added to the system over the interval <sub>[0, ∆t]</sub>,<br>
 you need to integrate FQ'Fᵀ.<br>
+
 ```
 Q =  ∫₀ΔᵗFQcFᵀ
 (Qc: continuous noise)
 ```
 when I tried, filter worked as expected with following matrix Qc:<br>
 ```
-     ┏                     ┓   ┏                            ┓
-     ┃ ∆t²/2     0       0 ┃   ┃ σ²ₚ∆t³/6     0         0   ┃
-Qc = ┃   0       ∆t      0 ┃ * ┃    0      σ²ᵥ∆t²/2     0   ┃
-     ┃   0       0       1 ┃   ┃    0         0       σ²ₐ∆t ┃
-     ┗                     ┛   ┗                            ┛
+     ┏                 ┓   ┏                            ┓
+     ┃ ∆t²/2   0     0 ┃   ┃ σ²ₚ∆t³/6     0         0   ┃
+Qc = ┃   0     ∆t    0 ┃ * ┃    0      σ²ᵥ∆t²/2     0   ┃
+     ┃   0     0     1 ┃   ┃    0         0       σ²ₐ∆t ┃
+     ┗                 ┛   ┗                            ┛
 ```
 To express integrate the expression I used Riemann sum method:<br>
 ```
