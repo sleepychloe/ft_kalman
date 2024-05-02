@@ -73,28 +73,29 @@ Thus, the true initial velocity of the vehicle in m/s will be one of three cases
 <br>
 Even though server doesn't give you vehicle's velocity directly, you can calculate it from direction and acceleration.
 
-```
-	┏		      ┓
-	┃   1      0      0   ┃
-Rx(ψ) = ┃   0     cosψ  −sinψ ┃
-	┃   0     sinψ   cosψ ┃
-	┗		      ┛
-	┏		      ┓
-	┃  cosθ    0     sinθ ┃
-Ry(θ) = ┃   0      1      0   ┃
-	┃ −sinθ    0     cosθ ┃
-	┗		      ┛
-	┏		      ┓
-	┃  cosφ  −sinφ    0   ┃
-Rz(φ) = ┃  sinφ   cosφ    0   ┃
-	┃   0      0      1   ┃
-	┗		      ┛
-R = Rz(φ)Ry(θ)Rx(ψ)
- ₂
- ∑ global_a[k] = r[k][i] * a[i] (k = x, y, z)
-ⁱ⁼⁰
-v[k] = v[k] + global_a[k] *  ∆t
-```
+	┏		      ┓<br>
+	┃   1      0      0   ┃<br>
+Rx(ψ) = ┃   0     cosψ  −sinψ ┃<br>
+	┃   0     sinψ   cosψ ┃<br>
+	┗		      ┛<br>
+	┏		      ┓<br>
+	┃  cosθ    0     sinθ ┃<br>
+Ry(θ) = ┃   0      1      0   ┃<br>
+	┃ −sinθ    0     cosθ ┃<br>
+	┗		      ┛<br>
+	┏		      ┓<br>
+	┃  cosφ  −sinφ    0   ┃<br>
+Rz(φ) = ┃  sinφ   cosφ    0   ┃<br>
+	┃   0      0      1   ┃<br>
+	┗		      ┛<br>
+R = Rz(φ)Ry(θ)Rx(ψ)<br>
+ ₂<br>
+ ∑ global_a[k] = r[k][i] * a[i] (k = x, y, z)<br>
+ⁱ⁼⁰<br>
+v[k] = v[k] + global_a[k] *  ∆t<br>
+
+
+
 <br>
 Now you have initial position, initial velocity, and acceleration,<br>
 and you can calculate the position after 0.01 second(=∆t) with Newton's laws of motion.<br>
