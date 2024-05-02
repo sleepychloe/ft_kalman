@@ -19,7 +19,7 @@ currently working on the project
 #### predict
  ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁<br>
  ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
-&nbsp;&nbsp;&nbsp;&nbsp;(F: transition matrix, Q: process noise covariance matrix)
+&nbsp;&nbsp;(F: transition matrix, Q: process noise covariance matrix)
 
 ```
   template <typename K>
@@ -37,7 +37,7 @@ currently working on the project
  ⋅ innovation ỹₖ = zₖ - Hₖ * x̂ₖ<br>
  ⋅ innovation covariance Sₖ = Hₖ * Pₖ * Hₖᵀ + Rₖ<br>
  ⋅ kalman gain Kₖ = Pₖ * Hₖᵀ * Sₖ⁻¹<br>
-&nbsp;&nbsp;&nbsp;&nbsp;(H: observation matrix, z: actual measurement, R: measurement noise covariance matrix)<br>
+&nbsp;&nbsp;(H: observation matrix, z: actual measurement, R: measurement noise covariance matrix)<br>
  ⋅ updated estimated state x̂ₖ = x̂ₖ + Kₖ * ỹₖ<br>
  ⋅ updated estimated covariance Pₖ = (I - Kₖ * Hₖ) * Pₖ<br>
 ```
