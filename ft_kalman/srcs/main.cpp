@@ -6,14 +6,13 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/02 08:56:08 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/02 09:54:39 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/Parse.hpp"
 #include "../incs/KalmanFilter.hpp"
-#include "../incs/ServerUtils.hpp"
-#include "../incs/FilterUtils.hpp"
+#include "../incs/Utils.hpp"
 
 bool	g_running_flag;
 
@@ -44,13 +43,11 @@ int	main(int argc, char **argv)
 
 	for (size_t i = 0; g_running_flag && i < 7; i++)
 	{		
-		if (!recvFromServ(client_sock, buf) || !isServAvailable(client_sock, 3))
+		if (!recvFromServ(client_sock, buf) || !isServAvailable(client_sock, 1))
 			return (close(client_sock), 1);
 		std::cout << buf << std::endl;
 		p.parse(buf);
 	}
-	std::cout << YELLOW << "initial values" << BLACK << std::endl;
-	p.print();
 
 	std::vector<double>	velocity({p.getSpeed(), 0, 0});
 	computeVelocity(p.getDir(), p.getAcc(), velocity);
@@ -66,58 +63,28 @@ int	main(int argc, char **argv)
 		/* predict */
 		for (size_t i = 0; i < 299; i++)
 		{
-			while (buf.find("ACCELERATION") == std::string::npos)
-			{
-				if (!recvFromServ(client_sock, buf) || !isServAvailable(client_sock, 1))
-					return (close(client_sock), 1);
-				std::cout << buf << std::endl;
-			}
-			p.parse(buf);
-			while (buf.find("DIRECTION") == std::string::npos)
-			{
-				if (!recvFromServ(client_sock, buf) || !isServAvailable(client_sock, 1))
-					return (close(client_sock), 1);
-				std::cout << buf << std::endl;
-			}
-			p.parse(buf);
+			if (!parseElement(client_sock, p, "ACCELERATION")
+				|| !parseElement(client_sock, p, "DIRECTION"))
+				return (close(client_sock), 1);
 			computeVelocity(p.getDir(), p.getAcc(), velocity);
 
 			kalman.predict();
-
 			if (!sendPos(client_sock, servaddr, kalman.getState().getVector(), 1))
 				return (close(client_sock), 1);
 		}
 
 		/* update */
-		while (buf.find("POSITION") == std::string::npos)
-		{
-			if (!recvFromServ(client_sock, buf) || !isServAvailable(client_sock, 1))
-				return (close(client_sock), 1);
-			std::cout << buf << std::endl;
-		}
-		p.parse(buf);
-
-		while (buf.find("ACCELERATION") == std::string::npos)
-		{
-			if (!recvFromServ(client_sock, buf) || !isServAvailable(client_sock, 1))
-				return (close(client_sock), 1);
-			std::cout << buf << std::endl;
-		}
-		p.parse(buf);
-		while (buf.find("DIRECTION") == std::string::npos)
-		{
-			if (!recvFromServ(client_sock, buf) || !isServAvailable(client_sock, 1))
-				return (close(client_sock), 1);
-			std::cout << buf << std::endl;
-		}
-		p.parse(buf);
+		if (!parseElement(client_sock, p, "POSITION")
+			|| !parseElement(client_sock, p, "ACCELERATION")
+			|| !parseElement(client_sock, p, "DIRECTION"))
+			return (close(client_sock), 1);
 		computeVelocity(p.getDir(), p.getAcc(), velocity);
 
 		// measurement: 1 * m
 		Vector<double>	measurement({p.getPos()[0], p.getPos()[1], p.getPos()[2], p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
+
 		kalman.update(measurement);
 		kalman.predict();
-
 		if (!sendPos(client_sock, servaddr, kalman.getState().getVector(), 1))
 			return (close(client_sock), 1);
 	}

@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 17:16:52 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/02 08:15:51 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/02 09:55:16 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,37 +90,4 @@ void	Parse::parse(std::string &buf)
 		parseVec(buf, this->_acc);
 	else if (buf.find("DIRECTION") != std::string::npos)
 		parseVec(buf, this->_dir);
-}
-
-void	Parse::print(void) const
-{
-	std::cout << CYAN << "TRUE POSITION" << BLACK << std::endl;
-	for (size_t i = 0; i < this->_pos.size(); i++)
-	{
-		std::cout << std::setprecision(std::numeric_limits<long double>::digits10) << this->_pos[i];
-		if (i < 2)
-			std::cout << " ";
-	}
-	std::cout << std::endl;
-
-	std::cout << CYAN << "SPEED" << BLACK << std::endl;
-	std::cout << std::setprecision(std::numeric_limits<long double>::digits10) << this->_speed << std::endl;
-
-	std::cout << CYAN << "ACCELERATION" << BLACK << std::endl;
-	for (size_t i = 0; i < this->_acc.size(); i++)
-	{
-		std::cout << std::setprecision(std::numeric_limits<long double>::digits10) << this->_acc[i];
-		if (i < 2)
-			std::cout << " ";
-	}
-	std::cout << std::endl;
-
-	std::cout << CYAN << "DIRECTION" << BLACK << std::endl;
-	for (size_t i = 0; i < this->_dir.size(); i++)
-	{
-		std::cout << std::setprecision(std::numeric_limits<long double>::digits10) << this->_dir[i];
-		if (i < 2)
-			std::cout << " ";
-	}
-	std::cout << std::endl;
 }

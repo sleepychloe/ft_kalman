@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 17:16:44 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/02 08:18:25 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/02 09:55:28 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,9 @@
 #include <sstream>
 #include <vector>
 #include <cstdlib>
-#include <iomanip>
-#include <limits>
 #include <cmath>
 
 #include "./Color.hpp"
-
-# define	POS		1
-# define	SPEED		2
-# define 	ACC		3
-# define 	DIR		4
 
 class Parse
 {
@@ -43,7 +36,6 @@ public:
 	std::vector<double>		getDir(void) const;
 
 	void				parse(std::string &buf);
-	void				print(void) const;
 
 private:
 	void				parseVec(std::string &buf, std::vector<double> &data);

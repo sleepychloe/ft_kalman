@@ -6,11 +6,11 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 07:58:26 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/02 08:32:42 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/02 09:40:17 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/FilterUtils.hpp"
+#include "../incs/Utils.hpp"
 
 void	computeVelocity(std::vector<double> d,
 			std::vector<double> a, std::vector<double> &v)

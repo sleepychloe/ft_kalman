@@ -6,11 +6,11 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 12:37:34 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/02 08:48:18 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/02 09:50:33 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/ServerUtils.hpp"
+#include "../incs/Utils.hpp"
 
 void	signalHandler(int signo)
 {
@@ -107,5 +107,23 @@ bool	sendPos(int sock, struct sockaddr_in servaddr, std::vector<double> pos, int
 	std::cout << CYAN << "successfully sent message to server: " << std::endl
 		<< std::setprecision(std::numeric_limits<long double>::digits10)
 		<< pos[0] << " " << pos[1] << " " << pos[2] << BLACK << std::endl;
+	return (true);
+}
+
+bool	parseElement(int sock, Parse &p, std::string element)
+{
+	std::string	buf;
+
+	while (1)
+	{
+		if (!recvFromServ(sock, buf) || !isServAvailable(sock, 1))
+			return (false);
+		if (buf.find(element) != std::string::npos)
+		{
+			std::cout << buf << std::endl;
+			p.parse(buf);
+			break ;
+		}
+	}
 	return (true);
 }
