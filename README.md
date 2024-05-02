@@ -71,10 +71,11 @@ Thus, the true initial velocity of the vehicle in m/s will be one of three cases
 &nbsp;&nbsp;1. v(true initial speed in m/s, 0, 0)<br>
 &nbsp;&nbsp;2. v(0, true initial speed in m/s, 0)<br>
 &nbsp;&nbsp;3. (0, 0, true initial speed in m/s)<br>
-(try it from the first case - the actual velocity was (true initial speed in m/s, 0, 0) when I tried)
+(try it from the first case<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- the actual velocity was (true initial speed in m/s, 0, 0) when I tried)<br>
 <br>
-<br>
-Even though server does not give us vehicle's velocity directly, you can calculate it from direction and acceleration.
+Even though server does not give us vehicle's velocity directly,<br>
+you can calculate it from direction and acceleration.<br>
 ```
 	┏		      ┓
 	┃   1      0      0   ┃
@@ -101,8 +102,8 @@ v[k] = v[k] + global_a[k] * ∆t
 Now you have initial position, initial velocity, and acceleration,<br>
 and you can calculate the position after 0.01 second(=∆t) with Newton's laws of motion.<br>
 <br>
-Compute until the GPS position is received from the server(Kalman filter predict)<br>
-You can compare the calculation result and the actual position every 3 seconds.(Kalman filter update)<br>
+Compute until the GPS position is received from the server(Kalman filter predict),<br>
+and you can compare the calculation result and the actual position every 3 seconds(Kalman filter update).<br>
 <br>
 ### How to initialize Kalman filter
 ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁<br>
@@ -122,7 +123,7 @@ F = ┃   0      1     ∆t    ┃
 ```
 ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
 We already know the init state of the vehicle.<br>
-so make diagonal matrix with GPS, gyroscope, and accelerometer noise<br>
+Make diagonal matrix with GPS, gyroscope, and accelerometer noise<br>
 instead of using appropriately large value.<br>
 
 ```
@@ -134,9 +135,11 @@ P = ┃   0      σ²ᵥ    0    ┃
 (σ²ᵥ = σ_gyroscope² + σ_accelerometer² * ∆t)
 ```
 
-This is kinematic system, and it is continuous. So you can apply continuous white noise model for Q.<br>
+This is kinematic system, and it is continuous.<br>
+So you can apply continuous white noise model for Q.<br>
+<br>
 FQcFᵀ is a projection of the continuous noise based on F.<br>
-Since the noise is changing continuously, and e want to know how much noise is added to the system over the interval <span>[0, ∆t]</span>,<br>
+Since the noise is changing continuously, and we want to know how much noise is added to the system over the interval <span>[0, ∆t]</span>,<br>
 you need to integrate FQ'Fᵀ.<br>
 
 ```
@@ -145,11 +148,11 @@ Q =  ∫₀ΔᵗFQcFᵀ
 ```
 when I tried, filter worked as expected with following matrix Qc:<br>
 ```
-     ┏                 ┓   ┏                            ┓
-     ┃ ∆t²/2   0     0 ┃   ┃ σ²ₚ∆t³/6     0         0   ┃
-Qc = ┃   0     ∆t    0 ┃ * ┃    0      σ²ᵥ∆t²/2     0   ┃
-     ┃   0     0     1 ┃   ┃    0         0       σ²ₐ∆t ┃
-     ┗                 ┛   ┗                            ┛
+     ┏                 ┓ ┏                            ┓
+     ┃ ∆t²/2   0     0 ┃ ┃ σ²ₚ∆t³/6     0         0   ┃
+Qc = ┃   0     ∆t    0 ┃*┃    0      σ²ᵥ∆t²/2     0   ┃
+     ┃   0     0     1 ┃ ┃    0         0       σ²ₐ∆t ┃
+     ┗                 ┛ ┗                            ┛
 ```
 To express integrate the expression I used Riemann sum method:<br>
 ```
@@ -179,7 +182,8 @@ Matrix<double>	integrate(Matrix<double> m, double start, double end)
 ⋅ innovation ỹₖ = zₖ - Hₖ * x̂ₖ<br>
 ⋅ innovation covariance Sₖ = Hₖ * Pₖ * Hₖᵀ + Rₖ<br>
 When GPS position is received from server, you can update the filter.<br>
-I did not use velocity information to update kalman filter, because I wanted to use raw data which I do not have to compute.<br>
+I did not use velocity information to update kalman filter,<br>
+because I wanted to use raw data which I do not have to compute.<br>
 
 ```
 zₖ = (kₖ, k̈̈ₖ)
