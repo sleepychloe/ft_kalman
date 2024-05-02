@@ -72,12 +72,13 @@ Thus, the true initial velocity of the vehicle in m/s will be one of three cases
 <br>
 <br>
 Even though server doesn't give you vehicle's velocity directly, you can calculate it from direction and acceleration.
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┏&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┓<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┃&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;┃<br>
+Rx(ψ)&nbsp;=&nbsp;┃&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cosψ&nbsp;&nbsp;−sinψ&nbsp;┃<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┃&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sinψ&nbsp;&nbsp;&nbsp;cosψ&nbsp;┃<br>
 
-	┏		      ┓<br>
-	┃   1      0      0   ┃<br>
-Rx(ψ) = ┃   0     cosψ  −sinψ ┃<br>
-	┃   0     sinψ   cosψ ┃<br>
-	┗		      ┛<br>
+
 	┏		      ┓<br>
 	┃  cosθ    0     sinθ ┃<br>
 Ry(θ) = ┃   0      1      0   ┃<br>
