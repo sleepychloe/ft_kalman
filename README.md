@@ -17,8 +17,8 @@ currently working on the project
 
 ### Class Template KalmanFilter<K>
 #### predict
- ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁
- ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ
+ ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁<br>
+ ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
 &nbsp;&nbsp;&nbsp;&nbsp;(F: transition matrix, Q: process noise covariance matrix)
 
 ```
@@ -34,12 +34,12 @@ currently working on the project
 ```
 
 #### update
- ⋅ innovation ỹₖ = zₖ - Hₖ * x̂ₖ
- ⋅ innovation covariance Sₖ = Hₖ * Pₖ * Hₖᵀ + Rₖ
- ⋅ kalman gain Kₖ = Pₖ * Hₖᵀ * Sₖ⁻¹
-&nbsp;&nbsp;&nbsp;&nbsp;(H: observation matrix, z: actual measurement, R: measurement noise covariance matrix)
- ⋅ updated estimated state x̂ₖ = x̂ₖ + Kₖ * ỹₖ
- ⋅ updated estimated covariance Pₖ = (I - Kₖ * Hₖ) * Pₖ
+ ⋅ innovation ỹₖ = zₖ - Hₖ * x̂ₖ<br>
+ ⋅ innovation covariance Sₖ = Hₖ * Pₖ * Hₖᵀ + Rₖ<br>
+ ⋅ kalman gain Kₖ = Pₖ * Hₖᵀ * Sₖ⁻¹<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(H: observation matrix, z: actual measurement, R: measurement noise covariance matrix)<br>
+ ⋅ updated estimated state x̂ₖ = x̂ₖ + Kₖ * ỹₖ<br>
+ ⋅ updated estimated covariance Pₖ = (I - Kₖ * Hₖ) * Pₖ<br>
 ```
   template <typename K>
   void	KalmanFilter<K>::update(Vector<K> measurement)
