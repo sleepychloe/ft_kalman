@@ -140,7 +140,7 @@ So you can apply continuous white noise model for Q.<br>
 <br>
 FQcFᵀ is a projection of the continuous noise based on F.<br>
 Since the noise is changing continuously, and we want to know how much noise is added to the system over the interval <span>[0, ∆t]</span>,<br>
-you need to integrate FQ'Fᵀ.<br>
+you need to integrate FQcFᵀ.<br>
 
 ```
 Q =  ∫₀ΔᵗFQcFᵀ
