@@ -19,8 +19,8 @@ currently working on the project
 #### predict
  ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁<br>
  ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
-&nbsp;&nbsp;(F: transition matrix,
-&nbsp;&nbsp;&nbsp;Q: process noise covariance matrix)
+&nbsp;&nbsp;(F: transition matrix,<br>
+&nbsp;&nbsp;&nbsp;Q: process noise covariance matrix)<br>
 
 ```
 template <typename K>
@@ -36,8 +36,8 @@ void	KalmanFilter<K>::predict(void)
  ⋅ innovation ỹₖ = zₖ - Hₖ * x̂ₖ<br>
  ⋅ innovation covariance Sₖ = Hₖ * Pₖ * Hₖᵀ + Rₖ<br>
  ⋅ kalman gain Kₖ = Pₖ * Hₖᵀ * Sₖ⁻¹<br>
-&nbsp;&nbsp;(H: observation matrix,
-&nbsp;&nbsp;&nbsp;z: actual measurement
+&nbsp;&nbsp;(H: observation matrix,<br>
+&nbsp;&nbsp;&nbsp;z: actual measurement<br>
 &nbsp;&nbsp;&nbsp;R: measurement noise covariance matrix)<br>
  ⋅ updated estimated state x̂ₖ = x̂ₖ + Kₖ * ỹₖ<br>
  ⋅ updated estimated covariance Pₖ = (I - Kₖ * Hₖ) * Pₖ<br>
