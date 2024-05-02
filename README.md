@@ -19,7 +19,8 @@ currently working on the project
 #### predict
  ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁<br>
  ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
-&nbsp;&nbsp;(F: transition matrix, Q: process noise covariance matrix)
+&nbsp;&nbsp;(F: transition matrix,
+&nbsp;&nbsp;&nbsp;Q: process noise covariance matrix)
 
 ```
 template <typename K>
@@ -35,7 +36,9 @@ void	KalmanFilter<K>::predict(void)
  ⋅ innovation ỹₖ = zₖ - Hₖ * x̂ₖ<br>
  ⋅ innovation covariance Sₖ = Hₖ * Pₖ * Hₖᵀ + Rₖ<br>
  ⋅ kalman gain Kₖ = Pₖ * Hₖᵀ * Sₖ⁻¹<br>
-&nbsp;&nbsp;(H: observation matrix, z: actual measurement, R: measurement noise covariance matrix)<br>
+&nbsp;&nbsp;(H: observation matrix,
+&nbsp;&nbsp;&nbsp;z: actual measurement
+&nbsp;&nbsp;&nbsp;R: measurement noise covariance matrix)<br>
  ⋅ updated estimated state x̂ₖ = x̂ₖ + Kₖ * ỹₖ<br>
  ⋅ updated estimated covariance Pₖ = (I - Kₖ * Hₖ) * Pₖ<br>
 ```
@@ -133,7 +136,7 @@ P = ┃   0      σ²ᵥ    0    ┃
 
 This is kinematic system, and it is continuous. So you can apply continuous white noise model for Q.<br>
 FQcFᵀ is a projection of the continuous noise based on F.<br>
-Since the noise is changing continuously, and e want to know how much noise is added to the system over the interval <sub>[0, ∆t]</sub>,<br>
+Since the noise is changing continuously, and e want to know how much noise is added to the system over the interval <span>[0, ∆t]</span>,<br>
 you need to integrate FQ'Fᵀ.<br>
 
 ```
