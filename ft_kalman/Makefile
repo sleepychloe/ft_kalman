@@ -6,7 +6,7 @@
 #    By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/23 23:34:22 by yhwang            #+#    #+#              #
-#    Updated: 2024/04/25 22:12:24 by yhwang           ###   ########.fr        #
+#    Updated: 2024/05/02 08:17:59 by yhwang           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,8 @@ SRC_DIR = ./srcs/
 
 FILES = $(SRC_DIR)main \
 		$(SRC_DIR)Parse \
-		$(SRC_DIR)Utils
+		$(SRC_DIR)ServerUtils \
+		$(SRC_DIR)FilterUtils
 
 INCS_DIR = ./incs/
 

@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Utils.cpp                                          :+:      :+:    :+:   */
+/*   ServerUtils.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 12:37:34 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/27 00:36:04 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/02 08:48:18 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/Utils.hpp"
+#include "../incs/ServerUtils.hpp"
 
-void	signal_handler(int signo)
+void	signalHandler(int signo)
 {
 	std::cerr << RED;
 	if (signo == SIGINT)
@@ -23,7 +23,7 @@ void	signal_handler(int signo)
 	g_running_flag = false;
 }
 
-int	create_sock(void)
+int	createSock(void)
 {
 	int	sock = socket(AF_INET, SOCK_DGRAM, 0);
 
@@ -36,7 +36,7 @@ int	create_sock(void)
 	return (sock);
 }
 
-struct sockaddr_in	create_sockaddr_in(int port)
+struct sockaddr_in	createServAddr(int port)
 {
 	struct sockaddr_in	addr;
 	memset(&addr, 0, sizeof(addr));
@@ -46,7 +46,7 @@ struct sockaddr_in	create_sockaddr_in(int port)
 	return (addr);
 }
 
-bool	send_msg(int sock, struct sockaddr_in servaddr, std::string msg)
+bool	sendMsg(int sock, struct sockaddr_in servaddr, std::string msg)
 {
 	ssize_t		byte = sendto(sock, msg.c_str(), msg.length(), 0, (struct sockaddr*)&servaddr, sizeof(servaddr));
 
@@ -58,7 +58,7 @@ bool	send_msg(int sock, struct sockaddr_in servaddr, std::string msg)
 	return (true);
 }
 
-bool	is_serv_available(int sock, int time_sec)
+bool	isServAvailable(int sock, int time_sec)
 {
 	fd_set	readfd;
 	FD_ZERO(&readfd);
@@ -81,7 +81,7 @@ bool	is_serv_available(int sock, int time_sec)
 	return (true);
 }
 
-bool	recv_from_serv(int sock, std::string &buf)
+bool	recvFromServ(int sock, std::string &buf)
 {
 	char	tmp[1024 * 255];
 	ssize_t	byte = recvfrom(sock, tmp, sizeof(tmp), 0, NULL, NULL);
@@ -93,5 +93,19 @@ bool	recv_from_serv(int sock, std::string &buf)
 	}
 	tmp[byte] = '\0';
 	buf = tmp;
+	return (true);
+}
+
+bool	sendPos(int sock, struct sockaddr_in servaddr, std::vector<double> pos, int timeout)
+{
+	std::string	msg;
+
+	msg = std::to_string(pos[0]) + " " + std::to_string(pos[1]) + " " + std::to_string(pos[2]);
+	if (!sendMsg(sock, servaddr, msg) || !isServAvailable(sock, timeout))
+		return (false);
+	
+	std::cout << CYAN << "successfully sent message to server: " << std::endl
+		<< std::setprecision(std::numeric_limits<long double>::digits10)
+		<< pos[0] << " " << pos[1] << " " << pos[2] << BLACK << std::endl;
 	return (true);
 }

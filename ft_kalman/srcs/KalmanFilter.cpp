@@ -6,11 +6,16 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 01:15:54 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/30 06:09:27 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/02 08:22:52 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/KalmanFilter.hpp"
+
+template <typename K>
+KalmanFilter<K>::KalmanFilter()
+{
+}
 
 template <typename K>
 KalmanFilter<K>::KalmanFilter(Vector<K> initial_satate, Matrix<K> initial_covariance,

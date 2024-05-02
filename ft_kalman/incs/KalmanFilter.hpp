@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 01:15:47 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/30 06:09:20 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/02 08:31:46 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ template <typename K>
 class KalmanFilter
 {
 public:
+	KalmanFilter();
 	KalmanFilter(Vector<K> initial_state, Matrix<K> initial_covariance,
 			Matrix<K> transition_matrix, Matrix<K> observation_matrix,
 			Matrix<K> process_noise_covariance, Matrix<K> measurement_noise_covariance);
@@ -33,8 +34,6 @@ public:
 	void			update(Vector<K> measurement);
 
 private:
-	KalmanFilter();
-
 	Vector<K>		_state;
 	Matrix<K>		_covariance;
 	Matrix<K>		_transition_matrix;
