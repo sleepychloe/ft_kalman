@@ -99,7 +99,7 @@ Now you have initial position, initial velocity, and acceleration,<br>
 and you can calculate the position after 0.01 second(=∆t) with Newton's laws of motion.<br>
 <br>
 Compute until the GPS position is received from the server(Kalman filter predict)<br>
-You can compare the calculation result and the actual position every 3 seconds(Kalman filter update)<br>.
+You can compare the calculation result and the actual position every 3 seconds.(Kalman filter update)<br>
 <br>
 ### How to initialize Kalman filter
 <br>
