@@ -1,0 +1,11 @@
+[00:30:32.340]
+Matrix<double>	control_transition_model({{DT * DT * DT / 6},
+							{DT * DT * DT / 6},
+							{DT * DT * DT / 6},
+							{DT * DT / 2},
+							{DT * DT / 2},
+							{DT * DT / 2},
+							{DT},
+							{DT},
+							{DT}});
+	control_transition_model = control_transition_model * control_transition_model.transpose();

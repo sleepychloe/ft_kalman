@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/02 13:08:33 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/04 16:43:49 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int	main(int argc, char **argv)
 	if (!sendPos(client_sock, servaddr, kalman.getState().getVector(), 1))
 		return (close(client_sock), 1);
 
+	Vector<double>	control_input;
 	while (g_running_flag)
 	{
 		/* predict */
@@ -68,7 +69,9 @@ int	main(int argc, char **argv)
 				return (close(client_sock), 1);
 			computeVelocity(p.getDir(), p.getAcc(), velocity);
 
-			kalman.predict();
+			// control input: 1 * n
+			control_input = Vector<double>({p.getPos()[0], p.getPos()[1], p.getPos()[2], velocity[0], velocity[1], velocity[2], p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
+			kalman.predict(control_input);
 			if (!sendPos(client_sock, servaddr, kalman.getState().getVector(), 1))
 				return (close(client_sock), 1);
 		}
@@ -84,7 +87,6 @@ int	main(int argc, char **argv)
 		Vector<double>	measurement({p.getPos()[0], p.getPos()[1], p.getPos()[2], p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
 
 		kalman.update(measurement);
-		kalman.predict();
 		if (!sendPos(client_sock, servaddr, kalman.getState().getVector(), 1))
 			return (close(client_sock), 1);
 	}

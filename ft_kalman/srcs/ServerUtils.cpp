@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 12:37:34 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/02 09:50:33 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/03 02:26:25 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,9 @@ bool	parseElement(int sock, Parse &p, std::string element)
 	{
 		if (!recvFromServ(sock, buf) || !isServAvailable(sock, 1))
 			return (false);
+		std::cout << buf << std::endl;
 		if (buf.find(element) != std::string::npos)
 		{
-			std::cout << buf << std::endl;
 			p.parse(buf);
 			break ;
 		}
