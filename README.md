@@ -144,6 +144,7 @@ F = ┃   0      1     ∆t    ┃
 To improve filter's performance, we can introduce control input.<br>
 the result of x̂ₖ is vector of n-size,<br>
 so I'll set control transition model as n by n matrix, and control input as n-size-vector.<br>
+Also, since we do not always know the vehicle's position I will not use it for prediction.<br>
 ```
     ┏        ┓ ┏        ┓T
     ┃    0   ┃ ┃    0   ┃
