@@ -49,8 +49,6 @@ void	KalmanFilter<K>::predict(Vector<K> control_input)
 				+ this->_process_noise_covariance;
 }
 ```
-<br>
-
 #### update
  ⋅ innovation ỹₖ = zₖ - Hₖ * x̂ₖ<br>
  ⋅ innovation covariance Sₖ = Hₖ * Pₖ * Hₖᵀ + Rₖ<br>
