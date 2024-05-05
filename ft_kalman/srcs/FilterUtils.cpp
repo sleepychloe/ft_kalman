@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 07:58:26 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/04 17:25:20 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/05 02:54:35 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,8 @@ Matrix<double>	integrate(Matrix<double> m, double start, double end)
 		for (size_t r = 0; r < m.getRowSize(); r++)
 		{
 			for (size_t c = 0; c < m.getColumnSize(); c++)
-				res[r][c] += m.getMatrix()[r][c];
+				res[r][c] += m.getMatrix()[r][c] * dx;
 		}
-	}
-	for (size_t r = 0; r < m.getRowSize(); r++)
-	{
-		for (size_t c = 0; c < m.getColumnSize(); c++)
-			res[r][c] *= dx;
 	}
 	return (Matrix<double>(res));
 }
@@ -90,9 +85,9 @@ void	initFilter(Parse &p, std::vector<double> v, KalmanFilter<double> &kalman)
 						{0, 0, 0, 0, 0, 0, 0, 0, 1}});
 
 	// control model: n * n
-	Matrix<double>	control_transition_model({{DT * DT * DT / 6},
-							{DT * DT * DT / 6},
-							{DT * DT * DT / 6},
+	Matrix<double>	control_transition_model({{0},
+							{0},
+							{0},
 							{DT * DT / 2},
 							{DT * DT / 2},
 							{DT * DT / 2},
@@ -102,6 +97,7 @@ void	initFilter(Parse &p, std::vector<double> v, KalmanFilter<double> &kalman)
 	control_transition_model = control_transition_model * control_transition_model.transpose();
 
 	// observation: m * n
+	
 	Matrix<double>	observation_matrix({{1, 0, 0, 0, 0, 0, 0, 0, 0},
 						{0, 1, 0, 0, 0, 0, 0, 0, 0},
 						{0, 0, 1, 0, 0, 0, 0, 0, 0},

@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 01:15:54 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/04 17:52:13 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/05 00:33:30 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,18 +89,12 @@ void	KalmanFilter<K>::predict(void)
 				+ _process_noise_covariance;
 }
 
-/* - predicted state x̂ₖ = Fₖ * x̂ₖ₋₁ + B * uₖ + wₖ₋₁
+/* - predicted state x̂ₖ = Fₖ * x̂ₖ₋₁ + B * uₖ
    - predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ
    (F: transition matrix,
     B: control transition matrix,
     u: control input,
-    w: measurement noise,
     Q: process noise covariance matrix) */
-
-# define	DT			0.01
-# define 	ACCELEROMETER_NOISE	0.001
-# define	GYROSCOPE_NOISE		0.01
-# define	GPS_NOISE		0.1
 template <typename K>
 void	KalmanFilter<K>::predict(Vector<K> control_input)
 {

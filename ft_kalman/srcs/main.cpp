@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/04 16:43:49 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/05 02:41:04 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	main(int argc, char **argv)
 			computeVelocity(p.getDir(), p.getAcc(), velocity);
 
 			// control input: 1 * n
-			control_input = Vector<double>({p.getPos()[0], p.getPos()[1], p.getPos()[2], velocity[0], velocity[1], velocity[2], p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
+			control_input = Vector<double>({0, 0, 0, velocity[0], velocity[1], velocity[2], p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
 			kalman.predict(control_input);
 			if (!sendPos(client_sock, servaddr, kalman.getState().getVector(), 1))
 				return (close(client_sock), 1);
