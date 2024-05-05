@@ -239,115 +239,113 @@ R = ┃  0   σ²ₐ ┃
 ### initial values
 ```
 /* control input: n */
-	control_input = Vector<double>({0, 0, 0, velocity[0], velocity[1], velocity[2], p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
-	kalman.predict(control_input);
+control_input = Vector<double>({0, 0, 0, velocity[0], velocity[1], velocity[2], p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
+kalman.predict(control_input);
 
 /* measurement: m */
-	measurement = Vector<double>({p.getPos()[0], p.getPos()[1], p.getPos()[2], p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
-	kalman.update(measurement);
+measurement = Vector<double>({p.getPos()[0], p.getPos()[1], p.getPos()[2], p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
+kalman.update(measurement);
 ```
 
 ```
 /* init state: n(pos, v, acc) */
-	Vector<double>	init_state({p.getPos()[0], p.getPos()[1], p.getPos()[2],
-					v[0], v[1], v[2],
-					p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
+Vector<double>	init_state({p.getPos()[0], p.getPos()[1], p.getPos()[2], v[0], v[1], v[2], p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
 
 /* init covariance: n by n */
-	Matrix<double>	init_covariance({{pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0, 0, 0},
-					{0, pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0, 0},
-					{0, 0, pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0},
-					{0, 0, 0, (pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT), 0, 0, 0, 0, 0},
-					{0, 0, 0, 0, (pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT), 0, 0, 0, 0},
-					{0, 0, 0, 0, 0, (pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT), 0, 0, 0},
-					{0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2), 0, 0},
-					{0, 0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2), 0},
-					{0, 0, 0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2)}});
+Matrix<double>	init_covariance({{pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, (pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT), 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, (pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT), 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, (pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT), 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2), 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2), 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2)}});
 
 /* transition: n by n */
-	Matrix<double>	transition_matrix({{1, 0, 0, DT, 0, 0, DT * DT / 2, 0, 0},
-						{0, 1, 0, 0, DT, 0, 0, DT * DT / 2, 0},
-						{0, 0, 1, 0, 0, DT, 0, 0, DT * DT / 2},
-						{0, 0, 0, 1, 0, 0, DT, 0, 0},
-						{0, 0, 0, 0, 1, 0, 0, DT, 0},
-						{0, 0, 0, 0, 0, 1, 0, 0, DT},
-						{0, 0, 0, 0, 0, 0, 1, 0, 0},
-						{0, 0, 0, 0, 0, 0, 0, 1, 0},
-						{0, 0, 0, 0, 0, 0, 0, 0, 1}});
+Matrix<double>	transition_matrix({{1, 0, 0, DT, 0, 0, DT * DT / 2, 0, 0},
+					{0, 1, 0, 0, DT, 0, 0, DT * DT / 2, 0},
+					{0, 0, 1, 0, 0, DT, 0, 0, DT * DT / 2},
+					{0, 0, 0, 1, 0, 0, DT, 0, 0},
+					{0, 0, 0, 0, 1, 0, 0, DT, 0},
+					{0, 0, 0, 0, 0, 1, 0, 0, DT},
+					{0, 0, 0, 0, 0, 0, 1, 0, 0},
+					{0, 0, 0, 0, 0, 0, 0, 1, 0},
+					{0, 0, 0, 0, 0, 0, 0, 0, 1}});
 
 /* control model: n by n */
-	Matrix<double>	control_transition_model({{0},
-							{0},
-							{0},
-							{DT * DT / 2},
-							{DT * DT / 2},
-							{DT * DT / 2},
-							{DT},
-							{DT},
-							{DT}});
-	control_transition_model = control_transition_model * control_transition_model.transpose();
+Matrix<double>	control_transition_model({{0},
+						{0},
+						{0},
+						{DT * DT / 2},
+						{DT * DT / 2},
+						{DT * DT / 2},
+						{DT},
+						{DT},
+						{DT}});
+control_transition_model = control_transition_model * control_transition_model.transpose();
 
 /* observation: m by n */
-	Matrix<double>	observation_matrix({{1, 0, 0, 0, 0, 0, 0, 0, 0},
-						{0, 1, 0, 0, 0, 0, 0, 0, 0},
-						{0, 0, 1, 0, 0, 0, 0, 0, 0},
-						{0, 0, 0, 0, 0, 0, 1, 0, 0},
-						{0, 0, 0, 0, 0, 0, 0, 1, 0},
-						{0, 0, 0, 0, 0, 0, 0, 0, 1}});
+Matrix<double>	observation_matrix({{1, 0, 0, 0, 0, 0, 0, 0, 0},
+					{0, 1, 0, 0, 0, 0, 0, 0, 0},
+					{0, 0, 1, 0, 0, 0, 0, 0, 0},
+					{0, 0, 0, 0, 0, 0, 1, 0, 0},
+					{0, 0, 0, 0, 0, 0, 0, 1, 0},
+					{0, 0, 0, 0, 0, 0, 0, 0, 1}});
 
 /* process_noise: n by n */
-	Matrix<double>	q_continuous({{DT * DT / 2, 0, 0, 0, 0, 0, 0, 0, 0,},
-					{0, DT * DT / 2, 0, 0, 0, 0, 0, 0, 0,},
-					{0, 0, DT * DT / 2, 0, 0, 0, 0, 0, 0,},
-					{0, 0, 0, DT, 0, 0, 0, 0, 0,},
-					{0, 0, 0, 0, DT, 0, 0, 0, 0,},
-					{0, 0, 0, 0, 0, DT, 0, 0, 0,},
-					{0, 0, 0, 0, 0, 0, 1, 0, 0,},
-					{0, 0, 0, 0, 0, 0, 0, 1, 0,},
-					{0, 0, 0, 0, 0, 0, 0, 0, 1,}});
-	Matrix<double>	noise_p({{pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0, 0, 0},
-					{0, pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0, 0},
-					{0, 0, pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0},
-					{0, 0, 0, 0, 0, 0, 0, 0, 0},
-					{0, 0, 0, 0, 0, 0, 0, 0, 0},
-					{0, 0, 0, 0, 0, 0, 0, 0, 0},
-					{0, 0, 0, 0, 0, 0, 0, 0, 0},
-					{0, 0, 0, 0, 0, 0, 0, 0, 0},
-					{0, 0, 0, 0, 0, 0, 0, 0, 0},});
-	Matrix<double>	noise_v({{(pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT) * DT, 0, 0, 0, 0, 0, 0, 0, 0},
-					{0, (pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT) * DT, 0, 0, 0, 0, 0, 0, 0},
-					{0, 0, (pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT) * DT, 0, 0, 0, 0, 0, 0},
-					{0, 0, 0, (pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT), 0, 0, 0, 0, 0},
-					{0, 0, 0, 0, (pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT), 0, 0, 0, 0},
-					{0, 0, 0, 0, 0, (pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT), 0, 0, 0},
-					{0, 0, 0, 0, 0, 0, 0, 0, 0},
-					{0, 0, 0, 0, 0, 0, 0, 0, 0},
-					{0, 0, 0, 0, 0, 0, 0, 0, 0},});
-	Matrix<double>	noise_a({{pow(ACCELEROMETER_NOISE, 2) * DT * DT / 2, 0, 0, 0, 0, 0, 0, 0, 0},
-					{0, pow(ACCELEROMETER_NOISE, 2) * DT * DT / 2, 0, 0, 0, 0, 0, 0, 0},
-					{0, 0, pow(ACCELEROMETER_NOISE, 2) * DT * DT / 2, 0, 0, 0, 0, 0, 0},
-					{0, 0, 0, pow(ACCELEROMETER_NOISE, 2) * DT, 0, 0, 0, 0, 0},
-					{0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2) * DT, 0, 0, 0, 0},
-					{0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2) * DT, 0, 0, 0},
-					{0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2), 0, 0},
-					{0, 0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2), 0},
-					{0, 0, 0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2)}});
-	Matrix<double>	noise_density = noise_p + noise_v + noise_a;
-	q_continuous = q_continuous * noise_density ;
-	Matrix<double>	process_noise_covariance = transition_matrix * q_continuous * transition_matrix.transpose();
-	process_noise_covariance = integrate(process_noise_covariance, 0, DT);
+Matrix<double>	q_continuous({{DT * DT / 2, 0, 0, 0, 0, 0, 0, 0, 0,},
+				{0, DT * DT / 2, 0, 0, 0, 0, 0, 0, 0,},
+				{0, 0, DT * DT / 2, 0, 0, 0, 0, 0, 0,},
+				{0, 0, 0, DT, 0, 0, 0, 0, 0,},
+				{0, 0, 0, 0, DT, 0, 0, 0, 0,},
+				{0, 0, 0, 0, 0, DT, 0, 0, 0,},
+				{0, 0, 0, 0, 0, 0, 1, 0, 0,},
+				{0, 0, 0, 0, 0, 0, 0, 1, 0,},
+				{0, 0, 0, 0, 0, 0, 0, 0, 1,}});
+Matrix<double>	noise_p({{pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0},});
+Matrix<double>	noise_v({{(pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT) * DT, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, (pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT) * DT, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, (pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT) * DT, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, (pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT), 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, (pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT), 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, (pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT), 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0},});
+Matrix<double>	noise_a({{pow(ACCELEROMETER_NOISE, 2) * DT * DT / 2, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, pow(ACCELEROMETER_NOISE, 2) * DT * DT / 2, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, pow(ACCELEROMETER_NOISE, 2) * DT * DT / 2, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, pow(ACCELEROMETER_NOISE, 2) * DT, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2) * DT, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2) * DT, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2), 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2), 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2)}});
+Matrix<double>	noise_density = noise_p + noise_v + noise_a;
+q_continuous = q_continuous * noise_density ;
+Matrix<double>	process_noise_covariance = transition_matrix * q_continuous * transition_matrix.transpose();
+process_noise_covariance = integrate(process_noise_covariance, 0, DT);
 
 /* measurement noise: m by m */
-	Matrix<double>	measurement_noise_covariance({{pow(GPS_NOISE, 2), 0, 0, 0, 0, 0},
-						{0, pow(GPS_NOISE, 2), 0, 0, 0, 0},
-						{0, 0, pow(GPS_NOISE, 2), 0, 0, 0},
-						{0, 0, 0, pow(ACCELEROMETER_NOISE, 2), 0, 0},
-						{0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2), 0},
-						{0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2)}});
+Matrix<double>	measurement_noise_covariance({{pow(GPS_NOISE, 2), 0, 0, 0, 0, 0},
+					{0, pow(GPS_NOISE, 2), 0, 0, 0, 0},
+					{0, 0, pow(GPS_NOISE, 2), 0, 0, 0},
+					{0, 0, 0, pow(ACCELEROMETER_NOISE, 2), 0, 0},
+					{0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2), 0},
+					{0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2)}});
 
 kalman = KalmanFilter<double>(init_state, init_covariance,
-					transition_matrix, observation_matrix, control_transition_model,
-					process_noise_covariance, measurement_noise_covariance);
+				transition_matrix, observation_matrix, control_transition_model,
+				process_noise_covariance, measurement_noise_covariance);
 ```
 
 ![image](https://github.com/sleepychloe/ft_kalman/assets/78352910/019a912f-8248-4744-a2c6-7ce9951eb3cc)
