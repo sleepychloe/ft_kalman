@@ -16,12 +16,11 @@ currently working on the project
 ## Kalman filter
 
 ### Class Template KalmanFilter<K>
-#### predict
+#### predict without control input
  ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁<br>
  ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
 &nbsp;&nbsp;(F: transition matrix,<br>
 &nbsp;&nbsp;&nbsp;Q: process noise covariance matrix)<br>
-
 ```
 template <typename K>
 void	KalmanFilter<K>::predict(void)
@@ -30,6 +29,24 @@ void	KalmanFilter<K>::predict(void)
 		= this->_transition_matrix * this->_state;
 	this->_covariance = this->_transition_matrix * this->_covariance * this->_transition_matrix.transpose()
 				+ _process_noise_covariance;
+}
+```
+### predict with control input
+I introduced control input for this project to improve the filter's perfomance.<br>
+ ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁ + B * uₖ<br>
+ ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
+&nbsp;&nbsp;(F: transition matrix,<br>
+&nbsp;&nbsp;&nbsp;B: control transition matrix,<br>
+&nbsp;&nbsp;&nbsp;u: control input,<br>
+&nbsp;&nbsp;&nbsp;Q: process noise covariance matrix)<br>
+```
+template <typename K>
+void	KalmanFilter<K>::predict(Vector<K> control_input)
+{
+	this->_state
+		= this->_transition_matrix * this->_state + this->_control_transition_model * control_input;
+	this->_covariance = this->_transition_matrix * this->_covariance * this->_transition_matrix.transpose()
+				+ this->_process_noise_covariance;
 }
 ```
 #### update
@@ -106,7 +123,7 @@ Compute until the GPS position is received from the server(Kalman filter predict
 and you can compare the calculation result and the actual position every 3 seconds(Kalman filter update).<br>
 <br>
 ### How to initialize Kalman filter
-⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁<br>
+⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁ + B * uₖ<br>
 The position, velocity, and acceleration of the vehicle are described by the linear state space.<br>
 Thus, vector x̂ₖ can be defined as (kₖ(=position), k̇ₖ(=velocity), k̈ₖ(=acceleration)) (k = x, y, z).<br><br>
 By Newton's laws of motion,<br>
@@ -120,6 +137,17 @@ x̂ₖ = (kₖ, k̇ₖ, k̈ₖ)
 F = ┃   0      1     ∆t    ┃
     ┃   0      0      1    ┃
     ┗                      ┛
+```
+To improve filter's performance, we can introduce control input.<br>
+the result of x̂ₖ is vector of n-size,<br>
+so I'll set control transition model as n by n matrix, and control input as n-size-vector.<br>
+```
+    ┏        ┓ ┏        ┓T
+    ┃    0   ┃ ┃    0   ┃
+B = ┃ 0.5∆t² ┃*┃ 0.5∆t² ┃
+    ┃   ∆t   ┃ ┃   ∆t   ┃
+    ┗        ┛ ┗        ┛
+u = (0, k̇ₖ, k̈ₖ)
 ```
 ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
 We already know the init state of the vehicle.<br>
