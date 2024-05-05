@@ -158,6 +158,7 @@ We already know the init state of the vehicle.<br>
 Make diagonal matrix with GPS, gyroscope, and accelerometer noise<br>
 instead of using appropriately large value.<br>
 
+
 ```
     ┏                      ┓
     ┃   σ²ₚ    0      0    ┃
@@ -216,6 +217,7 @@ Matrix<double>	integrate(Matrix<double> m, double start, double end)
 When GPS position is received from server, you can update the filter.<br>
 I did not use velocity information to update kalman filter,<br>
 because I wanted to use raw data which I do not have to compute.<br>
+
 
 ```
 zₖ = (kₖ, k̈̈ₖ)
