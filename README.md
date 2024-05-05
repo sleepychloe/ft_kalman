@@ -8,8 +8,12 @@ currently working on the project
 ```
 
 ## Usage
+to run server:
 ```
   ./imu-sensor-stream-linux -s 42 -d 42 -p 4242
+```
+to run program:
+```
   ./ft_kalman
 ```
 
