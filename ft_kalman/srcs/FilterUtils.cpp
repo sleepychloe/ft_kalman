@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 07:58:26 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/05 02:54:35 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/05 03:19:23 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,12 @@ Matrix<double>	integrate(Matrix<double> m, double start, double end)
 
 void	initFilter(Parse &p, std::vector<double> v, KalmanFilter<double> &kalman)
 {
-	// init state: 1 * n: pos, v, acc
-	Vector<double>	init_state({p.getPos()[0], p.getPos()[1], p.getPos()[2], v[0], v[1], v[2], p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
+	/* init state: n(pos, v, acc) */
+	Vector<double>	init_state({p.getPos()[0], p.getPos()[1], p.getPos()[2],
+					v[0], v[1], v[2],
+					p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
 
-
-	// init covariance: n * n
+	/* init covariance: n by n */
 	Matrix<double>	init_covariance({{pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0, 0, 0},
 					{0, pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0, 0},
 					{0, 0, pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0},
@@ -73,7 +74,7 @@ void	initFilter(Parse &p, std::vector<double> v, KalmanFilter<double> &kalman)
 					{0, 0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2), 0},
 					{0, 0, 0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2)}});
 
-	// transition: n * n
+	/* transition: n by n */
 	Matrix<double>	transition_matrix({{1, 0, 0, DT, 0, 0, DT * DT / 2, 0, 0},
 						{0, 1, 0, 0, DT, 0, 0, DT * DT / 2, 0},
 						{0, 0, 1, 0, 0, DT, 0, 0, DT * DT / 2},
@@ -84,7 +85,7 @@ void	initFilter(Parse &p, std::vector<double> v, KalmanFilter<double> &kalman)
 						{0, 0, 0, 0, 0, 0, 0, 1, 0},
 						{0, 0, 0, 0, 0, 0, 0, 0, 1}});
 
-	// control model: n * n
+	/* control model: n by n */
 	Matrix<double>	control_transition_model({{0},
 							{0},
 							{0},
@@ -96,8 +97,7 @@ void	initFilter(Parse &p, std::vector<double> v, KalmanFilter<double> &kalman)
 							{DT}});
 	control_transition_model = control_transition_model * control_transition_model.transpose();
 
-	// observation: m * n
-	
+	/* observation: m by n */
 	Matrix<double>	observation_matrix({{1, 0, 0, 0, 0, 0, 0, 0, 0},
 						{0, 1, 0, 0, 0, 0, 0, 0, 0},
 						{0, 0, 1, 0, 0, 0, 0, 0, 0},
@@ -105,6 +105,7 @@ void	initFilter(Parse &p, std::vector<double> v, KalmanFilter<double> &kalman)
 						{0, 0, 0, 0, 0, 0, 0, 1, 0},
 						{0, 0, 0, 0, 0, 0, 0, 0, 1}});
 
+	/* process_noise: n by n */
 	Matrix<double>	q_continuous({{DT * DT / 2, 0, 0, 0, 0, 0, 0, 0, 0,},
 					{0, DT * DT / 2, 0, 0, 0, 0, 0, 0, 0,},
 					{0, 0, DT * DT / 2, 0, 0, 0, 0, 0, 0,},
@@ -114,7 +115,6 @@ void	initFilter(Parse &p, std::vector<double> v, KalmanFilter<double> &kalman)
 					{0, 0, 0, 0, 0, 0, 1, 0, 0,},
 					{0, 0, 0, 0, 0, 0, 0, 1, 0,},
 					{0, 0, 0, 0, 0, 0, 0, 0, 1,}});
-
 	Matrix<double>	noise_p({{pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0, 0, 0},
 					{0, pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0, 0},
 					{0, 0, pow(GPS_NOISE, 2), 0, 0, 0, 0, 0, 0},
@@ -143,12 +143,11 @@ void	initFilter(Parse &p, std::vector<double> v, KalmanFilter<double> &kalman)
 					{0, 0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2), 0},
 					{0, 0, 0, 0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2)}});
 	Matrix<double>	noise_density = noise_p + noise_v + noise_a;
-
 	q_continuous = q_continuous * noise_density ;
 	Matrix<double>	process_noise_covariance = transition_matrix * q_continuous * transition_matrix.transpose();
 	process_noise_covariance = integrate(process_noise_covariance, 0, DT);
 
-	// measurement noise: m * m
+	/* measurement noise: m by m */
 	Matrix<double>	measurement_noise_covariance({{pow(GPS_NOISE, 2), 0, 0, 0, 0, 0},
 						{0, pow(GPS_NOISE, 2), 0, 0, 0, 0},
 						{0, 0, pow(GPS_NOISE, 2), 0, 0, 0},

@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/05 02:41:04 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/05 03:25:18 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ int	main(int argc, char **argv)
 		return (close(client_sock), 1);
 
 	Vector<double>	control_input;
+	Vector<double>	measurement;
+
 	while (g_running_flag)
 	{
 		/* predict */
@@ -69,7 +71,7 @@ int	main(int argc, char **argv)
 				return (close(client_sock), 1);
 			computeVelocity(p.getDir(), p.getAcc(), velocity);
 
-			// control input: 1 * n
+			/* control input: n */
 			control_input = Vector<double>({0, 0, 0, velocity[0], velocity[1], velocity[2], p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
 			kalman.predict(control_input);
 			if (!sendPos(client_sock, servaddr, kalman.getState().getVector(), 1))
@@ -83,9 +85,8 @@ int	main(int argc, char **argv)
 			return (close(client_sock), 1);
 		computeVelocity(p.getDir(), p.getAcc(), velocity);
 
-		// measurement: 1 * m
-		Vector<double>	measurement({p.getPos()[0], p.getPos()[1], p.getPos()[2], p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
-
+		/* measurement: m */
+		measurement = Vector<double>({p.getPos()[0], p.getPos()[1], p.getPos()[2], p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
 		kalman.update(measurement);
 		if (!sendPos(client_sock, servaddr, kalman.getState().getVector(), 1))
 			return (close(client_sock), 1);
