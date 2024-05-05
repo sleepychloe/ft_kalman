@@ -50,6 +50,7 @@ void	KalmanFilter<K>::predict(Vector<K> control_input)
 }
 ```
 <br>
+
 #### update
  ⋅ innovation ỹₖ = zₖ - Hₖ * x̂ₖ<br>
  ⋅ innovation covariance Sₖ = Hₖ * Pₖ * Hₖᵀ + Rₖ<br>
@@ -73,6 +74,7 @@ void	KalmanFilter<K>::update(Vector<K> measurement)
 }
 ```
 <br>
+
 ### How to calculate
 After sending "READY" to server, you can get<br>
 &nbsp;&nbsp;⋅ true initial position(x, y, z in meters)<br>
@@ -124,6 +126,7 @@ and you can calculate the position after 0.01 second(=∆t) with Newton's laws o
 Compute until the GPS position is received from the server(Kalman filter predict),<br>
 and you can compare the calculation result and the actual position every 3 seconds(Kalman filter update).<br>
 <br>
+
 ### How to initialize Kalman filter
 ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁ + B * uₖ<br>
 The position, velocity, and acceleration of the vehicle are described by the linear state space.<br>
