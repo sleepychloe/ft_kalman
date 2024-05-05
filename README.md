@@ -49,6 +49,7 @@ void	KalmanFilter<K>::predict(Vector<K> control_input)
 				+ this->_process_noise_covariance;
 }
 ```
+<br>
 #### update
  ⋅ innovation ỹₖ = zₖ - Hₖ * x̂ₖ<br>
  ⋅ innovation covariance Sₖ = Hₖ * Pₖ * Hₖᵀ + Rₖ<br>
@@ -71,6 +72,7 @@ void	KalmanFilter<K>::update(Vector<K> measurement)
 				* this->_covariance;
 }
 ```
+<br>
 ### How to calculate
 After sending "READY" to server, you can get<br>
 &nbsp;&nbsp;⋅ true initial position(x, y, z in meters)<br>
@@ -149,6 +151,7 @@ B = ┃ 0.5∆t² ┃*┃ 0.5∆t² ┃
     ┗        ┛ ┗        ┛
 u = (0, k̇ₖ, k̈ₖ)
 ```
+<br>
 ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
 We already know the init state of the vehicle.<br>
 Make diagonal matrix with GPS, gyroscope, and accelerometer noise<br>
@@ -212,7 +215,6 @@ Matrix<double>	integrate(Matrix<double> m, double start, double end)
 When GPS position is received from server, you can update the filter.<br>
 I did not use velocity information to update kalman filter,<br>
 because I wanted to use raw data which I do not have to compute.<br>
-
 ```
 zₖ = (kₖ, k̈̈ₖ)
     ┏           ┓
