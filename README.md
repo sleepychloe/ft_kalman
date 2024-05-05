@@ -156,8 +156,7 @@ u = (0, k̇ₖ, k̈ₖ)
 ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
 We already know the init state of the vehicle.<br>
 Make diagonal matrix with GPS, gyroscope, and accelerometer noise<br>
-instead of using appropriately large value.<br>
-
+instead of using appropriately large value.<br><br>
 
 ```
     ┏                      ┓
