@@ -31,7 +31,7 @@ void	KalmanFilter<K>::predict(void)
 				+ _process_noise_covariance;
 }
 ```
-### predict with control input
+#### predict with control input
 I introduced control input for this project to improve the filter's perfomance.<br>
  ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁ + B * uₖ<br>
  ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
