@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 07:58:26 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/05 03:19:23 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/06 18:17:25 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,16 +86,16 @@ void	initFilter(Parse &p, std::vector<double> v, KalmanFilter<double> &kalman)
 						{0, 0, 0, 0, 0, 0, 0, 0, 1}});
 
 	/* control model: n by n */
-	Matrix<double>	control_transition_model({{0},
-							{0},
-							{0},
-							{DT * DT / 2},
-							{DT * DT / 2},
-							{DT * DT / 2},
-							{DT},
-							{DT},
-							{DT}});
-	control_transition_model = control_transition_model * control_transition_model.transpose();
+	// // [00:30:32.660]
+	Matrix<double>	control_transition_model({{DT * DT * DT / 6, 0, 0, DT * DT * DT * DT / 24, 0, 0, DT * DT * DT * DT * DT / 120, 0, 0},
+						{0, DT * DT * DT / 6, 0, 0, DT * DT * DT * DT / 24, 0, 0, DT * DT * DT * DT * DT / 120, 0},
+						{0, 0, DT * DT * DT / 6, 0, 0, DT * DT * DT * DT / 24, 0, 0, DT * DT * DT * DT * DT / 120},
+						{0, 0, 0, DT * DT / 2, 0, 0, DT * DT * DT / 6, 0, 0},
+						{0, 0, 0, 0, DT * DT / 2, 0, 0, DT * DT * DT / 6, 0},
+						{0, 0, 0, 0, 0, DT * DT / 2, 0, 0, DT * DT * DT / 6},
+						{0, 0, 0, 0, 0, 0, DT, 0, 0},
+						{0, 0, 0, 0, 0, 0, 0, DT, 0},
+						{0, 0, 0, 0, 0, 0, 0, 0, DT}});
 
 	/* observation: m by n */
 	Matrix<double>	observation_matrix({{1, 0, 0, 0, 0, 0, 0, 0, 0},

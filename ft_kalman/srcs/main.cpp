@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/05 03:25:18 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/06 18:21:44 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ int	main(int argc, char **argv)
 
 	Vector<double>	control_input;
 	Vector<double>	measurement;
+	std::vector<double>	keep_v = velocity;
+	std::vector<double>	keep_a = p.getAcc();
 
 	while (g_running_flag)
 	{
@@ -72,12 +74,14 @@ int	main(int argc, char **argv)
 			computeVelocity(p.getDir(), p.getAcc(), velocity);
 
 			/* control input: n */
-			control_input = Vector<double>({0, 0, 0, velocity[0], velocity[1], velocity[2], p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
+			control_input = Vector<double>({0, 0, 0, velocity[0] - keep_v[0], velocity[1] - keep_v[1], velocity[2] - keep_v[2],  p.getAcc()[0] - keep_a[0],  p.getAcc()[1] - keep_a[1],  p.getAcc()[2] - keep_a[2]});
+			keep_v = velocity;
+			keep_a = p.getAcc();
+			std::cout << control_input << std::endl;
 			kalman.predict(control_input);
 			if (!sendPos(client_sock, servaddr, kalman.getState().getVector(), 1))
 				return (close(client_sock), 1);
 		}
-
 		/* update */
 		if (!parseElement(client_sock, p, "POSITION")
 			|| !parseElement(client_sock, p, "ACCELERATION")
