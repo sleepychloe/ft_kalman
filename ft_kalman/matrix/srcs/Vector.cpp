@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 18:55:36 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/26 17:44:40 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/06 10:49:06 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -291,6 +291,16 @@ Vector<K>	operator*(const Vector<K> &l, const T &r)
 	
 	for (size_t i = 0; i < l.getSize(); i++)
 		res[i] = l.getVector()[i] * r;
+	return (Vector<K>(res));
+}
+
+template <typename K, typename T>
+Vector<K>	operator/(const Vector<K> &l, const T &r)
+{
+	std::vector<K>	res(l.getSize());
+
+	for(size_t i = 0; i < l.getSize(); i++)
+		res[i] = l.getVector()[i] / r;
 	return (Vector<K>(res));
 }
 

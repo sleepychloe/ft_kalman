@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 19:06:08 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/26 18:19:53 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/06 10:50:22 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -609,6 +609,19 @@ Matrix<K>	operator*(const Matrix<K> &l, const Matrix<K> &r)
 			for (size_t n = 0; n < l.getColumnSize(); n++)
 				res[m][p] += l.getMatrix()[m][n] * r.getMatrix()[n][p];
 		}
+	}
+	return (Matrix<K>(res));
+}
+
+template <typename K, typename T>
+Matrix<K>	operator/(const Matrix<K> &l, const T &r)
+{
+	std::vector<std::vector<K>>	res(l.getRowSize(), std::vector<K>(l.getColumnSize()));
+
+	for (size_t i = 0; i < l.getRowSize(); i++)
+	{
+		for (size_t j = 0; j < l.getColumnSize(); j++)
+			res[i][j] = l.getMatrix()[i][j] / r;
 	}
 	return (Matrix<K>(res));
 }

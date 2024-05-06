@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 02:18:09 by yhwang            #+#    #+#             */
-/*   Updated: 2024/04/26 18:19:06 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/06 10:50:25 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,9 @@ Vector<K>	operator*(const Matrix<K> &l, const Vector<K> &r);
 
 template <typename K>
 Matrix<K>	operator*(const Matrix<K> &l, const Matrix<K> &r);
+
+template <typename K, typename T>
+Matrix<K>	operator/(const Matrix<K> &l, const T &r);
 
 template <typename K>
 std::ostream	&operator<<(std::ostream &ostream, const Matrix<K> &matrix);
