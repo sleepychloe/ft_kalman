@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 07:58:26 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/07 02:10:04 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/07 14:16:18 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,12 +78,12 @@ void	initFilter(Parse &p, std::vector<double> v, KalmanFilter<double> &kalman)
 						{0, 0, 0, 0, 0, 1}});
 
 	/* control model: n by n */
-	Matrix<double>	control_transition_model({{DT * DT / 2, 0, 0, DT * DT * DT / 6, 0, 0},
-						{0, DT * DT / 2, 0, 0, DT * DT * DT / 6, 0},
-						{0, 0, DT * DT / 2, 0, 0, DT * DT * DT / 6},
-						{0, 0, 0, DT, 0, 0},
-						{0, 0, 0, 0, DT, 0},
-						{0, 0, 0, 0, 0, DT}});
+	Matrix<double>	control_transition_model({{DT * DT / 2, 0, 0},
+						{0, DT * DT / 2, 0},
+						{0, 0, DT * DT / 2},
+						{DT, 0, 0},
+						{0, DT, 0},
+						{0, 0, DT}});
 
 	/* observation: m by n */
 	Matrix<double>	observation_matrix({{1, 0, 0, 0, 0, 0},
