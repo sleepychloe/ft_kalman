@@ -36,7 +36,8 @@ void	KalmanFilter<K>::predict(void)
 }
 ```
 #### predict with control input
-I introduced control input for this project to improve the filter's perfomance.<br>
+I introduced control input for this project,<br>
+to calculate the effect of external inputs(=acceleration).<br>
  ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁ + B * uₖ<br>
  ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
 &nbsp;&nbsp;(F: transition matrix,<br>
@@ -132,11 +133,32 @@ and you can compare the calculation result and the actual position every 3 secon
 ### How to initialize Kalman filter
 ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁ + B * uₖ<br>
 The position, velocity, and acceleration of the vehicle are described by the linear state space.<br>
-Thus, vector x̂ₖ can be defined as (kₖ(=position), k̇ₖ(=velocity), k̈ₖ(=acceleration)) (k = x, y, z).<br><br>
+Thus, vector x̂ₖ can be defined as (kₖ(=position), k̇ₖ(=velocity)) (k = x, y, z).<br><br>
 By Newton's laws of motion,<br>
 kₖ = kₖ₋₁ + k̇ₖ₋₁∆t + k̈ₖ₋₁∆t²/2<br>
 k̇ₖ = k̇ₖ₋₁ + k̈ₖ₋₁∆t<br>
+```
+x̂ₖ = (kₖ, k̇ₖ)
+    ┏          ┓
+F = ┃ 1     ∆t ┃
+    ┃ 0     1  ┃
+    ┗          ┛
+```
+An external inputs can be considered as acceleration.<br>
+Thus vecter u can be defined as (k̈ₖ) (k = x, y, z).<br>
 k̈ₖ = k̈ₖ₋₁<br>
+```
+u = (k̈ₖ)
+    ┏        ┓
+B = ┃ 0.5∆t² ┃
+    ┃   ∆t   ┃
+    ┗        ┛
+```
+<br>
+
+<details>
+<summary><b>see another way to calculate: define x̂ₖ as (kₖ, k̇ₖ, k̈ₖ)</b></summary>
+You can also define vector x̂ₖ as (kₖ(=position), k̇ₖ(=velocity), k̈ₖ(=acceleration)) (k = x, y, z).<br>
 ```
 x̂ₖ = (kₖ, k̇ₖ, k̈ₖ)
     ┏                      ┓
@@ -145,10 +167,10 @@ F = ┃   0      1     ∆t    ┃
     ┃   0      0      1    ┃
     ┗                      ┛
 ```
-To improve filter's performance, we can introduce control input.<br>
-the result of x̂ₖ is vector of n-size,<br>
-so I'll set control transition model as n by n matrix, and control input as n-size-vector.<br>
-Also, since we do not always know the vehicle's position I will not use it for prediction.<br>
+
+Setting control input u is optional in this case,<br>
+but the filter's performance improved when I set u and B as follows:
+prediction.<br>
 ```
     ┏        ┓ ┏        ┓T
     ┃    0   ┃ ┃    0   ┃
@@ -157,20 +179,35 @@ B = ┃ 0.5∆t² ┃*┃ 0.5∆t² ┃
     ┗        ┛ ┗        ┛
 u = (0, k̇ₖ, k̈ₖ)
 ```
+Since we do not always know the vehicle's position I did not use it for prediction.<br>
+</details>
 <br>
+
 ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
 We already know the init state of the vehicle.<br>
-Make diagonal matrix with GPS, gyroscope, and accelerometer noise<br>
+Make diagonal matrix with GPS, and gyroscope<br>
 instead of using appropriately large value.<br><br>
 
 ```
-    ┏                      ┓
-    ┃   σ²ₚ    0      0    ┃
-P = ┃   0      σ²ᵥ    0    ┃
-    ┃   0      0      σ²ₐ  ┃
-    ┗                      ┛
+    ┏           ┓
+P = ┃ σ²ₚ    0  ┃
+    ┃  0    σ²ᵥ ┃
+    ┗           ┛
 (σ²ᵥ = σ_gyroscope² + σ_accelerometer² * ∆t)
 ```
+<details>
+<summary><b>when x̂ₖ is (kₖ, k̇ₖ, k̈ₖ)</b></summary>
+You need to apply accelerometer noise for matrix P.<br>
+```
+    ┏                 ┓
+    ┃ σ²ₚ   0     0   ┃
+P = ┃ 0     σ²ᵥ   0   ┃
+    ┃ 0     0     σ²ₐ ┃
+    ┗                 ┛
+(σ²ᵥ = σ_gyroscope² + σ_accelerometer² * ∆t)
+```
+</details>
+<br>
 
 This is kinematic system, and it is continuous.<br>
 So you can apply continuous white noise model for Q.<br>
@@ -190,7 +227,38 @@ when I tried, filter worked as expected with following matrix Qc:<br>
 Qc = ┃   0     ∆t    0 ┃*┃    0      σ²ᵥ∆t²/2     0   ┃
      ┃   0     0     1 ┃ ┃    0         0       σ²ₐ∆t ┃
      ┗                 ┛ ┗                            ┛
+     ┏        ┓
+Qc = ┃ 0    0 ┃*Φₛ
+     ┃ 0    1 ┃
+     ┗        ┛
+(Φₛ: spectral density of the white noise, Φₛ = Nₚ + Nᵥ + Nₐ)
+     ┏            ┓
+Nₚ = ┃  σ²ₚ    0  ┃
+     ┃  0      0  ┃
+     ┗            ┛
+     ┏            ┓
+Nₚ = ┃  0   σ²ᵥ∆t ┃
+     ┃  0    σ²ᵥ  ┃
+     ┗            ┛
+     ┏                    ┓
+Nₐ = ┃ σ²ₐ∆t²/2  σ²ₐ∆t²/2 ┃
+     ┃    0        σ²ₐ∆t  ┃
+     ┗                    ┛
 ```
+<details>
+<summary><b>when x̂ₖ is (kₖ, k̇ₖ, k̈ₖ)</b></summary>
+When I tried, filter worked as expected with following matrix Qc:<br>
+
+```
+     ┏                 ┓ ┏                            ┓
+     ┃ ∆t²/2   0     0 ┃ ┃ σ²ₚ∆t³/6     0         0   ┃
+Qc = ┃   0     ∆t    0 ┃*┃    0      σ²ᵥ∆t²/2     0   ┃
+     ┃   0     0     1 ┃ ┃    0         0       σ²ₐ∆t ┃
+     ┗                 ┛ ┗                            ┛
+```
+</details>
+<br>
+
 To express definite integral of the expression I used Riemann sum method:<br>
 ```
 	    ₙ
@@ -223,6 +291,21 @@ I did not use velocity information to update kalman filter,<br>
 because I wanted to use raw data which I do not have to compute.<br><br>
 
 ```
+zₖ = (kₖ)
+    ┏       ┓
+H = ┃ 1   0 ┃
+    ┗       ┛
+    ┏     ┓
+R = ┃ σ²ₚ ┃
+    ┗     ┛
+```
+<br>
+
+<details>
+<summary><b>when x̂ₖ is (kₖ, k̇ₖ, k̈ₖ)</b></summary>
+When I tried, filter worked as expected with following matrix Qc:<br>
+
+```
 zₖ = (kₖ, k̈̈ₖ)
     ┏           ┓
     ┃ 1   0   0 ┃
@@ -233,9 +316,89 @@ H = ┃ 0   0   1 ┃
 R = ┃  0   σ²ₐ ┃
     ┗          ┛
 ```
+</details>
 <br>
 
 ### initial values
+```
+/* control input: n */
+control_input = Vector<double>({p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
+kalman.predict(control_input);
+
+/* measurement: m */
+measurement = Vector<double>({p.getPos()[0], p.getPos()[1], p.getPos()[2]});
+kalman.update(measurement);
+```
+
+```
+/* init state: n(pos, v) */
+Vector<double>	init_state({p.getPos()[0], p.getPos()[1], p.getPos()[2], v[0], v[1], v[2]});
+
+/* transition: n by n */
+Matrix<double>	transition_matrix({{1, 0, 0, DT, 0, 0},
+					{0, 1, 0, 0, DT, 0},
+					{0, 0, 1, 0, 0, DT},
+					{0, 0, 0, 1, 0, 0},
+					{0, 0, 0, 0, 1, 0},
+					{0, 0, 0, 0, 0, 1}});
+
+/* control model: n by n */
+Matrix<double>	control_transition_model({{DT * DT / 2, 0, 0},
+					{0, DT * DT / 2, 0},
+					{0, 0, DT * DT / 2},
+					{DT, 0, 0},
+					{0, DT, 0},
+					{0, 0, DT}});
+
+/* observation: m by n */
+Matrix<double>	observation_matrix({{1, 0, 0, 0, 0, 0},
+					{0, 1, 0, 0, 0, 0},
+					{0, 0, 1, 0, 0, 0}});
+
+/* process_noise: n by n */
+Matrix<double>	q_continuous({{0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 1, 0, 0},
+				{0, 0, 0, 0, 1, 0},
+				{0, 0, 0, 0, 0, 1}});
+Matrix<double>	noise_p({{pow(GPS_NOISE, 2), 0, 0, 0, 0, 0},
+				{0, pow(GPS_NOISE, 2), 0, 0, 0, 0},
+				{0, 0, pow(GPS_NOISE, 2), 0, 0, 0},
+				{0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0,}});
+Matrix<double>	noise_v({{0, 0, 0, pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT, 0, 0},
+				{0, 0, 0, 0, pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT, 0},
+				{0, 0, 0, 0, 0, pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT},
+				{0, 0, 0, pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT, 0, 0},
+				{0, 0, 0, 0, pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT, 0},
+				{0, 0, 0, 0, 0, pow(GYROSCOPE_NOISE, 2) + pow(ACCELEROMETER_NOISE, 2) * DT}});
+Matrix<double>	noise_a({{pow(ACCELEROMETER_NOISE, 2) * DT * DT / 2, 0, 0, pow(ACCELEROMETER_NOISE, 2) * DT * DT / 2, 0, 0},
+				{0, pow(ACCELEROMETER_NOISE, 2) * DT * DT / 2, 0, 0, pow(ACCELEROMETER_NOISE, 2) * DT * DT / 2, 0},
+				{0, 0, pow(ACCELEROMETER_NOISE, 2) * DT * DT / 2, 0, 0, pow(ACCELEROMETER_NOISE, 2) * DT * DT / 2},
+				{0, 0, 0, pow(ACCELEROMETER_NOISE, 2) * DT, 0, 0},
+				{0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2) * DT, 0},
+				{0, 0, 0, 0, 0, pow(ACCELEROMETER_NOISE, 2) * DT}});
+Matrix<double>	noise_density = (noise_p + noise_v + noise_a) * 0.000005;
+q_continuous = q_continuous * noise_density;
+Matrix<double>	process_noise_covariance = transition_matrix * q_continuous * transition_matrix.transpose();
+process_noise_covariance = integrate(process_noise_covariance, 0, DT);
+
+/* measurement noise: m by m */
+Matrix<double>	measurement_noise_covariance({{pow(GPS_NOISE, 2), 0, 0},
+					{0, pow(GPS_NOISE, 2), 0},
+					{0, 0, pow(GPS_NOISE, 2)}});
+
+kalman = KalmanFilter<double>(init_state, init_covariance,
+				transition_matrix, observation_matrix, control_transition_model,
+				process_noise_covariance, measurement_noise_covariance);
+```
+<br>
+
+<details>
+<summary><b>when x̂ₖ is (kₖ, k̇ₖ, k̈ₖ)</b></summary>
+
 ```
 /* control input: n */
 control_input = Vector<double>({0, 0, 0, velocity[0], velocity[1], velocity[2], p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
@@ -346,6 +509,8 @@ kalman = KalmanFilter<double>(init_state, init_covariance,
 				transition_matrix, observation_matrix, control_transition_model,
 				process_noise_covariance, measurement_noise_covariance);
 ```
+</details>
+<br>
 <br>
 <br>
 
