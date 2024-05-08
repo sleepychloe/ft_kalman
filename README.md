@@ -154,10 +154,8 @@ B = ┃ 0.5∆t² ┃
     ┃   ∆t   ┃
     ┗        ┛
 ```
-<br>
-
 <details>
-<summary><b>see another way to calculate: define x̂ₖ as (kₖ, k̇ₖ, k̈ₖ)</b></summary>
+<summary><b style="text-decoration:underline">see another way to calculate: define x̂ₖ as (kₖ, k̇ₖ, k̈ₖ)</b></summary>
 You can also define vector x̂ₖ as (kₖ(=position), k̇ₖ(=velocity), k̈ₖ(=acceleration)) (k = x, y, z).<br>
 
 ```
@@ -197,7 +195,7 @@ P = ┃ σ²ₚ    0  ┃
 (σ²ᵥ = σ_gyroscope² + σ_accelerometer² * ∆t)
 ```
 <details>
-<summary><b>when x̂ₖ is (kₖ, k̇ₖ, k̈ₖ)</b></summary>
+<summary><b style="text-decoration:underline">when x̂ₖ is (kₖ, k̇ₖ, k̈ₖ)</b></summary>
 You need to apply accelerometer noise for matrix P.<br>
 ```
     ┏                 ┓
@@ -247,7 +245,7 @@ Nₐ = ┃ σ²ₐ∆t²/2  σ²ₐ∆t²/2 ┃
      ┗                    ┛
 ```
 <details>
-<summary><b>when x̂ₖ is (kₖ, k̇ₖ, k̈ₖ)</b></summary>
+<summary><b style="text-decoration:underline">when x̂ₖ is (kₖ, k̇ₖ, k̈ₖ)</b></summary>
 When I tried, filter worked as expected with following matrix Qc:<br>
 
 ```
@@ -300,10 +298,8 @@ H = ┃ 1   0 ┃
 R = ┃ σ²ₚ ┃
     ┗     ┛
 ```
-<br>
-
 <details>
-<summary><b>when x̂ₖ is (kₖ, k̇ₖ, k̈ₖ)</b></summary>
+<summary><b style="text-decoration:underline">when x̂ₖ is (kₖ, k̇ₖ, k̈ₖ)</b></summary>
 When I tried, filter worked as expected with following matrix Qc:<br>
 
 ```
@@ -395,10 +391,8 @@ kalman = KalmanFilter<double>(init_state, init_covariance,
 				transition_matrix, observation_matrix, control_transition_model,
 				process_noise_covariance, measurement_noise_covariance);
 ```
-<br>
-
 <details>
-<summary><b>when x̂ₖ is (kₖ, k̇ₖ, k̈ₖ)</b></summary>
+<summary><b style="text-decoration:underline">when x̂ₖ is (kₖ, k̇ₖ, k̈ₖ)</b></summary>
 
 ```
 /* control input: n */
