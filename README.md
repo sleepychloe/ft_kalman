@@ -144,7 +144,7 @@ F = ┃ 1     ∆t ┃
     ┃ 0     1  ┃
     ┗          ┛
 ```
-An external inputs can be considered as acceleration.<br>
+the acceleration can be considered as an external inputs.<br>
 Thus vecter u can be defined as (k̈ₖ) (k = x, y, z).<br>
 k̈ₖ = k̈ₖ₋₁<br>
 ```
