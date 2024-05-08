@@ -129,7 +129,7 @@ and you can calculate the position after 0.01 second(=∆t) with Newton's laws o
 Compute until the GPS position is received from the server(Kalman filter predict),<br>
 and you can compare the calculation result and the actual position every 3 seconds(Kalman filter update).<br>
 <br>
-
+<br>
 ### How to initialize Kalman filter
 ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁ + B * uₖ<br>
 The position, velocity, and acceleration of the vehicle are described by the linear state space.<br>
