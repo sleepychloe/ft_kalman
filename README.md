@@ -147,8 +147,9 @@ F = ┃ 1     ∆t ┃
 ```
 The acceleration can be considered as an external inputs.<br>
 Thus vecter u can be defined as (k̈ₖ) (k = x, y, z).<br>
+Let's say that the acceleration is constant during the interval of time ∆t.<br>
 By Newton's laws of motion,<br>
-k̈ₖ = k̈ₖ₋₁(let's say that the acceleration is constant during the interval of time ∆t)<br>
+k̈ₖ = k̈ₖ₋₁<br>
 By definition of acceleration,
 a = Δv / Δt<br>
 ```
