@@ -36,8 +36,7 @@ void	KalmanFilter<K>::predict(void)
 }
 ```
 #### predict with control input
-I introduced control input for this project,<br>
-to calculate the effect of external inputs(=acceleration).<br>
+I introduced control input for this project, to calculate the effect of external inputs(=acceleration).<br>
  ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁ + B * uₖ<br>
  ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
 &nbsp;&nbsp;(F: transition matrix,<br>
@@ -144,7 +143,7 @@ F = ┃ 1     ∆t ┃
     ┃ 0     1  ┃
     ┗          ┛
 ```
-the acceleration can be considered as an external inputs.<br>
+The acceleration can be considered as an external inputs.<br>
 Thus vecter u can be defined as (k̈ₖ) (k = x, y, z).<br>
 k̈ₖ = k̈ₖ₋₁<br>
 ```
