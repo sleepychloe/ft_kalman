@@ -185,7 +185,7 @@ Since we do not always know the vehicle's position I did not use it for predicti
 ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
 We already know the init state of the vehicle.<br>
 Make diagonal matrix with GPS, and gyroscope<br>
-instead of using appropriately large value.<br><br>
+instead of using appropriately large value.<br>
 
 ```
     ┏           ┓
@@ -197,6 +197,7 @@ P = ┃ σ²ₚ    0  ┃
 <details>
 <summary><b><ins>when x̂ₖ is (kₖ, k̇ₖ, k̈ₖ)</ins></b></summary>
 You need to apply accelerometer noise for matrix P.<br>
+
 ```
     ┏                 ┓
     ┃ σ²ₚ   0     0   ┃
