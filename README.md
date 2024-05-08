@@ -131,7 +131,7 @@ and you can compare the calculation result and the actual position every 3 secon
 <br>
 ### How to initialize Kalman filter
 ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁ + B * uₖ<br>
-The position, velocity, and acceleration of the vehicle are described by the linear state space.<br>
+The position, and velocity of the vehicle are described by the linear state space.<br>
 Thus, vector x̂ₖ can be defined as (kₖ(=position), k̇ₖ(=velocity)) (k = x, y, z).<br><br>
 By Newton's laws of motion,<br>
 kₖ = kₖ₋₁ + k̇ₖ₋₁∆t + k̈ₖ₋₁∆t²/2<br>
@@ -145,6 +145,7 @@ F = ┃ 1     ∆t ┃
 ```
 The acceleration can be considered as an external inputs.<br>
 Thus vecter u can be defined as (k̈ₖ) (k = x, y, z).<br>
+By Newton's laws of motion,<br>
 k̈ₖ = k̈ₖ₋₁<br>
 ```
 u = (k̈ₖ)
@@ -155,6 +156,7 @@ B = ┃ 0.5∆t² ┃
 ```
 <details>
 <summary><b><ins>see another way to calculate: define x̂ₖ as (kₖ, k̇ₖ, k̈ₖ)</ins></b></summary>
+The position, velocity, and acceleration of the vehicle are described by the linear state space.
 You can also define vector x̂ₖ as (kₖ(=position), k̇ₖ(=velocity), k̈ₖ(=acceleration)) (k = x, y, z).<br>
 
 ```
