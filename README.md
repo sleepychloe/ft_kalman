@@ -159,6 +159,7 @@ B = ┃ 0.5∆t² ┃
 <details>
 <summary><b>see another way to calculate: define x̂ₖ as (kₖ, k̇ₖ, k̈ₖ)</b></summary>
 You can also define vector x̂ₖ as (kₖ(=position), k̇ₖ(=velocity), k̈ₖ(=acceleration)) (k = x, y, z).<br>
+
 ```
 x̂ₖ = (kₖ, k̇ₖ, k̈ₖ)
     ┏                      ┓
