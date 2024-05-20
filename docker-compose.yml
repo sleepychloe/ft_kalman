@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  kalman:
+    build: ./ft_kalman/
+    image: kalman
+    container_name: kalman
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XDG_RUNTIME_DIR=/tmp/runtime-root
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /dev/dri:/dev/dri
+    devices:
+      - /dev/dri:/dev/dri
+
+# xhost +local:root
+# docker exec -it kalman /bin/bash
+# xhost -local:root
