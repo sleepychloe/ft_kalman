@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 17:16:44 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/02 09:55:28 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/20 16:08:55 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 #include <vector>
 #include <cstdlib>
 #include <cmath>
-
 #include "./Color.hpp"
 
 class Parse

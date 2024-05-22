@@ -6,7 +6,7 @@
 #    By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/23 23:34:22 by yhwang            #+#    #+#              #
-#    Updated: 2024/05/20 09:35:41 by yhwang           ###   ########.fr        #
+#    Updated: 2024/05/20 16:07:38 by yhwang           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,8 @@ RM = rm -f
 FILES = $(SRC_DIR)main \
 		$(SRC_DIR)Parse \
 		$(SRC_DIR)ServerUtils \
-		$(SRC_DIR)FilterUtils
+		$(SRC_DIR)FilterUtils \
+		$(SRC_DIR)OpenGLUtils
 
 SRCS = $(addsuffix .cpp, $(FILES))
 OBJS = $(addsuffix .o, $(FILES))
