@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/20 17:50:59 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/24 00:55:04 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,17 +60,14 @@ int	main(int argc, char **argv)
 	if (!sendPos(client_sock, servaddr, position, 1))
 		return (close(client_sock), 1);
 
-	OpenGL	ctx;
+	t_opengl	ctx;
 	if (!init_opengl(ctx))
 		return (close(client_sock), 1);
-	setup_view();
-
-	
 	update_graph(ctx, position);
 	render(ctx);
+
 	Vector<double>	control_input;
 	Vector<double>	measurement;
-
 	while (!glfwWindowShouldClose(ctx.window) && g_running_flag)
 	{
 		glfwPollEvents();
@@ -91,13 +88,13 @@ int	main(int argc, char **argv)
 				return (close(client_sock), 1);
 			update_graph(ctx, position);
 		}
+
 		/* update */
 		if (!parseElement(client_sock, p, "POSITION")
 			|| !parseElement(client_sock, p, "ACCELERATION")
 			|| !parseElement(client_sock, p, "DIRECTION"))
 			return (close(client_sock), 1);
 		computeVelocity(p.getDir(), p.getAcc(), velocity);
-
 		control_input = Vector<double>({p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
 		kalman.predict(control_input);
 
@@ -106,7 +103,7 @@ int	main(int argc, char **argv)
 		kalman.update(measurement);
 		position = std::vector<double>({kalman.getState().getVector()[0], kalman.getState().getVector()[1], kalman.getState().getVector()[2]});
 		if (!sendPos(client_sock, servaddr, position, 1))
-			return (close(client_sock), 1);
+			return (close(client_sock), 1);	
 		update_graph(ctx, position);
 		render(ctx);
 	}
