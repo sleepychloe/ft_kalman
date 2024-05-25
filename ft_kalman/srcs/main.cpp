@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/24 00:55:04 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/26 00:46:14 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,15 @@ int	main(int argc, char **argv)
 	initFilter(p, velocity, kalman);
 
 	std::vector<double>	position({kalman.getState().getVector()[0], kalman.getState().getVector()[1], kalman.getState().getVector()[2]});
+	std::vector<std::vector<double>>	covariance = kalman.getCovariance().getMatrix();
 	if (!sendPos(client_sock, servaddr, position, 1))
 		return (close(client_sock), 1);
 
 	t_opengl	ctx;
 	if (!init_opengl(ctx))
 		return (close(client_sock), 1);
-	update_graph(ctx, position);
+	update_position_graph(ctx, position);
+	update_covariance_graph(ctx, covariance);
 	render(ctx);
 
 	Vector<double>	control_input;
@@ -86,7 +88,7 @@ int	main(int argc, char **argv)
 			position = std::vector<double>({kalman.getState().getVector()[0], kalman.getState().getVector()[1], kalman.getState().getVector()[2]});
 			if (!sendPos(client_sock, servaddr, position, 1))
 				return (close(client_sock), 1);
-			update_graph(ctx, position);
+std::cout << kalman.getCovariance() << std::endl;
 		}
 
 		/* update */
@@ -102,9 +104,11 @@ int	main(int argc, char **argv)
 		measurement = Vector<double>({p.getPos()[0], p.getPos()[1], p.getPos()[2]});
 		kalman.update(measurement);
 		position = std::vector<double>({kalman.getState().getVector()[0], kalman.getState().getVector()[1], kalman.getState().getVector()[2]});
+		covariance = kalman.getCovariance().getMatrix();
 		if (!sendPos(client_sock, servaddr, position, 1))
 			return (close(client_sock), 1);	
-		update_graph(ctx, position);
+		update_position_graph(ctx, position);
+		update_covariance_graph(ctx, covariance);
 		render(ctx);
 	}
 	close(client_sock);

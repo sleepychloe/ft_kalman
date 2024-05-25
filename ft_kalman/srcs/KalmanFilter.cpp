@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 01:15:54 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/07 01:32:43 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/25 22:33:53 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,12 @@ template <typename K>
 KalmanFilter<K>::KalmanFilter(const KalmanFilter &kalmanfilter)
 {
 	*this = kalmanfilter;
+}
+
+template <typename K>
+Matrix<K>	KalmanFilter<K>::getCovariance(void) const
+{
+	return (this->_covariance);
 }
 
 template <typename K>

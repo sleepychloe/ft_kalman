@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 01:15:47 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/04 16:33:51 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/25 22:33:43 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ public:
 	~KalmanFilter();
 
 	Vector<K>		getState(void) const;
+	Matrix<K>		getCovariance(void) const;
 
 	void			predict(void);
 	void			predict(Vector<K> control_input);
