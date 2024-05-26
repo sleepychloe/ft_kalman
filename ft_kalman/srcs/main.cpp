@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/26 00:46:14 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/26 22:04:19 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ int	main(int argc, char **argv)
 			position = std::vector<double>({kalman.getState().getVector()[0], kalman.getState().getVector()[1], kalman.getState().getVector()[2]});
 			if (!sendPos(client_sock, servaddr, position, 1))
 				return (close(client_sock), 1);
-std::cout << kalman.getCovariance() << std::endl;
 		}
 
 		/* update */

@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 16:06:59 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/26 00:51:59 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/26 22:47:06 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,20 @@ void	scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 	}
 	else
 	{
-		if (yoffset > 0)
-			ctx->data_covariance.zoom *= exp(0.1);
-		else if (yoffset < 0)
-			ctx->data_covariance.zoom *= exp(-0.1);
+		if (cursorY < windowHeight / 2)
+		{
+			if (yoffset > 0)
+				ctx->data_covariance_p.zoom *= exp(-0.1);
+			else if (yoffset < 0)
+				ctx->data_covariance_p.zoom *= exp(0.1);
+		}
+		else
+		{
+			if (yoffset > 0)
+				ctx->data_covariance_v.zoom *= exp(-0.1);
+			else if (yoffset < 0)
+				ctx->data_covariance_v.zoom *= exp(0.1);
+		}
 	}
 	(void)xoffset;
 }
@@ -74,18 +84,36 @@ void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 		}
 		else
 		{
-			if (key == GLFW_KEY_A)
-				ctx->data_covariance.camera_lookat_x -= 0.0001;
-			else if (key == GLFW_KEY_D)
-				ctx->data_covariance.camera_lookat_x += 0.0001;
-			else if (key == GLFW_KEY_S)
-				ctx->data_covariance.camera_lookat_y -= 0.0001;
-			else if (key == GLFW_KEY_W)
-				ctx->data_covariance.camera_lookat_y += 0.0001;
-			else if (key == GLFW_KEY_DOWN)
-				ctx->data_covariance.camera_lookat_z -= 0.0001;
-			else if (key == GLFW_KEY_UP)
-				ctx->data_covariance.camera_lookat_z += 0.0001;
+			if (cursorY < windowHeight / 2)
+			{
+				if (key == GLFW_KEY_A)
+					ctx->data_covariance_p.camera_lookat_x -= 200;
+				else if (key == GLFW_KEY_D)
+					ctx->data_covariance_p.camera_lookat_x += 200;
+				else if (key == GLFW_KEY_S)
+					ctx->data_covariance_p.camera_lookat_y -= 200;
+				else if (key == GLFW_KEY_W)
+					ctx->data_covariance_p.camera_lookat_y += 200;
+				else if (key == GLFW_KEY_DOWN)
+					ctx->data_covariance_p.camera_lookat_z -= 200;
+				else if (key == GLFW_KEY_UP)
+					ctx->data_covariance_p.camera_lookat_z += 200;
+			}
+			else
+			{
+				if (key == GLFW_KEY_A)
+					ctx->data_covariance_v.camera_lookat_x -= 200;
+				else if (key == GLFW_KEY_D)
+					ctx->data_covariance_v.camera_lookat_x += 200;
+				else if (key == GLFW_KEY_S)
+					ctx->data_covariance_v.camera_lookat_y -= 200;
+				else if (key == GLFW_KEY_W)
+					ctx->data_covariance_v.camera_lookat_y += 200;
+				else if (key == GLFW_KEY_DOWN)
+					ctx->data_covariance_v.camera_lookat_z -= 200;
+				else if (key == GLFW_KEY_UP)
+					ctx->data_covariance_v.camera_lookat_z += 200;
+			}
 		}
 	}
 	(void)scancode;
@@ -99,10 +127,15 @@ void	init_data(t_opengl &ctx)
 	ctx.data_position.camera_lookat_y = -1000;
 	ctx.data_position.camera_lookat_z = -2000;
 
-	ctx.data_covariance.zoom = 1.0f;
-	ctx.data_position.camera_lookat_x = 14500;
-	ctx.data_position.camera_lookat_y = -1000;
-	ctx.data_position.camera_lookat_z = -2000;
+	ctx.data_covariance_p.zoom = 1.0f;
+	ctx.data_covariance_p.camera_lookat_x = 14500;
+	ctx.data_covariance_p.camera_lookat_y = -1000;
+	ctx.data_covariance_p.camera_lookat_z = -2000;
+
+	ctx.data_covariance_v.zoom = 1.0f;
+	ctx.data_covariance_v.camera_lookat_x = 14500;
+	ctx.data_covariance_v.camera_lookat_y = -1000;
+	ctx.data_covariance_v.camera_lookat_z = -2000;
 }
 
 bool	init_opengl(t_opengl &ctx)
@@ -140,18 +173,26 @@ bool	init_opengl(t_opengl &ctx)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(t_point3) * ctx.position.size(), nullptr, GL_DYNAMIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_point3), (void *)0);
-	
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	glGenVertexArrays(1, &ctx.VAO_covariance);
-	glBindVertexArray(ctx.VAO_covariance);
-	glGenBuffers(1, &ctx.VBO_covariance);
-	glBindBuffer(GL_ARRAY_BUFFER, ctx.VBO_covariance);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(t_point3) * ctx.covariance.size(), nullptr, GL_DYNAMIC_DRAW);
+	glGenVertexArrays(1, &ctx.VAO_covariance_p);
+	glBindVertexArray(ctx.VAO_covariance_p);
+	glGenBuffers(1, &ctx.VBO_covariance_p);
+	glBindBuffer(GL_ARRAY_BUFFER, ctx.VBO_covariance_p);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(t_point3) * ctx.covariance_p.size(), nullptr, GL_DYNAMIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_point3), (void *)0);
-	
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+	glGenVertexArrays(1, &ctx.VAO_covariance_v);
+	glBindVertexArray(ctx.VAO_covariance_v);
+	glGenBuffers(1, &ctx.VBO_covariance_v);
+	glBindBuffer(GL_ARRAY_BUFFER, ctx.VBO_covariance_v);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(t_point3) * ctx.covariance_v.size(), nullptr, GL_DYNAMIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_point3), (void *)0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
@@ -159,45 +200,51 @@ bool	init_opengl(t_opengl &ctx)
 	return (true);
 }
 
-void	setup_position_view(t_opengl &ctx, int view_type)
+void	setup_view(t_opengl &ctx, int flag, int view_type)
 {
+	float	zoom;
+	float	camera_lookat_x;
+	float	camera_lookat_y;
+	float	camera_lookat_z;
+
+	if (flag == POS)
+	{
+		zoom = ctx.data_position.zoom;
+		camera_lookat_x = ctx.data_position.camera_lookat_x;
+		camera_lookat_y = ctx.data_position.camera_lookat_y;
+		camera_lookat_z = ctx.data_position.camera_lookat_z;
+	}
+	else if (flag == COV_P)
+	{
+		zoom = ctx.data_covariance_p.zoom;
+		camera_lookat_x = ctx.data_covariance_p.camera_lookat_x;
+		camera_lookat_y = ctx.data_covariance_p.camera_lookat_y;
+		camera_lookat_z = ctx.data_covariance_p.camera_lookat_z;
+	}
+	else if (flag == COV_V)
+	{
+		zoom = ctx.data_covariance_v.zoom;
+		camera_lookat_x = ctx.data_covariance_v.camera_lookat_x;
+		camera_lookat_y = ctx.data_covariance_v.camera_lookat_y;
+		camera_lookat_z = ctx.data_covariance_v.camera_lookat_z;
+	}
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-
-	gluPerspective(30 * ctx.data_position.zoom, 1 / 1, 1, 10000000000);
+	gluPerspective(30 * zoom, 1 / 1, 1, 10000000000);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
 	if (view_type == 0) // 3d view
-		gluLookAt(45000 / ctx.data_position.zoom, -45000 / ctx.data_position.zoom, 45000 / ctx.data_position.zoom, // camera position
-			ctx.data_position.camera_lookat_x / ctx.data_position.zoom, ctx.data_position.camera_lookat_y / ctx.data_position.zoom, ctx.data_position.camera_lookat_z / ctx.data_position.zoom, // looks at
+		gluLookAt(45000 / zoom, -45000 / zoom, 45000 / zoom, // camera position
+			camera_lookat_x / zoom, camera_lookat_y / zoom, camera_lookat_z / zoom, // looks at
 			0, 0, 1); // Carmera vector
 	if (view_type == 1)
-		gluLookAt(0, 0, 90000 / ctx.data_position.zoom, // camera position
-			14000, 0, 0, // looks at
-			0, 1, 0); // Carmera vector
-	if (view_type == 2)
-		gluLookAt(0, -90000 / ctx.data_position.zoom, 0,
+		gluLookAt(0, 0, 90000 / zoom,
 			14000, 0, 0,
-			0, 0, 1);
-}
-
-void	setup_covariance_view(t_opengl &ctx, int view_type)
-{
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(30 * ctx.data_covariance.zoom, 1 / 1, 1, 10000000000);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	if (view_type == 0) // 3d view
-		gluLookAt(45000 / ctx.data_position.zoom, -45000 / ctx.data_position.zoom, 45000 / ctx.data_position.zoom, // camera position
-			ctx.data_position.camera_lookat_x / ctx.data_position.zoom, ctx.data_position.camera_lookat_y / ctx.data_position.zoom, ctx.data_position.camera_lookat_z / ctx.data_position.zoom, // looks at
-			0, 0, 1); // Carmera vector
-	if (view_type == 1)
-		gluLookAt(0, 0, 90000 / ctx.data_position.zoom, // camera position
-			14000, 0, 0, // looks at
-			0, 1, 0); // Carmera vector
+			0, 1, 0);
 	if (view_type == 2)
-		gluLookAt(0, -90000 / ctx.data_position.zoom, 0,
+		gluLookAt(0, -90000 / zoom, 0,
 			14000, 0, 0,
 			0, 0, 1);
 	(void)ctx;
@@ -215,10 +262,15 @@ void	update_position_graph(t_opengl &ctx, const std::vector<double> &pos)
 void	update_covariance_graph(t_opengl &ctx, const std::vector<std::vector<double>> &cov)
 {
 	t_point3	p = {static_cast<GLfloat>(cov[0][0] * 1000000), static_cast<GLfloat>(cov[1][1] * 1000000), static_cast<GLfloat>(cov[2][2] * 1000000)};
+	t_point3	v = {static_cast<GLfloat>(cov[3][3] * 100000000), static_cast<GLfloat>(cov[4][4] * 100000000), static_cast<GLfloat>(cov[5][5] * 100000000)};
 
-	ctx.covariance.push_back(p);
-	glBindBuffer(GL_ARRAY_BUFFER, ctx.VBO_covariance);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(t_point3) * ctx.covariance.size(), ctx.covariance.data(), GL_DYNAMIC_DRAW);
+	ctx.covariance_p.push_back(p);
+	glBindBuffer(GL_ARRAY_BUFFER, ctx.VBO_covariance_p);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(t_point3) * ctx.covariance_p.size(), ctx.covariance_p.data(), GL_DYNAMIC_DRAW);
+
+	ctx.covariance_v.push_back(v);
+	glBindBuffer(GL_ARRAY_BUFFER, ctx.VBO_covariance_v);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(t_point3) * ctx.covariance_v.size(), ctx.covariance_v.data(), GL_DYNAMIC_DRAW);
 }
 
 void	draw_axis(double length)
@@ -248,7 +300,7 @@ void	render(t_opengl &ctx)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glViewport(0, 200, 400, 400);
-	setup_position_view(ctx, XYZ);
+	setup_view(ctx, POS, XYZ);
 	draw_axis(10000000000);
 	glBindVertexArray(ctx.VAO_position);
 	glPointSize(3);
@@ -257,7 +309,7 @@ void	render(t_opengl &ctx)
 	glBindVertexArray(0);
 
 	glViewport(0, 0, 200, 200);
-	setup_position_view(ctx, XY);
+	setup_view(ctx, POS, XY);
 	draw_axis(10000000000);
 	glBindVertexArray(ctx.VAO_position);
 	glPointSize(3);
@@ -266,7 +318,7 @@ void	render(t_opengl &ctx)
 	glBindVertexArray(0);
 
 	glViewport(200, 0, 200, 200);
-	setup_position_view(ctx, XZ);
+	setup_view(ctx, POS, XZ);
 	draw_axis(10000000000);
 	glBindVertexArray(ctx.VAO_position);
 	glPointSize(3);
@@ -274,31 +326,58 @@ void	render(t_opengl &ctx)
 	glDrawArrays(GL_POINTS, 0, ctx.position.size());
 	glBindVertexArray(0);
 
-	glViewport(400, 200, 400, 400);
-	setup_covariance_view(ctx, XYZ);
+	glViewport(400, 300, 300, 300);
+	setup_view(ctx, COV_P, XYZ);
 	draw_axis(100000);
-	glBindVertexArray(ctx.VAO_covariance);
+	glBindVertexArray(ctx.VAO_covariance_p);
 	glPointSize(3);
 	glColor3f(0, 0, 0);
-	glDrawArrays(GL_POINTS, 0, ctx.covariance.size());
+	glDrawArrays(GL_POINTS, 0, ctx.covariance_p.size());
 	glBindVertexArray(0);
 
-	glViewport(400, 0, 200, 200);
-	setup_covariance_view(ctx, XY);
+	glViewport(700, 450, 150, 150);
+	setup_view(ctx, COV_P, XY);
 	draw_axis(100000);
-	glBindVertexArray(ctx.VAO_covariance);
+	glBindVertexArray(ctx.VAO_covariance_p);
 	glPointSize(3);
 	glColor3f(0, 0, 0);
-	glDrawArrays(GL_POINTS, 0, ctx.covariance.size());
+	glDrawArrays(GL_POINTS, 0, ctx.covariance_p.size());
 	glBindVertexArray(0);
 
-	glViewport(600, 0, 200, 200);
-	setup_covariance_view(ctx, XZ);
+	glViewport(700, 300, 150, 150);
+	setup_view(ctx, COV_P, XZ);
 	draw_axis(100000);
-	glBindVertexArray(ctx.VAO_covariance);
+	glBindVertexArray(ctx.VAO_covariance_p);
 	glPointSize(3);
 	glColor3f(0, 0, 0);
-	glDrawArrays(GL_POINTS, 0, ctx.covariance.size());
+	glDrawArrays(GL_POINTS, 0, ctx.covariance_p.size());
+	glBindVertexArray(0);
+
+	glViewport(400, 0, 300, 300);
+	setup_view(ctx, COV_V, XYZ);
+	draw_axis(100000);
+	glBindVertexArray(ctx.VAO_covariance_v);
+	glPointSize(3);
+	glColor3f(0.5, 0.5, 0.5);
+	glDrawArrays(GL_POINTS, 0, ctx.covariance_v.size());
+	glBindVertexArray(0);
+
+	glViewport(700, 150, 150, 150);
+	setup_view(ctx, COV_V, XY);
+	draw_axis(100000);
+	glBindVertexArray(ctx.VAO_covariance_v);
+	glPointSize(3);
+	glColor3f(0.5, 0.5, 0.5);
+	glDrawArrays(GL_POINTS, 0, ctx.covariance_v.size());
+	glBindVertexArray(0);
+
+	glViewport(700, 0, 150, 150);
+	setup_view(ctx, COV_V, XZ);
+	draw_axis(100000);
+	glBindVertexArray(ctx.VAO_covariance_v);
+	glPointSize(3);
+	glColor3f(0.5, 0.5, 0.5);
+	glDrawArrays(GL_POINTS, 0, ctx.covariance_v.size());
 	glBindVertexArray(0);
 
 	glfwSwapBuffers(ctx.window);
