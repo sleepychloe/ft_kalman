@@ -9,7 +9,7 @@ currently working on the project
 
 if xorg is not installed, install it via
 ```
-  sudo apt-get install -y xorg
+  sudo apt-get install -y xorg-dev
 ```
 
 if docker and docker-compose is not isntalled, install it via
