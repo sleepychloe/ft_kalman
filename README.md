@@ -31,6 +31,7 @@ to run server:
 to run program:
 ```
   docker exec -it kalman /bin/bash
+  make
   ./ft_kalman
 ```
 
