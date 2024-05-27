@@ -78,9 +78,9 @@ use --graph to see the graph.
 <br>
 
 ## Graphic
-red line:   x axis
-green line: y axis
-blue line:  z axis
+red line:   x axis<br>
+green line: y axis<br>
+blue line:  z axis<br>
 ```
 ╔═════════════╦═══════════════════╗
 ║ SCROLL_DOWN ║ zoom out          ║
