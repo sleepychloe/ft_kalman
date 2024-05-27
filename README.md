@@ -1,6 +1,6 @@
 currently working on the project
 
-## demo
+## Demo
 ![Animated GIF](https://github.com/sleepychloe/ft_kalman/blob/main/img/graph.gif)
 
 ## Installation & Usage
@@ -81,6 +81,12 @@ use --graph to see the graph.
 <br>
 
 ## Graphics
+
+![image](https://github.com/sleepychloe/ft_kalman/assets/78352910/915540a0-8688-4c47-bf19-71116264ff77)
+Every mouse and keyboard control depends on the cursor's position relative to the window's width and height.<br>
+⋅ Left half of the window: position section<br>
+⋅ Right half of the window, top half: covariance for position section<br>
+⋅ Right half of the window, bottom half: covariance for velocity section<br>
 ```
 ╔═════════════╦═══════════════════╗
 ║ SCROLL_DOWN ║ zoom out          ║
@@ -93,10 +99,9 @@ use --graph to see the graph.
 ║ KEY_UP      ║ camera vector +z  ║
 ╚═════════════╩═══════════════════╝
 ```
-Every mouse and keyboard control depends on the cursor's position relative to the window's width and height.<br>
-⋅ Left half of the window: position section<br>
-⋅ Right half of the window, top half: covariance for position section<br>
-⋅ Right half of the window, bottom half: covariance for velocity section<br>
+
+![Animated GIF](https://github.com/sleepychloe/ft_kalman/blob/main/img/control.gif)
+######↳ control position graph: cursor is on the position section(left half of the window)
 <br>
 
 ## Kalman filter
