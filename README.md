@@ -77,6 +77,23 @@ use --graph to see the graph.
 </details>
 <br>
 
+## Graphic
+red line:   x axis
+green line: y axis
+blue line:  z axis
+```
+╔═════════════╦═══════════════════╗
+║ SCROLL_DOWN ║ zoom out          ║
+║ SCROLL_UP   ║ zoom in           ║
+║ KEY_A       ║ camera vector -x  ║
+║ KEY_D       ║ camera vector +x  ║
+║ KEY_S       ║ camera vector -y  ║
+║ KEY_W       ║ camera vector +y  ║
+║ KEY_DOWN    ║ camera vector -z  ║
+║ KEY_UP      ║ camera vector +z  ║
+╚═════════════╩═══════════════════╝
+```
+
 ## Kalman filter
 
 ### Class Template KalmanFilter<K>
