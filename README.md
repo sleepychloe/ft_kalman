@@ -102,7 +102,7 @@ Every mouse and keyboard control depends on the cursor's position relative to th
 ```
 
 ![Animated GIF](https://github.com/sleepychloe/ft_kalman/blob/main/img/control.gif)
-######↳ control position graph: cursor is on the position section(left half of the window)
+###### ↳ control position graph: cursor is on the position section(left half of the window)
 <br>
 
 ## Kalman filter
