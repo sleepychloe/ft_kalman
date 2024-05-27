@@ -14,7 +14,7 @@ if xorg is not installed, install it via
 
 if docker and docker-compose is not isntalled, install it via
 ```
-sudo apt install -y docker.io && sudo apt-get install -y docker-compose
+  sudo apt install -y docker.io && sudo apt-get install -y docker-compose
 ```
 
 ## Usage
