@@ -55,7 +55,7 @@ install softwares that use OpenGL and related libraries for rendering graphics v
 			  libglfw3-dev \
 			  libglm-dev
 ```
-clone the repository and compile
+Clone the repository and compile
 ```
   git clone https://github.com/sleepychloe/ft_kalman.git
   cd ft_kalman/ft_kalman
@@ -73,7 +73,7 @@ use --graph to see the graph.
 ```
   ./ft_kalman --graph
 ```
-
+<br>
 
 ## Kalman filter
 
