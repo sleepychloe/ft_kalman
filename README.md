@@ -34,6 +34,10 @@ to run program:
   make
   ./ft_kalman
 ```
+use --graph to see the graph.
+```
+  ./ft_kalman --graph
+```
 
 when you are done testing, do not forget to disable root access via
 ```
