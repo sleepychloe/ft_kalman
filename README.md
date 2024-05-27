@@ -44,6 +44,7 @@ When you are done testing, do not forget to disable root access via
 
 <details>
 <summary><b><ins>launch without docker: when you are a root user</ins></b></summary>
+
 If you are a root user and do not want to use docker,<br>
 install softwares that use OpenGL and related libraries for rendering graphics via
 ```
