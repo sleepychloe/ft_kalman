@@ -82,8 +82,6 @@ use --graph to see the graph.
 
 ## Graphics
 
-<img src="https://github.com/sleepychloe/ft_kalman/assets/78352910/915540a0-8688-4c47-bf19-71116264ff77" width="600" height="400">
-<br>
 Every mouse and keyboard control depends on the cursor's position relative to the window's width and height.<br>
 ⋅ Left half of the window: position section<br>
 ⋅ Right half of the window, top half: covariance for position section<br>
@@ -100,10 +98,12 @@ Every mouse and keyboard control depends on the cursor's position relative to th
 ║ KEY_UP      ║ camera vector +z  ║
 ╚═════════════╩═══════════════════╝
 ```
+<br>
+<img src="https://github.com/sleepychloe/ft_kalman/assets/78352910/915540a0-8688-4c47-bf19-71116264ff77" width="600" height="400">
+###### ↳ the sections on the window<br>
 
 ![Animated GIF](https://github.com/sleepychloe/ft_kalman/blob/main/img/control.gif)
-###### ↳ control position graph: cursor is on the position section(left half of the window)
-<br>
+###### ↳ control position graph: cursor is on the position section(left half of the window)<br>
 
 ## Kalman filter
 
