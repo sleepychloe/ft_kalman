@@ -88,9 +88,6 @@ use --graph to see the graph.
 <br>
 
 Every mouse and keyboard control depends on the cursor's position relative to the window's width and height.<br>
-⋅ Left half of the window: position section<br>
-⋅ Right half of the window, top half: covariance for position section<br>
-⋅ Right half of the window, bottom half: covariance for velocity section<br>
 ```
 ╔═════════════╦═══════════════════╗
 ║ SCROLL_DOWN ║ zoom out          ║
