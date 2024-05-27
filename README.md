@@ -77,10 +77,7 @@ use --graph to see the graph.
 </details>
 <br>
 
-## Graphic
-red line:   x axis<br>
-green line: y axis<br>
-blue line:  z axis<br>
+## Graphics
 ```
 ╔═════════════╦═══════════════════╗
 ║ SCROLL_DOWN ║ zoom out          ║
@@ -93,6 +90,11 @@ blue line:  z axis<br>
 ║ KEY_UP      ║ camera vector +z  ║
 ╚═════════════╩═══════════════════╝
 ```
+Every mouse and keyboard control depends on the cursor's position relative to the window's width and height.<br>
+⋅ Left half of the window: position section<br>
+⋅ Right half of the window, top half: covariance for position section<br>
+⋅ Right half of the window, bottom half: covariance for velocity section<br>
+<br>
 
 ## Kalman filter
 
