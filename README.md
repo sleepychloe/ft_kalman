@@ -1,5 +1,8 @@
 currently working on the project
 
+## demo
+![Animated GIF](https://github.com/sleepychloe/ft_kalman/blob/main/img/graph.gif)
+
 ## Installation & Usage
 
 ```
