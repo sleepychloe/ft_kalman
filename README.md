@@ -1,34 +1,33 @@
 currently working on the project
 
-## Installation
+## Installation & Usage
+### with docker
+
 ```
   git clone https://github.com/sleepychloe/ft_kalman.git
   cd ft_kalman
   make
 ```
-
-if xorg is not installed, install it via
+If xorg is not installed, install it via
 ```
   sudo apt-get install -y xorg-dev
 ```
-
-if docker and docker-compose is not isntalled, install it via
+If docker and docker-compose is not isntalled, install it via
 ```
   sudo apt install -y docker.io && sudo apt-get install -y docker-compose
 ```
+<br>
 
-## Usage
-before running program, allow the root user on your local system to access the X server via
+Before running program, allow the root user on your local system to access the X server via
 ```
   xhost +local:root
 ```
-
-to run server:
+To run server:
 ```
   docker exec -it kalman /bin/bash
   ./imu-sensor-stream-linux -s 42 -d 42 -p 4242
 ```
-to run program:
+To run program:
 ```
   docker exec -it kalman /bin/bash
   make
@@ -38,11 +37,43 @@ use --graph to see the graph.
 ```
   ./ft_kalman --graph
 ```
-
-when you are done testing, do not forget to disable root access via
+When you are done testing, do not forget to disable root access via
 ```
   xhost -local:root
 ```
+<br>
+
+### without docker
+If you are a root user and do not want to use docker,<br>
+install softwares that use OpenGL and related libraries for rendering graphics via
+```
+  sudo apt-get install -y build-essential \
+			  xorg-dev \
+			  libglu1-mesa-dev \
+			  mesa-common-dev \
+			  libglew-dev \
+			  libglfw3-dev \
+			  libglm-dev
+```
+clone the repository and compile
+```
+  git clone https://github.com/sleepychloe/ft_kalman.git
+  cd ft_kalman/ft_kalman
+  make
+```
+To run server:
+```
+  ./imu-sensor-stream-linux -s 42 -d 42 -p 4242
+```
+To run program:
+```
+  ./ft_kalman
+```
+use --graph to see the graph.
+```
+  ./ft_kalman --graph
+```
+
 
 ## Kalman filter
 
