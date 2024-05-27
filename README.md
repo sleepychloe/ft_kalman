@@ -3,18 +3,40 @@ currently working on the project
 ## Installation
 ```
   git clone https://github.com/sleepychloe/ft_kalman.git
-  cd ft_kalman/ft_kalman
+  cd ft_kalman
   make
 ```
 
+if xorg is not installed, install it via
+```
+  sudo apt-get install -y xorg
+```
+
+if docker and docker-compose is not isntalled, install it via
+```
+sudo apt install -y docker.io && sudo apt-get install -y docker-compose
+```
+
 ## Usage
+before running program, allow the root user on your local system to access the X server via
+```
+  xhost +local:root
+```
+
 to run server:
 ```
+  docker exec -it kalman /bin/bash
   ./imu-sensor-stream-linux -s 42 -d 42 -p 4242
 ```
 to run program:
 ```
+  docker exec -it kalman /bin/bash
   ./ft_kalman
+```
+
+when you are done testing, do not forget to disable root access via
+```
+  xhost -local:root
 ```
 
 ## Kalman filter
