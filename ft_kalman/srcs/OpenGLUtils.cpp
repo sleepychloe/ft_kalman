@@ -6,12 +6,101 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 16:06:59 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/26 22:47:06 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/27 15:40:06 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/OpenGLUtils.hpp"
 #include "../incs/Color.hpp"
+
+bool	init_opengl(t_opengl &ctx)
+{
+	std::function<void(t_data &)>	init_data = [&](t_data &data)
+	{
+		data.zoom = 1.0f;
+		data.camera_lookat_x = 14500;
+		data.camera_lookat_y = -1000;
+		data.camera_lookat_z = -2000;
+	};
+
+	init_data(ctx.data_position);
+	init_data(ctx.data_covariance_p);
+	init_data(ctx.data_covariance_v);
+	
+	if (!glfwInit())
+	{
+		glfwTerminate();
+		glfwDestroyWindow(ctx.window);
+		std::cerr << RED << "error: failed to initialize GLFW" << BLACK << std::endl;
+		return (false);
+	}
+
+	ctx.window = glfwCreateWindow(WINODW_WIDTH, WINDOW_HEIGHT, "Kalman Filter", NULL, NULL);
+	if (!ctx.window)
+	{
+		glfwTerminate();
+		glfwDestroyWindow(ctx.window);
+		std::cerr << RED << "error: failed to create GLFW window" << BLACK << std::endl;
+		return (false);
+	}
+
+	glfwMakeContextCurrent(ctx.window);
+	glfwSetWindowUserPointer(ctx.window, &ctx);
+	glfwSetScrollCallback(ctx.window, scroll_callback);
+	glfwSetKeyCallback(ctx.window, key_callback);
+
+	if (glewInit() != GLEW_OK)
+	{
+		glfwTerminate();
+		glfwDestroyWindow(ctx.window);
+		std::cerr << RED << "error: failed to initialize GLFW" << BLACK << std::endl;
+		return (false);
+	}
+
+	std::function<void(GLuint &, GLuint &, GLsizei)>	setup = [&](GLuint &VAO, GLuint &VBO, GLsizei array_size)
+	{
+		glGenVertexArrays(1, &VAO);
+		glBindVertexArray(VAO);
+		glGenBuffers(1, &VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(t_point3) * array_size, nullptr, GL_DYNAMIC_DRAW);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_point3), (void *)0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	};
+
+	setup(ctx.VAO_position, ctx.VBO_position, ctx.position.size());
+	setup(ctx.VAO_covariance_p, ctx.VBO_covariance_p, ctx.covariance_p.size());
+	setup(ctx.VAO_covariance_v, ctx.VBO_covariance_v, ctx.covariance_v.size());
+
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // white background
+	return (true);
+}
+
+void	update_position_graph(t_opengl &ctx, const std::vector<double> &pos)
+{
+	t_point3	p = {static_cast<GLfloat>(pos[0]), static_cast<GLfloat>(pos[1]), static_cast<GLfloat>(pos[2])};
+
+	ctx.position.push_back(p);
+	glBindBuffer(GL_ARRAY_BUFFER, ctx.VBO_position);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(t_point3) * ctx.position.size(), ctx.position.data(), GL_DYNAMIC_DRAW);
+}
+
+void	update_covariance_graph(t_opengl &ctx, const std::vector<std::vector<double>> &cov)
+{
+	t_point3	p = {static_cast<GLfloat>(cov[0][0] * 1000000), static_cast<GLfloat>(cov[1][1] * 1000000), static_cast<GLfloat>(cov[2][2] * 1000000)};
+	t_point3	v = {static_cast<GLfloat>(cov[3][3] * 100000000), static_cast<GLfloat>(cov[4][4] * 100000000), static_cast<GLfloat>(cov[5][5] * 100000000)};
+
+	ctx.covariance_p.push_back(p);
+	glBindBuffer(GL_ARRAY_BUFFER, ctx.VBO_covariance_p);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(t_point3) * ctx.covariance_p.size(), ctx.covariance_p.data(), GL_DYNAMIC_DRAW);
+
+	ctx.covariance_v.push_back(v);
+	glBindBuffer(GL_ARRAY_BUFFER, ctx.VBO_covariance_v);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(t_point3) * ctx.covariance_v.size(), ctx.covariance_v.data(), GL_DYNAMIC_DRAW);
+}
 
 void	scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 {
@@ -31,7 +120,6 @@ void	scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 			ctx->data_position.zoom *= exp(-0.1);
 		else if (yoffset < 0)
 			ctx->data_position.zoom *= exp(0.1);
-		
 	}
 	else
 	{
@@ -120,86 +208,6 @@ void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 	(void)mods;
 }
 
-void	init_data(t_opengl &ctx)
-{
-	ctx.data_position.zoom = 1.0f;
-	ctx.data_position.camera_lookat_x = 14500;
-	ctx.data_position.camera_lookat_y = -1000;
-	ctx.data_position.camera_lookat_z = -2000;
-
-	ctx.data_covariance_p.zoom = 1.0f;
-	ctx.data_covariance_p.camera_lookat_x = 14500;
-	ctx.data_covariance_p.camera_lookat_y = -1000;
-	ctx.data_covariance_p.camera_lookat_z = -2000;
-
-	ctx.data_covariance_v.zoom = 1.0f;
-	ctx.data_covariance_v.camera_lookat_x = 14500;
-	ctx.data_covariance_v.camera_lookat_y = -1000;
-	ctx.data_covariance_v.camera_lookat_z = -2000;
-}
-
-bool	init_opengl(t_opengl &ctx)
-{
-	init_data(ctx);
-	if (!glfwInit())
-	{
-		std::cerr << RED << "error: failed to initialize GLFW" << BLACK << std::endl;
-		return (false);
-	}
-
-	ctx.window = glfwCreateWindow(WINODW_WIDTH, WINDOW_HEIGHT, "Kalman Filter", NULL, NULL);
-	if (!ctx.window)
-	{
-		glfwTerminate();
-		std::cerr << RED << "error: failed to create GLFW window" << BLACK << std::endl;
-		return (false);
-	}
-
-	glfwMakeContextCurrent(ctx.window);
-	glfwSetWindowUserPointer(ctx.window, &ctx);
-	glfwSetScrollCallback(ctx.window, scroll_callback);
-	glfwSetKeyCallback(ctx.window, key_callback);
-
-	if (glewInit() != GLEW_OK)
-	{
-		std::cerr << RED << "error: failed to initialize GLFW" << BLACK << std::endl;
-		return (false);
-	}
-
-	glGenVertexArrays(1, &ctx.VAO_position);
-	glBindVertexArray(ctx.VAO_position);
-	glGenBuffers(1, &ctx.VBO_position);
-	glBindBuffer(GL_ARRAY_BUFFER, ctx.VBO_position);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(t_point3) * ctx.position.size(), nullptr, GL_DYNAMIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_point3), (void *)0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	glGenVertexArrays(1, &ctx.VAO_covariance_p);
-	glBindVertexArray(ctx.VAO_covariance_p);
-	glGenBuffers(1, &ctx.VBO_covariance_p);
-	glBindBuffer(GL_ARRAY_BUFFER, ctx.VBO_covariance_p);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(t_point3) * ctx.covariance_p.size(), nullptr, GL_DYNAMIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_point3), (void *)0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	glGenVertexArrays(1, &ctx.VAO_covariance_v);
-	glBindVertexArray(ctx.VAO_covariance_v);
-	glGenBuffers(1, &ctx.VBO_covariance_v);
-	glBindBuffer(GL_ARRAY_BUFFER, ctx.VBO_covariance_v);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(t_point3) * ctx.covariance_v.size(), nullptr, GL_DYNAMIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_point3), (void *)0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // white background
-	return (true);
-}
-
 void	setup_view(t_opengl &ctx, int flag, int view_type)
 {
 	float	zoom;
@@ -221,7 +229,7 @@ void	setup_view(t_opengl &ctx, int flag, int view_type)
 		camera_lookat_y = ctx.data_covariance_p.camera_lookat_y;
 		camera_lookat_z = ctx.data_covariance_p.camera_lookat_z;
 	}
-	else if (flag == COV_V)
+	else
 	{
 		zoom = ctx.data_covariance_v.zoom;
 		camera_lookat_x = ctx.data_covariance_v.camera_lookat_x;
@@ -250,29 +258,6 @@ void	setup_view(t_opengl &ctx, int flag, int view_type)
 	(void)ctx;
 }
 
-void	update_position_graph(t_opengl &ctx, const std::vector<double> &pos)
-{
-	t_point3	p = {static_cast<GLfloat>(pos[0]), static_cast<GLfloat>(pos[1]), static_cast<GLfloat>(pos[2])};
-
-	ctx.position.push_back(p);
-	glBindBuffer(GL_ARRAY_BUFFER, ctx.VBO_position);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(t_point3) * ctx.position.size(), ctx.position.data(), GL_DYNAMIC_DRAW);
-}
-
-void	update_covariance_graph(t_opengl &ctx, const std::vector<std::vector<double>> &cov)
-{
-	t_point3	p = {static_cast<GLfloat>(cov[0][0] * 1000000), static_cast<GLfloat>(cov[1][1] * 1000000), static_cast<GLfloat>(cov[2][2] * 1000000)};
-	t_point3	v = {static_cast<GLfloat>(cov[3][3] * 100000000), static_cast<GLfloat>(cov[4][4] * 100000000), static_cast<GLfloat>(cov[5][5] * 100000000)};
-
-	ctx.covariance_p.push_back(p);
-	glBindBuffer(GL_ARRAY_BUFFER, ctx.VBO_covariance_p);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(t_point3) * ctx.covariance_p.size(), ctx.covariance_p.data(), GL_DYNAMIC_DRAW);
-
-	ctx.covariance_v.push_back(v);
-	glBindBuffer(GL_ARRAY_BUFFER, ctx.VBO_covariance_v);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(t_point3) * ctx.covariance_v.size(), ctx.covariance_v.data(), GL_DYNAMIC_DRAW);
-}
-
 void	draw_axis(double length)
 {
 	glBegin(GL_LINES);
@@ -292,93 +277,65 @@ void	draw_axis(double length)
 	glVertex3f(0, 0, length); // +z
 	glVertex3f(0, 0, 0);
 	glVertex3f(0, 0, -length); // -z
+
 	glEnd();
+}
+
+void	draw_graph(t_opengl &ctx, int flag)
+{
+	GLuint	VAO;
+	GLsizei	array_size;
+	std::vector<GLfloat> color;
+	std::vector<std::vector<int>>	viewport;
+
+	if (flag == POS)
+	{
+		VAO = ctx.VAO_position;
+		array_size = ctx.position.size();
+		color = {1, 0, 1};
+		viewport = {{0, 200, 400, 400},
+				{0, 0, 200, 200},
+				{200, 0, 200, 200}};
+	}
+	else if (flag == COV_P)
+	{
+		VAO = ctx.VAO_covariance_p;
+		array_size = ctx.covariance_p.size();
+		color = {0, 0, 0};
+		viewport = {{400, 300, 300, 300},
+				{700, 450, 150, 150},
+				{700, 300, 150, 150}};
+	}
+	else
+	{
+		VAO = ctx.VAO_covariance_v;
+		array_size = ctx.covariance_v.size();
+		color = {0.5, 0.5, 0.5};
+		viewport = {{400, 0, 300, 300},
+				{700, 150, 150, 150},
+				{700, 0, 150, 150}};
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		glViewport(viewport[i][0], viewport[i][1], viewport[i][2], viewport[i][3]);
+		setup_view(ctx, flag, i); // XYZ == 0, XY == 1, XZ == 2
+		draw_axis(10000000000);
+		glBindVertexArray(VAO);
+		glPointSize(3);
+		glColor3f(color[0], color[1], color[2]);
+		glDrawArrays(GL_POINTS, 0, array_size);
+		glBindVertexArray(0);
+	}
 }
 
 void	render(t_opengl &ctx)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glViewport(0, 200, 400, 400);
-	setup_view(ctx, POS, XYZ);
-	draw_axis(10000000000);
-	glBindVertexArray(ctx.VAO_position);
-	glPointSize(3);
-	glColor3f(1, 0, 1);
-	glDrawArrays(GL_POINTS, 0, ctx.position.size());
-	glBindVertexArray(0);
-
-	glViewport(0, 0, 200, 200);
-	setup_view(ctx, POS, XY);
-	draw_axis(10000000000);
-	glBindVertexArray(ctx.VAO_position);
-	glPointSize(3);
-	glColor3f(1, 0, 1);
-	glDrawArrays(GL_POINTS, 0, ctx.position.size());
-	glBindVertexArray(0);
-
-	glViewport(200, 0, 200, 200);
-	setup_view(ctx, POS, XZ);
-	draw_axis(10000000000);
-	glBindVertexArray(ctx.VAO_position);
-	glPointSize(3);
-	glColor3f(1, 0, 1);
-	glDrawArrays(GL_POINTS, 0, ctx.position.size());
-	glBindVertexArray(0);
-
-	glViewport(400, 300, 300, 300);
-	setup_view(ctx, COV_P, XYZ);
-	draw_axis(100000);
-	glBindVertexArray(ctx.VAO_covariance_p);
-	glPointSize(3);
-	glColor3f(0, 0, 0);
-	glDrawArrays(GL_POINTS, 0, ctx.covariance_p.size());
-	glBindVertexArray(0);
-
-	glViewport(700, 450, 150, 150);
-	setup_view(ctx, COV_P, XY);
-	draw_axis(100000);
-	glBindVertexArray(ctx.VAO_covariance_p);
-	glPointSize(3);
-	glColor3f(0, 0, 0);
-	glDrawArrays(GL_POINTS, 0, ctx.covariance_p.size());
-	glBindVertexArray(0);
-
-	glViewport(700, 300, 150, 150);
-	setup_view(ctx, COV_P, XZ);
-	draw_axis(100000);
-	glBindVertexArray(ctx.VAO_covariance_p);
-	glPointSize(3);
-	glColor3f(0, 0, 0);
-	glDrawArrays(GL_POINTS, 0, ctx.covariance_p.size());
-	glBindVertexArray(0);
-
-	glViewport(400, 0, 300, 300);
-	setup_view(ctx, COV_V, XYZ);
-	draw_axis(100000);
-	glBindVertexArray(ctx.VAO_covariance_v);
-	glPointSize(3);
-	glColor3f(0.5, 0.5, 0.5);
-	glDrawArrays(GL_POINTS, 0, ctx.covariance_v.size());
-	glBindVertexArray(0);
-
-	glViewport(700, 150, 150, 150);
-	setup_view(ctx, COV_V, XY);
-	draw_axis(100000);
-	glBindVertexArray(ctx.VAO_covariance_v);
-	glPointSize(3);
-	glColor3f(0.5, 0.5, 0.5);
-	glDrawArrays(GL_POINTS, 0, ctx.covariance_v.size());
-	glBindVertexArray(0);
-
-	glViewport(700, 0, 150, 150);
-	setup_view(ctx, COV_V, XZ);
-	draw_axis(100000);
-	glBindVertexArray(ctx.VAO_covariance_v);
-	glPointSize(3);
-	glColor3f(0.5, 0.5, 0.5);
-	glDrawArrays(GL_POINTS, 0, ctx.covariance_v.size());
-	glBindVertexArray(0);
+	draw_graph(ctx, POS);
+	draw_graph(ctx, COV_P);
+	draw_graph(ctx, COV_V);
 
 	glfwSwapBuffers(ctx.window);
 }

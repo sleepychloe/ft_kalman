@@ -6,7 +6,7 @@
 #    By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/23 23:34:22 by yhwang            #+#    #+#              #
-#    Updated: 2024/05/20 16:07:38 by yhwang           ###   ########.fr        #
+#    Updated: 2024/05/27 15:50:47 by yhwang           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CPP = c++
 SRC_DIR = ./srcs/
 INCS_DIR = ./incs/
 
-CPPFLAGS = -Wall -Wextra -Werror -std=c++17 -I$(INCS_DIR)
+CPPFLAGS = -Wall -Wextra -Werror -std=c++17 -g3 -I$(INCS_DIR)
 LDFLAGS = -lGLEW -lGL -lglfw -lGLU -ldl -lm
 
 RM = rm -f

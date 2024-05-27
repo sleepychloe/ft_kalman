@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 09:05:26 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/26 22:35:39 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/27 15:14:25 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <functional>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -64,14 +65,14 @@ typedef struct s_opengl
 	t_data			data_covariance_v;
 }	t_opengl;
 
-void			scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
-void			key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
-void			init_data(t_opengl &ctx);
 bool			init_opengl(t_opengl &ctx);
-void			setup_view(t_opengl &ctx, int flag, int view_type);
 void			update_position_graph(t_opengl &ctx, const std::vector<double> &pos);
 void			update_covariance_graph(t_opengl &ctx, const std::vector<std::vector<double>> &cov);
+void			scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
+void			key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
+void			setup_view(t_opengl &ctx, int flag, int view_type);
 void			draw_axis(double length);
+void			draw_graph(t_opengl &ctx, int flag);
 void			render(t_opengl &ctx);
 
 #endif

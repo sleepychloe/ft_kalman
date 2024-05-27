@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/26 22:04:19 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/27 16:44:31 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,16 @@ bool	g_running_flag;
 
 int	main(int argc, char **argv)
 {
-	if (argc != 1)
+	if (!(argc == 1 || argc == 2))
 	{
 		std::cerr << RED << "error: invalid argument" << BLACK << std::endl;
 		return (1);
 	}
-	(void)argv;
+
+	bool	flag = false;
+
+	if (argv[1] && strlen(argv[1]) == 7 && !strncmp(argv[1], "--graph", 7))
+		flag = true;
 
 	g_running_flag = true;
 
@@ -53,33 +57,53 @@ int	main(int argc, char **argv)
 	std::vector<double>	velocity({p.getSpeed(), 0, 0});
 	computeVelocity(p.getDir(), p.getAcc(), velocity);
 
+	std::function<void(t_opengl, int)>	exit_program = [&](t_opengl ctx, int exit_code)
+	{
+		close(client_sock);
+		if (flag)
+		{
+			glDeleteBuffers(1, &ctx.VBO_position);
+			glDeleteBuffers(1, &ctx.VBO_covariance_p);
+			glDeleteBuffers(1, &ctx.VBO_covariance_v);
+			glfwDestroyWindow(ctx.window);
+			glfwTerminate();
+		}
+		exit(exit_code);
+	};
+
 	KalmanFilter<double>	kalman;
 	initFilter(p, velocity, kalman);
+	t_opengl	ctx;
+	if (flag)
+	{
+		if (!init_opengl(ctx))
+			return (close(client_sock), 1);
+	}
 
 	std::vector<double>	position({kalman.getState().getVector()[0], kalman.getState().getVector()[1], kalman.getState().getVector()[2]});
 	std::vector<std::vector<double>>	covariance = kalman.getCovariance().getMatrix();
-	if (!sendPos(client_sock, servaddr, position, 1))
-		return (close(client_sock), 1);
 
-	t_opengl	ctx;
-	if (!init_opengl(ctx))
-		return (close(client_sock), 1);
-	update_position_graph(ctx, position);
-	update_covariance_graph(ctx, covariance);
-	render(ctx);
+	if (!sendPos(client_sock, servaddr, position, 1))
+		exit_program(ctx, 1);
+
+	if (flag)
+	{
+		update_position_graph(ctx, position);
+		update_covariance_graph(ctx, covariance);
+		render(ctx);
+	}
 
 	Vector<double>	control_input;
 	Vector<double>	measurement;
-	while (!glfwWindowShouldClose(ctx.window) && g_running_flag)
-	{
-		glfwPollEvents();
 
+	std::function<bool(void)>	predict = [&](void) -> bool
+	{
 		/* predict */
 		for (size_t i = 0; i < 299; i++)
 		{
 			if (!parseElement(client_sock, p, "ACCELERATION")
 				|| !parseElement(client_sock, p, "DIRECTION"))
-				return (close(client_sock), 1);
+				return (false);
 			computeVelocity(p.getDir(), p.getAcc(), velocity);
 
 			/* control input: n */
@@ -87,14 +111,18 @@ int	main(int argc, char **argv)
 			kalman.predict(control_input);
 			position = std::vector<double>({kalman.getState().getVector()[0], kalman.getState().getVector()[1], kalman.getState().getVector()[2]});
 			if (!sendPos(client_sock, servaddr, position, 1))
-				return (close(client_sock), 1);
+				return (false);
 		}
+		return (true);
+	};
 
+	std::function<bool(void)>	update = [&](void) -> bool
+	{
 		/* update */
 		if (!parseElement(client_sock, p, "POSITION")
 			|| !parseElement(client_sock, p, "ACCELERATION")
 			|| !parseElement(client_sock, p, "DIRECTION"))
-			return (close(client_sock), 1);
+			return (false);
 		computeVelocity(p.getDir(), p.getAcc(), velocity);
 		control_input = Vector<double>({p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
 		kalman.predict(control_input);
@@ -105,13 +133,34 @@ int	main(int argc, char **argv)
 		position = std::vector<double>({kalman.getState().getVector()[0], kalman.getState().getVector()[1], kalman.getState().getVector()[2]});
 		covariance = kalman.getCovariance().getMatrix();
 		if (!sendPos(client_sock, servaddr, position, 1))
-			return (close(client_sock), 1);	
-		update_position_graph(ctx, position);
-		update_covariance_graph(ctx, covariance);
-		render(ctx);
+			return (false);
+		return (true);	
+	};
+
+	if (!flag)
+	{
+		while (g_running_flag)
+		{
+			if (!predict() || !update())
+				exit_program(ctx, 1);
+		}
 	}
-	close(client_sock);
-	glfwDestroyWindow(ctx.window);
-	glfwTerminate();
+	else
+	{
+		while (!glfwWindowShouldClose(ctx.window) && g_running_flag)
+		{
+			glfwPollEvents();
+			if (!predict() || !update())
+				exit_program(ctx, 1);
+			update_position_graph(ctx, position);
+			update_covariance_graph(ctx, covariance);
+			render(ctx);
+		}
+	}
+	exit_program(ctx, 0);
 	return (0);
 }
+
+// valgrind --leak-check=full --gen-suppressions=all --log-file=valgrind_output.txt ./ft_kalman
+// valgrind --leak-check=full --suppressions=valgrind.supp ./ft_kalman
+
