@@ -82,7 +82,7 @@ use --graph to see the graph.
 
 ## Graphics
 
-![image](https://github.com/sleepychloe/ft_kalman/assets/78352910/915540a0-8688-4c47-bf19-71116264ff77)
+<img src="https://github.com/sleepychloe/ft_kalman/assets/78352910/915540a0-8688-4c47-bf19-71116264ff77" width="600" height="400">
 <br>
 Every mouse and keyboard control depends on the cursor's position relative to the window's width and height.<br>
 ⋅ Left half of the window: position section<br>
