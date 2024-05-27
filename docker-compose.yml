@@ -13,7 +13,3 @@ services:
       - /dev/dri:/dev/dri
     devices:
       - /dev/dri:/dev/dri
-
-# xhost +local:root
-# docker exec -it kalman /bin/bash
-# xhost -local:root

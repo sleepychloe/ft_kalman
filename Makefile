@@ -6,7 +6,7 @@
 #    By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/19 14:24:38 by yhwang            #+#    #+#              #
-#    Updated: 2024/05/19 15:16:57 by yhwang           ###   ########.fr        #
+#    Updated: 2024/05/27 20:35:34 by yhwang           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ list:
 	@docker image ls
 	@echo ""
 
-	@echo "$(BLUE)LIST OF IMAGES:$(RESET)"
+	@echo "$(BLUE)LIST OF NETWORKS:$(RESET)"
 	@docker network ls
 	@echo ""
 
@@ -73,7 +73,7 @@ else
 	@echo "$(YELLOW)There is no container to remove$(RESET)"
 endif
 
-ifneq ($(shell docker network ls | grep network | wc -l), 0)
+ifneq ($(shell docker network ls | grep kalman | wc -l), 0)
 	@docker network prune -f
 	@echo "$(YELLOW)Networks successfully removed$(RESET)"
 else
