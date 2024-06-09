@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/27 22:55:39 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/05/29 20:11:56 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ int	main(int argc, char **argv)
 
 	if (argv[1] && strlen(argv[1]) == 7 && !strncmp(argv[1], "--graph", 7))
 		flag = true;
+	else if (argc == 1)
+		flag = false;
 	else
 	{
 		std::cerr << RED << "error: invalid argument" << BLACK << std::endl;
