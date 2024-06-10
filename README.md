@@ -8,7 +8,6 @@ currently working on the project
 ```
   git clone https://github.com/sleepychloe/ft_kalman.git
   cd ft_kalman
-  make
 ```
 If xorg is not installed, install it via
 ```
