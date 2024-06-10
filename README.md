@@ -26,7 +26,7 @@ Before running program, allow the root user on your local system to access the X
 
 To run program,
 ```
-   make (-d=[DURATION] -e=[ENTROPY FLAG] -s=[FILTER SPEED FLAG] -g=[GRAPH FLAG])
+   make (d=[DURATION] e=[ENTROPY FLAG] s=[FILTER SPEED FLAG] g=[GRAPH FLAG])
 ```
  ⋅ default trajectory duration = 90<br>
  ⋅ default entropy flag = 0<br>
