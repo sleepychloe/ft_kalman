@@ -27,25 +27,34 @@ Before running program, allow the root user on your local system to access the X
 
 To run program,
 ```
-   make (-d=[DURATION] -e=[ENTROPY FLAG])
+   make (-d=[DURATION] -e=[ENTROPY FLAG] -s=[FILTER SPEED FLAG] -g=[GRAPH FLAG])
 ```
+ ⋅ default trajectory duration = 90<br>
+ ⋅ default entropy flag = 0<br>
+ ⋅ default filter speed flag = 0<br>
+ ⋅ default graph flag = 1<br>
+
 <details>
 <summary><b><ins>examples</ins></b></summary>
 
-example 1: default trajectory duration(90 minutes) with default seed(42) 
+
+ ⋅ ex1: trajectory duration: 90,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;seed: 42,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printing filter speed: no,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showing it's graph: yes<br>
+
 ```
    make
 ```
 
-example 2: 30 minutes of trajectory duration with default seed(42)
+ ⋅ ex2: trajectory duration: 30,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;seed: generated from entropy,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printing filter speed: yes,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showing it's graph: no<br>
 ```
-   make -d=30
+   make d=30 e=1 s=1 g=0 
 ```
 
-example 3: 40 minutes of trajactory duration with seed generated from entropy
-```
-   make -d=40 -e=1
-```
 </details>
 <br>
 

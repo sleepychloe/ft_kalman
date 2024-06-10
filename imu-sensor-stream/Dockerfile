@@ -10,7 +10,7 @@ WORKDIR	/usr/src/workspace
 
 COPY	. .
 
-RUN	chmod +x entrypoint.sh
 RUN	chmod +x imu-sensor-stream-linux
+RUN	chmod +x entrypoint.sh
 
 ENTRYPOINT ["/usr/src/workspace/entrypoint.sh"]

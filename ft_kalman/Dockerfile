@@ -24,7 +24,8 @@ COPY	. .
 ENV	XDG_RUNTIME_DIR=/tmp/runtime-root
 RUN	mkdir -p $XDG_RUNTIME_DIR && chmod 700 $XDG_RUNTIME_DIR
 
-RUN	make re
+RUN	make
+RUN	chmod +x entrypoint.sh
 
-CMD	["./ft_kalman", "--graph"]
+ENTRYPOINT ["/usr/src/workspace/entrypoint.sh"]
 

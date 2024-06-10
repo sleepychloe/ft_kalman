@@ -6,7 +6,7 @@
 #    By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/19 14:24:38 by yhwang            #+#    #+#              #
-#    Updated: 2024/06/10 17:25:47 by yhwang           ###   ########.fr        #
+#    Updated: 2024/06/10 20:03:52 by yhwang           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,20 +18,30 @@ COMPOSE_FILE	= ./docker-compose.yml
 
 ENTROPY		?= 0
 DURATION	?= 90
+FILTERSPEED	?= 0
+GRAPH		?= 1
 
-# allow overriding DURATION via command line
+# allow overriding variables via command line
 ifneq ($(d),)
 	DURATION = $(d)
 endif
 
 ifneq ($(e),)
-	ENTROPY = $(d)
+	ENTROPY = $(e)
+endif
+
+ifneq ($(s),)
+	FILTERSPEED = $(s)
+endif
+
+ifneq ($(g),)
+	GRAPH = $(g)
 endif
 
 all: up
 
 up:
-	@ENTROPY=${ENTROPY} DURATION=$(DURATION) docker-compose -f $(COMPOSE_FILE) up --build -d
+	@ENTROPY=${ENTROPY} DURATION=$(DURATION) FILTERSPEED=$(FILTERSPEED) GRAPH=$(GRAPH) docker-compose -f $(COMPOSE_FILE) up --build -d
 	@echo "$(YELLOW)Containers succesfully created and started$(RESET)"
 	@docker attach kalman
 

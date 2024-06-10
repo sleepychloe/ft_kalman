@@ -9,6 +9,7 @@ services:
     environment:
       - DURATION=${DURATION}
       - ENTROPY=${ENTROPY}
+      - FILTERSPEED=${FILTERSPEED}
 
   kalman:
     build: ./ft_kalman/
@@ -19,6 +20,8 @@ services:
       - XDG_RUNTIME_DIR=/tmp/runtime-root
       - SERVER_ADDRESS=localhost
       - SERVER_PORT=4242
+      - DURATION=${DURATION}
+      - GRAPH=${GRAPH}
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev/dri:/dev/dri
