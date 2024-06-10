@@ -24,21 +24,30 @@ Before running program, allow the root user on your local system to access the X
 ```
   xhost +local:root
 ```
-To run server:
+
+To run program,
 ```
-  docker exec -it kalman /bin/bash
-  ./imu-sensor-stream-linux -s 42 -d 42 -p 4242
+   make (-d=[DURATION] -e=[ENTROPY FLAG])
 ```
-To run program:
+<details>
+<summary><b><ins>examples</ins></b></summary>
+example 1: default duration(90 minutes) with default seed(42) 
 ```
-  docker exec -it kalman /bin/bash
-  make
-  ./ft_kalman
+   make
 ```
-use --graph to see the graph.
+
+example 2: 30 minutes of trajectory duration with default seed(42)
 ```
-  ./ft_kalman --graph
+   make -d=30
 ```
+
+example 3: 40 minutes of trajactory duration with seed generated from entropy
+```
+   make -d=40 -e=1
+```
+</details>
+<br>
+
 When you are done testing, do not forget to disable root access via
 ```
   xhost -local:root

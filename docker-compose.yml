@@ -1,6 +1,15 @@
 version: '3.8'
 
 services:
+  imu-sensor-stream:
+    build: ./imu-sensor-stream/
+    image: imu-sensor-stream
+    container_name: imu-sensor-stream
+    network_mode: "host"
+    environment:
+      - DURATION=${DURATION}
+      - ENTROPY=${ENTROPY}
+
   kalman:
     build: ./ft_kalman/
     image: kalman
@@ -8,8 +17,13 @@ services:
     environment:
       - DISPLAY=${DISPLAY}
       - XDG_RUNTIME_DIR=/tmp/runtime-root
+      - SERVER_ADDRESS=localhost
+      - SERVER_PORT=4242
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev/dri:/dev/dri
     devices:
       - /dev/dri:/dev/dri
+    network_mode: "host"
+    depends_on:
+      - imu-sensor-stream

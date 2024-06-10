@@ -6,7 +6,7 @@
 #    By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/19 14:24:38 by yhwang            #+#    #+#              #
-#    Updated: 2024/05/27 20:35:34 by yhwang           ###   ########.fr        #
+#    Updated: 2024/06/10 17:25:47 by yhwang           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,11 +16,24 @@ BLUE		:= $(shell tput -Txterm setaf 6)
 
 COMPOSE_FILE	= ./docker-compose.yml
 
+ENTROPY		?= 0
+DURATION	?= 90
+
+# allow overriding DURATION via command line
+ifneq ($(d),)
+	DURATION = $(d)
+endif
+
+ifneq ($(e),)
+	ENTROPY = $(d)
+endif
+
 all: up
 
 up:
-	@docker-compose -f $(COMPOSE_FILE) up --build -d
+	@ENTROPY=${ENTROPY} DURATION=$(DURATION) docker-compose -f $(COMPOSE_FILE) up --build -d
 	@echo "$(YELLOW)Containers succesfully created and started$(RESET)"
+	@docker attach kalman
 
 list:
 	@echo "$(BLUE)LIST OF CONTAINERS:$(RESET)"
