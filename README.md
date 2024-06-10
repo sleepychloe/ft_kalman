@@ -55,40 +55,6 @@ When you are done testing, do not forget to disable root access via
 ```
 <br>
 
-<details>
-<summary><b><ins>launch without docker: when you are a root user</ins></b></summary>
-
-If you are a root user and do not want to use docker,<br>
-install softwares that use OpenGL and related libraries for rendering graphics via
-```
-  sudo apt-get install -y build-essential \
-			  xorg-dev \
-			  libglu1-mesa-dev \
-			  mesa-common-dev \
-			  libglew-dev \
-			  libglfw3-dev \
-			  libglm-dev
-```
-Clone the repository and compile
-```
-  git clone https://github.com/sleepychloe/ft_kalman.git
-  cd ft_kalman/ft_kalman
-  make
-```
-To run server:
-```
-  ./imu-sensor-stream-linux -s 42 -d 42 -p 4242
-```
-To run program:
-```
-  ./ft_kalman
-```
-use --graph to see the graph.
-```
-  ./ft_kalman --graph
-```
-</details>
-<br>
 
 ## Graphics
 <img src="https://github.com/sleepychloe/ft_kalman/assets/78352910/915540a0-8688-4c47-bf19-71116264ff77" width="600" height="400">
