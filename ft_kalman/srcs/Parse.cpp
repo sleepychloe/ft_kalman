@@ -6,14 +6,35 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 17:16:52 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/02 09:55:16 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/10 21:39:21 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/Parse.hpp"
 
-Parse::Parse(): _speed(0)
+Parse::Parse(int duration): _speed(0)
 {
+	std::string	h = "00";
+	std::string	m;
+	std::string	s = "59.970";
+	std::string	endtime;
+
+	if (duration <= 60)
+	{
+		if (duration < 10)
+			m = "0";
+		m += std::to_string(duration - 1);
+	}
+	else
+	{
+		h = "01";
+		if (duration - 60 < 10)
+			m = "0";
+		m += std::to_string(duration - 61);
+	}
+
+	endtime = "[" + h + ":" + m + ":" + s + "]";
+	this->_endtime = endtime;
 }
 
 Parse::Parse(const Parse &parse)
@@ -54,6 +75,11 @@ std::vector<double>	Parse::getAcc(void) const
 std::vector<double>	Parse::getDir(void) const
 {
 	return (this->_dir);
+}
+
+std::string	Parse::getEndtime(void) const
+{
+	return (this->_endtime);
 }
 
 void	Parse::parseVec(std::string &buf, std::vector<double> &data)

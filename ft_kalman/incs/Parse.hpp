@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 17:16:44 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/20 16:08:55 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/10 21:33:23 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 class Parse
 {
 public:
-	Parse();
+	Parse(int duration);
 	Parse(const Parse &parse);
 	Parse &operator=(const Parse &parse);
 	~Parse();
@@ -33,6 +33,7 @@ public:
 	double				getSpeed(void) const;
 	std::vector<double>		getAcc(void) const;
 	std::vector<double>		getDir(void) const;
+	std::string			getEndtime(void) const;
 
 	void				parse(std::string &buf);
 
@@ -44,6 +45,7 @@ private:
 	double				_speed;
 	std::vector<double>		_acc;
 	std::vector<double>		_dir;
+	std::string			_endtime;
 };
 
 #endif

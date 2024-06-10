@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 12:37:34 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/03 02:26:25 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/10 21:58:07 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ bool	sendPos(int sock, struct sockaddr_in servaddr, std::vector<double> pos, int
 	return (true);
 }
 
-bool	parseElement(int sock, Parse &p, std::string element)
+bool	parseElement(int sock, Parse &p, std::string element, int &end_flag)
 {
 	std::string	buf;
 
@@ -121,6 +121,8 @@ bool	parseElement(int sock, Parse &p, std::string element)
 		std::cout << buf << std::endl;
 		if (buf.find(element) != std::string::npos)
 		{
+			if (element == "DIRECTION" && buf.find(p.getEndtime()) != std::string::npos)
+				end_flag++;
 			p.parse(buf);
 			break ;
 		}

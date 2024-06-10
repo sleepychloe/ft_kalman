@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 07:16:15 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/02 09:46:22 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/10 21:53:53 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ bool			sendMsg(int sock, struct sockaddr_in servaddr, std::string msg);
 bool			isServAvailable(int sock, int time_sec);
 bool			recvFromServ(int sock, std::string &buf);
 bool			sendPos(int sock, struct sockaddr_in servaddr, std::vector<double> pos, int timeout);
-bool			parseElement(int sock, Parse &p, std::string element);
+bool			parseElement(int sock, Parse &p, std::string element, int &end_flag);
 
 /* FilterUtils.cpp */
 void			computeVelocity(std::vector<double> d,
