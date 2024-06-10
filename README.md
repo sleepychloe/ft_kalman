@@ -31,7 +31,8 @@ To run program,
 ```
 <details>
 <summary><b><ins>examples</ins></b></summary>
-example 1: default duration(90 minutes) with default seed(42) 
+
+example 1: default trajectory duration(90 minutes) with default seed(42) 
 ```
    make
 ```
