@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 07:16:15 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/10 21:53:53 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/12 23:22:06 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,7 @@
 #include "../incs/Parse.hpp"
 #include "../incs/KalmanFilter.hpp"
 #include "../incs/Color.hpp"
-
-# define	DT			0.01
-# define 	ACCELEROMETER_NOISE	0.001
-# define	GYROSCOPE_NOISE		0.01
-# define	GPS_NOISE		0.1
+#include "../incs/Define.hpp"
 
 extern bool		g_running_flag;
 

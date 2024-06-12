@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/10 22:10:15 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/12 23:22:11 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ int	main(int argc, char **argv)
 			{
 				if (end_flag)
 				{
-					std::cout << YELLOW << "END" << BLACK << std::endl;
+					std::cout << YELLOW << "* TRAJECTORY END *" << BLACK << std::endl;
 					break ;
 				}
 				else
@@ -206,7 +206,7 @@ int	main(int argc, char **argv)
 			{
 				if (end_flag)
 				{
-					std::cout << YELLOW << "END" << BLACK << std::endl;
+					std::cout << YELLOW << "* TRAJECTORY END *" << BLACK << std::endl;
 					break ;
 				}
 				else
@@ -214,6 +214,12 @@ int	main(int argc, char **argv)
 			}
 			update_position_graph(ctx, position);
 			update_covariance_graph(ctx, covariance);
+			render(ctx);
+		}
+
+		while (!glfwWindowShouldClose(ctx.window))
+		{
+			glfwPollEvents();
 			render(ctx);
 		}
 		exit_program(ctx, 0);

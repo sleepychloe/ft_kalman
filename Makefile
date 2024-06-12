@@ -6,7 +6,7 @@
 #    By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/19 14:24:38 by yhwang            #+#    #+#              #
-#    Updated: 2024/06/10 20:03:52 by yhwang           ###   ########.fr        #
+#    Updated: 2024/06/12 23:13:24 by yhwang           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ ENTROPY		?= 0
 DURATION	?= 90
 FILTERSPEED	?= 0
 GRAPH		?= 1
+NOISE		?= 1
 
 # allow overriding variables via command line
 ifneq ($(d),)
@@ -38,12 +39,24 @@ ifneq ($(g),)
 	GRAPH = $(g)
 endif
 
+ifneq ($(n),)
+	NOISE = $(n)
+endif
+
 all: up
 
 up:
-	@ENTROPY=${ENTROPY} DURATION=$(DURATION) FILTERSPEED=$(FILTERSPEED) GRAPH=$(GRAPH) docker-compose -f $(COMPOSE_FILE) up --build -d
+	@ENTROPY=${ENTROPY} \
+		DURATION=$(DURATION) \
+		FILTERSPEED=$(FILTERSPEED) \
+		GRAPH=$(GRAPH) \
+		NOISE=$(NOISE) \
+		docker-compose -f $(COMPOSE_FILE) up --build -d
 	@echo "$(YELLOW)Containers succesfully created and started$(RESET)"
 	@docker attach kalman
+ifneq ($(FILTERSPEED), 0)
+	@make logs | grep imu-sensor-stream | tail -n 1
+endif
 
 list:
 	@echo "$(BLUE)LIST OF CONTAINERS:$(RESET)"

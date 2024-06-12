@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 17:16:52 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/10 21:39:21 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/12 23:21:56 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@ Parse::Parse(int duration): _speed(0)
 
 	if (duration <= 60)
 	{
-		if (duration < 10)
+		if (duration <= 10)
 			m = "0";
 		m += std::to_string(duration - 1);
 	}
 	else
 	{
 		h = "01";
-		if (duration - 60 < 10)
+		if (duration - 60 <= 10)
 			m = "0";
 		m += std::to_string(duration - 61);
 	}

@@ -26,12 +26,13 @@ Before running program, allow the root user on your local system to access the X
 
 To run program,
 ```
-   make (d=[DURATION] e=[ENTROPY FLAG] s=[FILTER SPEED FLAG] g=[GRAPH FLAG])
+   make (d=[DURATION] e=[ENTROPY FLAG] s=[FILTER SPEED FLAG] g=[GRAPH FLAG] n=[NOISE INCREASE])
 ```
  ⋅ default trajectory duration = 90<br>
  ⋅ default entropy flag = 0<br>
  ⋅ default filter speed flag = 0<br>
  ⋅ default graph flag = 1<br>
+ ⋅ default noise increase = 1<br>
 
 <details>
 <summary><b><ins>examples</ins></b></summary>
@@ -41,6 +42,7 @@ To run program,
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;seed: 42,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printing filter speed: no,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showing it's graph: yes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;noise increase: 1<br>
 
 ```
    make
@@ -50,8 +52,9 @@ To run program,
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;seed: generated from entropy,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printing filter speed: yes,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showing it's graph: no<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;noise increase: 2<br>
 ```
-   make d=30 e=1 s=1 g=0 
+   make d=30 e=1 s=1 g=0 n=2
 ```
 
 </details>

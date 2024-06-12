@@ -10,9 +10,13 @@ services:
       - DURATION=${DURATION}
       - ENTROPY=${ENTROPY}
       - FILTERSPEED=${FILTERSPEED}
+      - NOISE=${NOISE}
 
   kalman:
-    build: ./ft_kalman/
+    build:
+      context: ./ft_kalman/
+      args:
+        NOISE: ${NOISE}
     image: kalman
     container_name: kalman
     environment:
@@ -22,6 +26,7 @@ services:
       - SERVER_PORT=4242
       - DURATION=${DURATION}
       - GRAPH=${GRAPH}
+      - NOISE=${NOISE}
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev/dri:/dev/dri
