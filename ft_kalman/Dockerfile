@@ -25,8 +25,6 @@ COPY	. .
 ENV	XDG_RUNTIME_DIR=/tmp/runtime-root
 RUN	mkdir -p $XDG_RUNTIME_DIR && chmod 700 $XDG_RUNTIME_DIR
 
-
-
 ARG	NOISE=1
 RUN	ACCELEROMETER_NOISE=$(echo "scale=6; ${NOISE} * 0.001" | bc) \
 	&& GPS_NOISE=$(echo "scale=6; ${NOISE} * 0.1" | bc) \
@@ -38,4 +36,3 @@ RUN	make
 RUN	chmod +x entrypoint.sh
 
 ENTRYPOINT ["/usr/src/workspace/entrypoint.sh"]
-

@@ -26,7 +26,6 @@ services:
       - SERVER_PORT=4242
       - DURATION=${DURATION}
       - GRAPH=${GRAPH}
-      - NOISE=${NOISE}
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev/dri:/dev/dri
