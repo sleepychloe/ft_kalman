@@ -15,6 +15,9 @@ currently working on the project
 &nbsp;&nbsp;&nbsp;- [Keyboard and Mouse Control](#graphics-control) <br>
  ⋅ [Kalman Filter](#kalman-filter) <br>
 &nbsp;&nbsp;&nbsp;- [Class Template KalmanFilter<K>](#kalman-filter-class-template) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[predict without control input](#kalman-filter-class-template-1) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[predict with control input](#kalman-filter-class-template-2) <br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[update](#kalman-filter-class-template-3) <br>
 &nbsp;&nbsp;&nbsp;- [How To Calculate](#kalman-filter-how-to-calculate) <br>
 &nbsp;&nbsp;&nbsp;- [Initial Values](#kalman-filter-initial-values) <br>
 &nbsp;&nbsp;&nbsp;- [PDFs](#kalman-filter-pdfs) <br>
@@ -171,6 +174,7 @@ When you are done testing, do not forget to disable root access via
 <img src="https://github.com/sleepychloe/ft_kalman/assets/78352910/915540a0-8688-4c47-bf19-71116264ff77" width="600" height="400">
 
 <br>
+<br>
 
 ### Keyboard and Mouse Control <a name="graphics-control"></a>
 
@@ -196,7 +200,7 @@ Every mouse and keyboard control depends on the cursor's position relative to th
 ## Kalman filter <a name="kalman-filter"></a>
 
 ### Class Template KalmanFilter<K> <a name="kalman-filter-class-template"></a>
-#### predict without control input
+#### predict without control input <a name="kalman-filter-class-template-1"></a>
  ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁<br>
  ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
 &nbsp;&nbsp;(F: transition matrix,<br>
@@ -211,7 +215,7 @@ void	KalmanFilter<K>::predict(void)
 				+ _process_noise_covariance;
 }
 ```
-#### predict with control input
+#### predict with control input  <a name="kalman-filter-class-template-2"></a>
 I introduced control input for this project, to calculate the effect of external inputs(=acceleration).<br>
  ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁ + B * uₖ<br>
  ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
@@ -229,7 +233,7 @@ void	KalmanFilter<K>::predict(Vector<K> control_input)
 				+ this->_process_noise_covariance;
 }
 ```
-#### update
+#### update  <a name="kalman-filter-class-template-3"></a>
  ⋅ innovation ỹₖ = zₖ - Hₖ * x̂ₖ<br>
  ⋅ innovation covariance Sₖ = Hₖ * Pₖ * Hₖᵀ + Rₖ<br>
  ⋅ kalman gain Kₖ = Pₖ * Hₖᵀ * Sₖ⁻¹<br>
