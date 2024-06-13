@@ -3,6 +3,57 @@ currently working on the project
 ## Demo
 ![Animated GIF](https://github.com/sleepychloe/ft_kalman/blob/main/img/graph.gif)
 
+## Project ft_kalman
+
+### Introduction
+
+This project is focused on implementing a Kalman Filter<br>
+to accurately estimate the position of a vehicle based on noisy sensor data.<br>
+The Kalman Filter is a powerful algorithm used in various fields<br>
+such as navigation, economics, and computer vision to process<br>
+and estimate the state of a dynamic system from a series of incomplete<br>
+and noisy measurements.<br>
+<br>
+
+### Project Description
+
+This project simulates the Inertial Measurement Unit (IMU)<br>
+of a generic vehicle moving in a simplified environment.<br>
+The vehicle moves along its longitudinal axis<br>
+without the influence of air resistance or gravity.<br>
+The following inputs are provided:<br>
+ ⋅ True initial position (X, Y, Z in meters, at the beginning)<br>
+ ⋅ True initial speed (in km/h, at the beginning)<br>
+ ⋅ Current acceleration (in m/s², every 0.01 seconds)<br>
+ ⋅ Current direction (in euler angles)<br>
+ ⋅ Current GPS position (X, Y, Z in meters, every 3 seconds)<br>
+<br>
+These measurements are affected by Gaussian white noise<br>
+with the following characteristics:<br>
+ ⋅ Accelerometer: σ = 10⁻³, v = 0<br>
+ ⋅ Gyroscope: σ = 10⁻², v = 0<br>
+ ⋅ GPS: σ = 10⁻¹, v = 0<br>
+<br>
+The goal is to implement a Kalman Filter that processes these noisy measurements<br>
+and provides accurate position estimates.<br>
+<br>
+
+### Mandatory Part
+
+The primary objective is to develop a robust Kalman Filter<br>
+capable of handling real-time trajectory estimation for up to 90 minutes.<br>
+The filter must be optimized to prevent timeouts<br>
+and maintain an estimation accuracy within 5 meters of the true position.<br>
+<br>
+
+### Optional Part
+ ⋅ Develop a trajectory visualizer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(2D plot or 3D visualizer with HUD and variance display)<br>
+ ⋅ Optimize the filter for faster computation(mean computation time in milliseconds)<br>
+ ⋅ Enhance the filter to handle higher noise levels than default noise amount<br>
+ ⋅ Introduce additional innovative functionalities beyond the basic requirements<br>
+<br>
+
 ## Installation
 
 ```
