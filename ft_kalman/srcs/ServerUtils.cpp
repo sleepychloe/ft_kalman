@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 12:37:34 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/12 21:13:25 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/13 23:16:11 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,16 @@
 
 void	signalHandler(int signo)
 {
-	std::cerr << RED;
-	if (signo == SIGINT)
-		std::cerr << "SIGINT(Ctrl-C)";
-	else if (signo == SIGQUIT)
-		std::cerr << "SIGQUIT(Ctrl-\\)";
-	std::cerr << " detected" << BLACK << std::endl;
-	g_running_flag = false;
+	if (g_running_flag)
+	{
+		std::cerr << RED;
+		if (signo == SIGINT)
+			std::cerr << "SIGINT(Ctrl-C)";
+		else if (signo == SIGQUIT)
+			std::cerr << "SIGQUIT(Ctrl-\\)";
+		std::cerr << " detected" << BLACK << std::endl;
+		g_running_flag = false;
+	}
 }
 
 int	createSock(void)

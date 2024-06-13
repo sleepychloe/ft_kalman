@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 16:06:59 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/27 15:40:06 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/13 23:32:28 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,7 +239,7 @@ void	setup_view(t_opengl &ctx, int flag, int view_type)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(30 * zoom, 1 / 1, 1, 10000000000);
+	gluPerspective(50 * zoom, 1 / 1, 1, 10000000000);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
@@ -320,7 +320,7 @@ void	draw_graph(t_opengl &ctx, int flag)
 	{
 		glViewport(viewport[i][0], viewport[i][1], viewport[i][2], viewport[i][3]);
 		setup_view(ctx, flag, i); // XYZ == 0, XY == 1, XZ == 2
-		draw_axis(10000000000);
+		draw_axis(10000000000000);
 		glBindVertexArray(VAO);
 		glPointSize(3);
 		glColor3f(color[0], color[1], color[2]);
