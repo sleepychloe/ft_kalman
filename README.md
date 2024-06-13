@@ -1,18 +1,34 @@
 currently working on the project
 
-## Demo
+## Lists
+ ⋅ [Demo](#demo) <br>
+ ⋅ [Project ft_kalman](#project-ft-kalman) <br>
+&nbsp;&nbsp;&nbsp;- [Introduction](#project-ft-kalman-introduction) <br>
+&nbsp;&nbsp;&nbsp;- [Project Description](#project-ft-kalman-description) <br>
+&nbsp;&nbsp;&nbsp;- [Mandatory Part](#project-ft-kalman-mandatory-part) <br>
+&nbsp;&nbsp;&nbsp;- [Optional Part](#project-ft-kalman-optional-part) <br>
+ ⋅ [Installation](#installation) <br>
+ ⋅ [Usage](#usage) <br>
+ ⋅ [Graphics](#graphics) <br>
+ ⋅ [Kalman Filter](#kalman-filter) <br>
+&nbsp;&nbsp;&nbsp;- [Class Template KalmanFilter<K>](#kalman-filter-class-template) <br>
+&nbsp;&nbsp;&nbsp;- [How To Calculate](#kalman-filter-how-to-calculate) <br>
+&nbsp;&nbsp;&nbsp;- [Initial Values](#kalman-filter-initial-values) <br>
+&nbsp;&nbsp;&nbsp;- [PDFs](#kalman-filter-pdfs) <br>
+
+## Demo <a name="demo"></a>
 ![Animated GIF](https://github.com/sleepychloe/ft_kalman/blob/main/img/graph.gif)
 
-## Project ft_kalman
+## Project ft_kalman <a name="project-ft-kalman"></a>
 
-### Introduction
+### Introduction <a name="project-ft-kalman-introduction"></a>
 
 This project is focused on implementing a Kalman Filter to accurately estimate the position of a vehicle based on noisy sensor data.<br>
 <br>
 The Kalman Filter is a powerful algorithm used in various fields such as navigation, economics, and computer vision to process and estimate the state of a dynamic system from a series of incomplete and noisy measurements.<br>
 <br>
 
-### Project Description
+### Project Description <a name="project-ft-kalman-description"></a>
 
 This project simulates the Inertial Measurement Unit (IMU) of a generic vehicle moving in a simplified environment.<br>
 The vehicle moves along its longitudinal axis without the influence of air resistance or gravity.<br>
@@ -32,14 +48,15 @@ These measurements are affected by Gaussian white noise with the following chara
 The goal is to implement a Kalman Filter that processes these noisy measurements and provides accurate position estimates.<br>
 <br>
 
-### Mandatory Part
+### Mandatory Part <a name="project-ft-kalman-mandatory-part"></a>
 
 The primary objective is to develop a robust Kalman Filter capable of handling real-time trajectory estimation for up to 90 minutes.<br>
 <br>
 The filter must be optimized to prevent timeouts and maintain an estimation accuracy within 5 meters of the true position.<br>
 <br>
 
-### Optional Part
+### Optional Part <a name="project-ft-kalman-optional-part"></a>
+
  ⋅ Develop a trajectory visualizer<br>
 &nbsp;&nbsp;&nbsp;(2D plot or 3D visualizer with HUD and variance display)<br>
  ⋅ Optimize the filter for faster computation<br>
@@ -48,7 +65,7 @@ The filter must be optimized to prevent timeouts and maintain an estimation accu
  ⋅ Introduce additional innovative functionalities beyond the basic requirements<br>
 <br>
 
-## Installation
+## Installation <a name="installation"></a>
 
 ```
   git clone https://github.com/sleepychloe/ft_kalman.git
@@ -64,7 +81,7 @@ If docker and docker-compose is not isntalled, install it via
 ```
 <br>
 
-## Usage
+## Usage <a name="usage"></a>
 
 Before running program, allow the root user on your local system to access the X server via
 ```
@@ -140,7 +157,8 @@ When you are done testing, do not forget to disable root access via
 <br>
 
 
-## Graphics
+## Graphics <a name="graphics"></a>
+
 <img src="https://github.com/sleepychloe/ft_kalman/assets/78352910/915540a0-8688-4c47-bf19-71116264ff77" width="600" height="400">
 
 ###### ↳ the sections on the window<br>
@@ -166,9 +184,9 @@ Every mouse and keyboard control depends on the cursor's position relative to th
 ###### ↳ control position graph: cursor is on the position section(left half of the window)<br>
 <br>
 
-## Kalman filter
+## Kalman filter <a name="kalman-filter"></a>
 
-### Class Template KalmanFilter<K>
+### Class Template KalmanFilter<K> <a name="kalman-filter-class-template"></a>
 #### predict without control input
  ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁<br>
  ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
@@ -226,7 +244,8 @@ void	KalmanFilter<K>::update(Vector<K> measurement)
 ```
 <br>
 
-### How to calculate
+### How To Calculate <a name="kalman-filter-how-to-calculate"></a>
+
 After sending "READY" to server, you can get<br>
 &nbsp;&nbsp;⋅ true initial position(x, y, z in meters)<br>
 &nbsp;&nbsp;⋅ true initial speed(in km/h)<br>
@@ -476,7 +495,8 @@ R = ┃  0   σ²ₐ ┃
 </details>
 <br>
 
-### initial values
+### Initial Values <a name="kalman-filter-initial-values"></a>
+
 ```
 /* control input: n */
 control_input = Vector<double>({p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
@@ -669,6 +689,8 @@ kalman = KalmanFilter<double>(init_state, init_covariance,
 <br>
 <br>
 <br>
+
+### PDFs <a name="kalman-filter-pdfs"></a>
 
 ![image](https://github.com/sleepychloe/ft_kalman/assets/78352910/eeb83879-2c88-4860-9456-7e993d5a0297)
 ![image](https://github.com/sleepychloe/ft_kalman/assets/78352910/026dddb7-574a-4ea7-a8bc-f4b667af7809)
