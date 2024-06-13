@@ -7,8 +7,9 @@ currently working on the project
 &nbsp;&nbsp;&nbsp;- [Project Description](#project-ft-kalman-description) <br>
 &nbsp;&nbsp;&nbsp;- [Mandatory Part](#project-ft-kalman-mandatory-part) <br>
 &nbsp;&nbsp;&nbsp;- [Optional Part](#project-ft-kalman-optional-part) <br>
- ⋅ [Installation](#installation) <br>
- ⋅ [Usage](#usage) <br>
+ ⋅ [Installation & Usage](#installation-usage) <br>
+&nbsp;&nbsp;&nbsp;- [Installation](#installation) <br>
+&nbsp;&nbsp;&nbsp;- [Usage](#usage) <br>
  ⋅ [Graphics](#graphics) <br>
 &nbsp;&nbsp;&nbsp;- [Sections](#graphics-sections) <br>
 &nbsp;&nbsp;&nbsp;- [Keyboard and Mouse Control](#graphics-control) <br>
@@ -69,7 +70,9 @@ The filter must be optimized to prevent timeouts and maintain an estimation accu
  ⋅ Introduce additional innovative functionalities beyond the basic requirements<br>
 <br>
 
-## Installation <a name="installation"></a>
+## Installation & Usage <a name="installation-usage"></a>
+
+### Installation <a name="installation"></a>
 
 ```
   git clone https://github.com/sleepychloe/ft_kalman.git
@@ -85,7 +88,7 @@ If docker and docker-compose is not isntalled, install it via
 ```
 <br>
 
-## Usage <a name="usage"></a>
+### Usage <a name="usage"></a>
 
 Before running program, allow the root user on your local system to access the X server via
 ```
