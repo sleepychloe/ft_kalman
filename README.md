@@ -10,6 +10,8 @@ currently working on the project
  ⋅ [Installation](#installation) <br>
  ⋅ [Usage](#usage) <br>
  ⋅ [Graphics](#graphics) <br>
+&nbsp;&nbsp;&nbsp;- [Sections](#graphics-sections) <br>
+&nbsp;&nbsp;&nbsp;- [Keyboard and Mouse Control](#graphics-control) <br>
  ⋅ [Kalman Filter](#kalman-filter) <br>
 &nbsp;&nbsp;&nbsp;- [Class Template KalmanFilter<K>](#kalman-filter-class-template) <br>
 &nbsp;&nbsp;&nbsp;- [How To Calculate](#kalman-filter-how-to-calculate) <br>
@@ -28,8 +30,6 @@ currently working on the project
 This project is focused on implementing a Kalman Filter to accurately estimate the position of a vehicle based on noisy sensor data.<br>
 <br>
 The Kalman Filter is a powerful algorithm used in various fields such as navigation, economics, and computer vision to process and estimate the state of a dynamic system from a series of incomplete and noisy measurements.<br>
-<br>
-
 <br>
 
 ### Project Description <a name="project-ft-kalman-description"></a>
@@ -67,8 +67,6 @@ The filter must be optimized to prevent timeouts and maintain an estimation accu
 &nbsp;&nbsp;&nbsp;(mean computation time in milliseconds)<br>
  ⋅ Enhance the filter to handle higher noise levels than default noise amount<br>
  ⋅ Introduce additional innovative functionalities beyond the basic requirements<br>
-<br>
-
 <br>
 
 ## Installation <a name="installation"></a>
@@ -165,11 +163,13 @@ When you are done testing, do not forget to disable root access via
 
 ## Graphics <a name="graphics"></a>
 
+### Sections <a name="graphics-sections"></a>
+
 <img src="https://github.com/sleepychloe/ft_kalman/assets/78352910/915540a0-8688-4c47-bf19-71116264ff77" width="600" height="400">
 
-###### ↳ the sections on the window<br>
-
 <br>
+
+### Keyboard and Mouse Control <a name="graphics-control"></a>
 
 Every mouse and keyboard control depends on the cursor's position relative to the window's width and height.<br>
 ```

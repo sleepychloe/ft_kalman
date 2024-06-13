@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 16:06:59 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/13 23:32:28 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/14 01:14:56 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,11 +249,11 @@ void	setup_view(t_opengl &ctx, int flag, int view_type)
 			0, 0, 1); // Carmera vector
 	if (view_type == 1)
 		gluLookAt(0, 0, 90000 / zoom,
-			14000, 0, 0,
+			0, 0, 0,
 			0, 1, 0);
 	if (view_type == 2)
 		gluLookAt(0, -90000 / zoom, 0,
-			14000, 0, 0,
+			0, 0, 0,
 			0, 0, 1);
 	(void)ctx;
 }
