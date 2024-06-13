@@ -7,21 +7,15 @@ currently working on the project
 
 ### Introduction
 
-This project is focused on implementing a Kalman Filter<br>
-to accurately estimate the position of a vehicle based on noisy sensor data.<br>
+This project is focused on implementing a Kalman Filter to accurately estimate the position of a vehicle based on noisy sensor data.<br>
 <br>
-The Kalman Filter is a powerful algorithm used in various fields<br>
-such as navigation, economics, and computer vision to process<br>
-and estimate the state of a dynamic system<br>
-from a series of incomplete and noisy measurements.<br>
+The Kalman Filter is a powerful algorithm used in various fields such as navigation, economics, and computer vision to process and estimate the state of a dynamic system from a series of incomplete and noisy measurements.<br>
 <br>
 
 ### Project Description
 
-This project simulates the Inertial Measurement Unit (IMU)<br>
-of a generic vehicle moving in a simplified environment.<br>
-The vehicle moves along its longitudinal axis<br>
-without the influence of air resistance or gravity.<br>
+This project simulates the Inertial Measurement Unit (IMU) of a generic vehicle moving in a simplified environment.<br>
+The vehicle moves along its longitudinal axis without the influence of air resistance or gravity.<br>
 <br>
 The following inputs are provided:<br>
  ⋅ True initial position (X, Y, Z in meters, at the beginning)<br>
@@ -30,8 +24,7 @@ The following inputs are provided:<br>
  ⋅ Current direction (in euler angles)<br>
  ⋅ Current GPS position (X, Y, Z in meters, every 3 seconds)<br>
 <br>
-These measurements are affected by Gaussian white noise<br>
-with the following characteristics:<br>
+These measurements are affected by Gaussian white noise with the following characteristics:<br>
  ⋅ Accelerometer: σ = 10⁻³, v = 0<br>
  ⋅ Gyroscope: σ = 10⁻², v = 0<br>
  ⋅ GPS: σ = 10⁻¹, v = 0<br>
