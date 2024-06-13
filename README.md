@@ -15,11 +15,16 @@ currently working on the project
 &nbsp;&nbsp;&nbsp;- [Keyboard and Mouse Control](#graphics-control) <br>
  ⋅ [Kalman Filter](#kalman-filter) <br>
 &nbsp;&nbsp;&nbsp;- [Class Template KalmanFilter<K>](#kalman-filter-class-template) <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[predict without control input](#kalman-filter-class-template-1) <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[predict with control input](#kalman-filter-class-template-2) <br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[predict without control input](#kalman-filter-class-template-1) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[predict with control input](#kalman-filter-class-template-2) <br> 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[update](#kalman-filter-class-template-3) <br>
 &nbsp;&nbsp;&nbsp;- [How To Calculate](#kalman-filter-how-to-calculate) <br>
 &nbsp;&nbsp;&nbsp;- [How To Initialize](#kalman-filter-how-to-initialize) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[predicted state, transition matrix](#kalman-filter-how-to-initialize-1) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[control input, control transition matrix](#kalman-filter-how-to-initialize-2) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[predicted covariance](#kalman-filter-how-to-initialize-3) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[process noise covariance](#kalman-filter-how-to-initialize-4) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[observation matrix, actual measurement, measurement noise covariance matrix](#kalman-filter-how-to-initialize-5) <br>
 &nbsp;&nbsp;&nbsp;- [Initial Values](#kalman-filter-initial-values) <br>
 &nbsp;&nbsp;&nbsp;- [PDFs](#kalman-filter-pdfs) <br>
 
@@ -318,6 +323,7 @@ and you can compare the calculation result and the actual position every 3 secon
 <br>
 
 ### How To Initialize <a name="kalman-filter-how-to-initialize"></a>
+#### predicted state, transition matrix <a name="kalman-filter-how-to-initialize-1"></a>
 
 ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁ + B * uₖ<br>
 The position, and velocity of the vehicle are described by the linear state space.<br>
@@ -334,6 +340,8 @@ F = ┃ 1     ∆t ┃
     ┃ 0     1  ┃
     ┗          ┛
 ```
+
+#### control input, control transition matrix <a name="kalman-filter-how-to-initialize-2"></a>
 The acceleration can be considered as an external inputs.<br>
 Thus vecter u can be defined as (k̈ₖ) (k = x, y, z).<br>
 Let's say that the acceleration is constant during the interval of time ∆t.<br>
@@ -366,6 +374,8 @@ Setting control input u and control transition model is optional in this case.<b
 </details>
 <br>
 
+#### predicted covariance <a name="kalman-filter-how-to-initialize-3"></a>
+
 ⋅ predicted covariance Pₖ = Fₖ * Pₖ₋₁ * Fₖᵀ + Qₖ<br>
 We already know the init state of the vehicle.<br>
 Make diagonal matrix with GPS, and gyroscope<br>
@@ -392,6 +402,8 @@ P = ┃ 0     σ²ᵥ   0   ┃
 ```
 </details>
 <br>
+
+#### process noise covariance <a name="kalman-filter-how-to-initialize-4"></a>
 
 This is kinematic system, and it is continuous.<br>
 So you can apply continuous white noise model for Q.<br>
@@ -483,6 +495,9 @@ Matrix<double>	integrate(Matrix<double> m, double start, double end)
 }
 ```
 <br>
+
+#### observation matrix, actual measurement, measurement noise covariance matrix <a name="kalman-filter-how-to-initialize-5"></a>
+
 ⋅ innovation ỹₖ = zₖ - Hₖ * x̂ₖ<br>
 ⋅ innovation covariance Sₖ = Hₖ * Pₖ * Hₖᵀ + Rₖ<br>
 When GPS position is received from server, you can update the filter.<br>
