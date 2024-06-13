@@ -29,16 +29,14 @@ These measurements are affected by Gaussian white noise with the following chara
  ⋅ Gyroscope: σ = 10⁻², v = 0<br>
  ⋅ GPS: σ = 10⁻¹, v = 0<br>
 <br>
-The goal is to implement a Kalman Filter that processes<br>
-these noisy measurements and provides accurate position estimates.<br>
+The goal is to implement a Kalman Filter that processes these noisy measurements and provides accurate position estimates.<br>
 <br>
 
 ### Mandatory Part
 
-The primary objective is to develop a robust Kalman Filter<br>
-capable of handling real-time trajectory estimation for up to 90 minutes.<br>
-The filter must be optimized to prevent timeouts<br>
-and maintain an estimation accuracy within 5 meters of the true position.<br>
+The primary objective is to develop a robust Kalman Filter capable of handling real-time trajectory estimation for up to 90 minutes.<br>
+<br>
+The filter must be optimized to prevent timeouts and maintain an estimation accuracy within 5 meters of the true position.<br>
 <br>
 
 ### Optional Part
@@ -47,8 +45,7 @@ and maintain an estimation accuracy within 5 meters of the true position.<br>
  ⋅ Optimize the filter for faster computation<br>
 &nbsp;&nbsp;&nbsp;(mean computation time in milliseconds)<br>
  ⋅ Enhance the filter to handle higher noise levels than default noise amount<br>
- ⋅ Introduce additional innovative functionalities<br>
-&nbsp;&nbsp;&nbsp;beyond the basic requirements<br>
+ ⋅ Introduce additional innovative functionalities beyond the basic requirements<br>
 <br>
 
 ## Installation
