@@ -6,7 +6,7 @@
 #    By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/19 14:24:38 by yhwang            #+#    #+#              #
-#    Updated: 2024/06/12 23:13:24 by yhwang           ###   ########.fr        #
+#    Updated: 2024/06/13 23:56:16 by yhwang           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -109,13 +109,6 @@ else
 	@echo "$(YELLOW)There is no container to remove$(RESET)"
 endif
 
-ifneq ($(shell docker network ls | grep kalman | wc -l), 0)
-	@docker network prune -f
-	@echo "$(YELLOW)Networks successfully removed$(RESET)"
-else
-	@echo "$(YELLOW)There is no network to remove$(RESET)"
-endif
-
 ifneq ($(shell docker volume ls | wc -l), 1)
 	@docker volume rm $(shell docker volume ls | awk 'NR>1' | cut -c 21-40) -f
 	@echo "$(YELLOW)Volumes successfully removed$(RESET)"
@@ -129,6 +122,14 @@ ifneq ($(shell docker image ls | wc -l), 1)
 else
 	@echo "$(YELLOW)There is no image to remove$(RESET)"
 endif
+
+ifneq ($(shell docker network ls | grep kalman | wc -l), 0)
+	@docker network prune -f
+	@echo "$(YELLOW)Networks successfully removed$(RESET)"
+else
+	@echo "$(YELLOW)There is no network to remove$(RESET)"
+endif
+
 	@echo "$(BLUE)Everything is successfully removed!$(RESET)"
 
 .PHONY: all up list logs stop fclean

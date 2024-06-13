@@ -60,6 +60,31 @@ To run program,
 </details>
 <br>
 
+To see lists of containers, volumes, images, and networks,
+```
+   make list
+```
+
+To see outputs of containers,
+```
+   make logs
+```
+
+To stop containers,
+```
+   make stop
+```
+
+To restart containers,
+```
+   make restart
+```
+
+To clean every containers, volumes, images, and networks,
+```
+   make fclean
+```
+
 When you are done testing, do not forget to disable root access via
 ```
   xhost -local:root
