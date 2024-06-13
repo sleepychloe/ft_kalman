@@ -3,7 +3,7 @@ currently working on the project
 ## Demo
 ![Animated GIF](https://github.com/sleepychloe/ft_kalman/blob/main/img/graph.gif)
 
-## Installation & Usage
+## Installation
 
 ```
   git clone https://github.com/sleepychloe/ft_kalman.git
@@ -18,6 +18,8 @@ If docker and docker-compose is not isntalled, install it via
   sudo apt install -y docker.io && sudo apt-get install -y docker-compose
 ```
 <br>
+
+## Usage
 
 Before running program, allow the root user on your local system to access the X server via
 ```
