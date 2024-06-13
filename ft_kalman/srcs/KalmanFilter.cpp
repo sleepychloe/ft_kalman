@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 01:15:54 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/25 22:33:53 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/14 01:45:02 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void	KalmanFilter<K>::predict(Vector<K> control_input)
 }
 
 /* - innovation ỹₖ = zₖ - Hₖ * x̂ₖ
-   - innovation covariance Sₖ = Hₖ * Pₖ * Hₖᵀ + Rₖ 
+   - innovation covariance Sₖ = Hₖ * Pₖ * Hₖᵀ + Rₖ
    - kalman gain Kₖ = Pₖ * Hₖᵀ * Sₖ⁻¹
    (H: observation matrix,
     z: actual measurement,
