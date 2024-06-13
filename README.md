@@ -19,6 +19,7 @@ currently working on the project
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[predict with control input](#kalman-filter-class-template-2) <br> 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[update](#kalman-filter-class-template-3) <br>
 &nbsp;&nbsp;&nbsp;- [How To Calculate](#kalman-filter-how-to-calculate) <br>
+&nbsp;&nbsp;&nbsp;- [How To Initialize](#kalman-filter-how-to-initialize) <br>
 &nbsp;&nbsp;&nbsp;- [Initial Values](#kalman-filter-initial-values) <br>
 &nbsp;&nbsp;&nbsp;- [PDFs](#kalman-filter-pdfs) <br>
 
@@ -215,6 +216,8 @@ void	KalmanFilter<K>::predict(void)
 				+ _process_noise_covariance;
 }
 ```
+<br>
+
 #### predict with control input  <a name="kalman-filter-class-template-2"></a>
 I introduced control input for this project, to calculate the effect of external inputs(=acceleration).<br>
  ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁ + B * uₖ<br>
@@ -233,6 +236,8 @@ void	KalmanFilter<K>::predict(Vector<K> control_input)
 				+ this->_process_noise_covariance;
 }
 ```
+<br>
+
 #### update  <a name="kalman-filter-class-template-3"></a>
  ⋅ innovation ỹₖ = zₖ - Hₖ * x̂ₖ<br>
  ⋅ innovation covariance Sₖ = Hₖ * Pₖ * Hₖᵀ + Rₖ<br>
@@ -280,6 +285,7 @@ Thus, the true initial velocity of the vehicle in m/s will be one of three cases
 <br>
 Even though server does not give us vehicle's velocity directly,<br>
 you can calculate it from direction and acceleration.<br>
+
 ```
 	┏		      ┓
 	┃   1      0      0   ┃
@@ -310,7 +316,9 @@ Compute until the GPS position is received from the server(Kalman filter predict
 and you can compare the calculation result and the actual position every 3 seconds(Kalman filter update).<br>
 <br>
 <br>
-### How to initialize Kalman filter
+
+### How To Initialize <a name="kalman-filter-how-to-initialize"></a>
+
 ⋅ predicted state x̂ₖ = Fₖ * x̂ₖ₋₁ + B * uₖ<br>
 The position, and velocity of the vehicle are described by the linear state space.<br>
 Thus, vector x̂ₖ can be defined as (kₖ(=position), k̇ₖ(=velocity)) (k = x, y, z).<br><br>
