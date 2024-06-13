@@ -2,19 +2,25 @@ currently working on the project
 
 ## Lists
  ⋅ [Demo](#demo) <br>
+<br>
  ⋅ [Project ft_kalman](#project-ft-kalman) <br>
 &nbsp;&nbsp;&nbsp;- [Introduction](#project-ft-kalman-introduction) <br>
 &nbsp;&nbsp;&nbsp;- [Project Description](#project-ft-kalman-description) <br>
 &nbsp;&nbsp;&nbsp;- [Mandatory Part](#project-ft-kalman-mandatory-part) <br>
 &nbsp;&nbsp;&nbsp;- [Optional Part](#project-ft-kalman-optional-part) <br>
  ⋅ [Installation](#installation) <br>
+<br>
  ⋅ [Usage](#usage) <br>
+<br>
  ⋅ [Graphics](#graphics) <br>
+<br>
  ⋅ [Kalman Filter](#kalman-filter) <br>
 &nbsp;&nbsp;&nbsp;- [Class Template KalmanFilter<K>](#kalman-filter-class-template) <br>
 &nbsp;&nbsp;&nbsp;- [How To Calculate](#kalman-filter-how-to-calculate) <br>
 &nbsp;&nbsp;&nbsp;- [Initial Values](#kalman-filter-initial-values) <br>
 &nbsp;&nbsp;&nbsp;- [PDFs](#kalman-filter-pdfs) <br>
+
+<br>
 
 ## Demo <a name="demo"></a>
 ![Animated GIF](https://github.com/sleepychloe/ft_kalman/blob/main/img/graph.gif)
@@ -686,7 +692,6 @@ kalman = KalmanFilter<double>(init_state, init_covariance,
 				process_noise_covariance, measurement_noise_covariance);
 ```
 </details>
-<br>
 <br>
 <br>
 
