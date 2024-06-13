@@ -341,6 +341,8 @@ F = ┃ 1     ∆t ┃
     ┗          ┛
 ```
 
+<br>
+
 #### B, uₖ <a name="kalman-filter-how-to-initialize-2"></a>
 The acceleration can be considered as an external inputs.<br>
 Thus vecter u can be defined as (k̈ₖ) (k = x, y, z).<br>
