@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 21:55:02 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/14 22:34:30 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/14 23:47:50 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ AdaptiveKalmanFilter<K>::AdaptiveKalmanFilter(Vector<K> initial_state, Matrix<K>
 						process_noise_covariance, measurement_noise_covariance)
 
 {
-	this->_adaptation_rate = 0.1;
+	this->_adaptation_rate = 0.0000001;
 }
 
 template <typename K>
@@ -37,7 +37,7 @@ AdaptiveKalmanFilter<K>::AdaptiveKalmanFilter(Vector<K> initial_state, Matrix<K>
 						transition_matrix, control_transition_matrix, observation_matrix,
 						process_noise_covariance, measurement_noise_covariance)
 {
-	this->_adaptation_rate = 0.1;
+	this->_adaptation_rate = 0.0000001;
 }
 
 template <typename K>
@@ -71,20 +71,22 @@ AdaptiveKalmanFilter<K>::~AdaptiveKalmanFilter()
 template <typename K>
 void	AdaptiveKalmanFilter<K>::update(Vector<K> measurement)
 {
-	KalmanFilter<K>::update(measurement);
-	adaptNoiseCovariance();
+	Vector<K>	innovation = measurement - this->_observation_matrix * this->_state;
+	Matrix<K>	innovation_covariance = this->_observation_matrix * this->_covariance * this->_observation_matrix.transpose()
+						+ this->_measurement_noise_covariance;
+	Matrix<K>	kalman_gain = this->_covariance * this->_observation_matrix.transpose() * innovation_covariance.inverse();
+
+	this->_state = this->_state + kalman_gain * innovation;
+	this->_covariance = (identity<double>(this->_state.getSize()) - kalman_gain * this->_observation_matrix)
+				* this->_covariance;
+	adaptNoiseCovariance(innovation_covariance);
 }
 
 template <typename K>
-void	AdaptiveKalmanFilter<K>::adaptNoiseCovariance(void)
+void	AdaptiveKalmanFilter<K>::adaptNoiseCovariance(Matrix<K> innovation_covariance)
 {
-	Vector<K>	innovation = measurement - this->_observation_matrix * this->_state;
-	Matrix<K>	state_matrix(1, this->_state.getSize());
-	for (size_t i = 0; i < this->_state.getSize(); i++)
-		state_matrix[0][i] = this->_state.getVector()[i];
-
 	this->_measurement_noise_covariance = (1 - this->_adaptation_rate) * this->_measurement_noise_covariance
-						+ this->_adaptation_rate * (innovation * innovation.transpose());
+						+ this->_adaptation_rate * innovation_covariance;
 	this->_process_noise_covariance = (1 - this->_adaptation_rate) * this->_process_noise_covariance
-						+ this->_adaptation_rate * (state_matrix * state_matrix.transpose());
+						+ this->_adaptation_rate * this->_covariance;
 }

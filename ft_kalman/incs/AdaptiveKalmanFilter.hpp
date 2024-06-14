@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 01:56:58 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/14 22:33:22 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/14 23:35:04 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "./KalmanFilter.hpp"
 
 template <typename K>
-class AdaptiveKalmanFilter: public KalmanFilter
+class AdaptiveKalmanFilter: public KalmanFilter<K>
 {
 public:
 	AdaptiveKalmanFilter();
@@ -33,7 +33,7 @@ public:
 	virtual void		update(Vector<K> measurement);
 
 private:
-	void			adaptNoiseCovariance(void);
+	void			adaptNoiseCovariance(Matrix<K> innovation_covariance);
 
 	K			_adaptation_rate;
 };

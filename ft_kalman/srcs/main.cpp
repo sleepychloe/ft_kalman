@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/14 22:36:15 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/14 22:55:43 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,11 +92,10 @@ int	main(int argc, char **argv)
 		exit(exit_code);
 	};
 
-	KalmanFilter<double>	kalman;
-	initFilter(p, velocity, kalman);
+	AdaptiveKalmanFilter<double>	*kalman = initFilter(p, velocity);
 
-	std::vector<double>	position({kalman.getState().getVector()[0], kalman.getState().getVector()[1], kalman.getState().getVector()[2]});
-	std::vector<std::vector<double>>	covariance = kalman.getCovariance().getMatrix();
+	std::vector<double>	position({kalman->getState().getVector()[0], kalman->getState().getVector()[1], kalman->getState().getVector()[2]});
+	std::vector<std::vector<double>>	covariance = kalman->getCovariance().getMatrix();
 	int		end_flag = 0;
 
 	Vector<double>	control_input;
@@ -114,8 +113,8 @@ int	main(int argc, char **argv)
 
 			/* control input: n */
 			control_input = Vector<double>({p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
-			kalman.predict(control_input);
-			position = std::vector<double>({kalman.getState().getVector()[0], kalman.getState().getVector()[1], kalman.getState().getVector()[2]});
+			kalman->predict(control_input);
+			position = std::vector<double>({kalman->getState().getVector()[0], kalman->getState().getVector()[1], kalman->getState().getVector()[2]});
 			if (!sendPos(client_sock, servaddr, position, 1))
 				return (false);
 
@@ -134,13 +133,13 @@ int	main(int argc, char **argv)
 			return (false);
 		computeVelocity(p.getDir(), p.getAcc(), velocity);
 		control_input = Vector<double>({p.getAcc()[0], p.getAcc()[1], p.getAcc()[2]});
-		kalman.predict(control_input);
+		kalman->predict(control_input);
 
 		/* measurement: m */
 		measurement = Vector<double>({p.getPos()[0], p.getPos()[1], p.getPos()[2]});
-		kalman.update(measurement);
-		position = std::vector<double>({kalman.getState().getVector()[0], kalman.getState().getVector()[1], kalman.getState().getVector()[2]});
-		covariance = kalman.getCovariance().getMatrix();
+		kalman->update(measurement);
+		position = std::vector<double>({kalman->getState().getVector()[0], kalman->getState().getVector()[1], kalman->getState().getVector()[2]});
+		covariance = kalman->getCovariance().getMatrix();
 		if (!sendPos(client_sock, servaddr, position, 1))
 			return (false);
 		return (true);	
@@ -150,6 +149,7 @@ int	main(int argc, char **argv)
 	{
 		std::function<void(int)>	exit_program = [&](int exit_code)
 		{
+			delete kalman;
 			close(client_sock);
 			exit(exit_code);
 		};
@@ -176,6 +176,7 @@ int	main(int argc, char **argv)
 	{
 		std::function<void(t_opengl, int)>	exit_program = [&](t_opengl ctx, int exit_code)
 		{
+			delete kalman;
 			close(client_sock);
 			if (flag)
 			{
