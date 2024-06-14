@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 01:15:47 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/14 21:53:31 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/14 22:29:31 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ public:
 			Matrix<K> process_noise_covariance, Matrix<K> measurement_noise_covariance);
 	KalmanFilter(const KalmanFilter &kalmanfilter);
 	KalmanFilter& operator=(const KalmanFilter &kalmanfilter);
-	~KalmanFilter();
+	virtual ~KalmanFilter();
 
 	Vector<K>		getState(void) const;
 	Matrix<K>		getCovariance(void) const;

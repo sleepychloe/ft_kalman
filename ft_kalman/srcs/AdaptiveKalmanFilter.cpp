@@ -6,14 +6,14 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 21:55:02 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/14 22:23:46 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/14 22:34:30 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/AdaptiveKalmanFilter.hpp"
 
 template <typename K>
-AdaptiveKalmanFilter<K>::AdaptiveKalmanFilter(): KalmanFilter()
+AdaptiveKalmanFilter<K>::AdaptiveKalmanFilter(): KalmanFilter<K>()
 {
 }
 
@@ -21,7 +21,7 @@ template <typename K>
 AdaptiveKalmanFilter<K>::AdaptiveKalmanFilter(Vector<K> initial_state, Matrix<K> initial_covariance,
 			Matrix<K> transition_matrix, Matrix<K> observation_matrix,
 			Matrix<K> process_noise_covariance, Matrix<K> measurement_noise_covariance)
-				:KalmanFilter(initial_state, initial_covariance,
+				:KalmanFilter<K>(initial_state, initial_covariance,
 						transition_matrix, observation_matrix,
 						process_noise_covariance, measurement_noise_covariance)
 
@@ -33,7 +33,7 @@ template <typename K>
 AdaptiveKalmanFilter<K>::AdaptiveKalmanFilter(Vector<K> initial_state, Matrix<K> initial_covariance,
 			Matrix<K> transition_matrix, Matrix<K> control_transition_matrix, Matrix<K> observation_matrix,
 			Matrix<K> process_noise_covariance, Matrix<K> measurement_noise_covariance)
-				:KalmanFilter(initial_state, initial_covariance,
+				:KalmanFilter<K>(initial_state, initial_covariance,
 						transition_matrix, control_transition_matrix, observation_matrix,
 						process_noise_covariance, measurement_noise_covariance)
 {
@@ -41,7 +41,8 @@ AdaptiveKalmanFilter<K>::AdaptiveKalmanFilter(Vector<K> initial_state, Matrix<K>
 }
 
 template <typename K>
-AdaptiveKalmanFilter<K>::AdaptiveKalmanFilter(const AdaptiveKalmanFilter &adaptivekalmanfilter): KalmanFilter(adaptivekalmanfilter)
+AdaptiveKalmanFilter<K>::AdaptiveKalmanFilter(const AdaptiveKalmanFilter &adaptivekalmanfilter)
+				: KalmanFilter<K>(adaptivekalmanfilter)
 {
 	*this = adaptivekalmanfilter;
 }

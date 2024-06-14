@@ -6,12 +6,13 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/14 01:51:36 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/14 22:36:15 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/Parse.hpp"
 #include "../incs/KalmanFilter.hpp"
+#include "../incs/AdaptiveKalmanFilter.hpp"
 #include "../incs/Utils.hpp"
 #include "../incs/OpenGLUtils.hpp"
 
