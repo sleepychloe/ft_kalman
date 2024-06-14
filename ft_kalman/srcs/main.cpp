@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/13 23:10:54 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/14 01:51:36 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,7 +216,7 @@ int	main(int argc, char **argv)
 			update_covariance_graph(ctx, covariance);
 			render(ctx);
 		}
-
+		g_running_flag = false;
 		while (!glfwWindowShouldClose(ctx.window))
 		{
 			glfwPollEvents();

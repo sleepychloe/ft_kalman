@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 01:15:54 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/14 01:45:02 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/14 22:19:45 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,6 @@ KalmanFilter<K>::KalmanFilter(const KalmanFilter &kalmanfilter)
 }
 
 template <typename K>
-Matrix<K>	KalmanFilter<K>::getCovariance(void) const
-{
-	return (this->_covariance);
-}
-
-template <typename K>
 KalmanFilter<K>	&KalmanFilter<K>::operator=(const KalmanFilter &kalmanfilter)
 {
 	if (this == &kalmanfilter)
@@ -80,6 +74,12 @@ template <typename K>
 Vector<K>	KalmanFilter<K>::getState(void) const
 {
 	return (this->_state);
+}
+
+template <typename K>
+Matrix<K>	KalmanFilter<K>::getCovariance(void) const
+{
+	return (this->_covariance);
 }
 
 /* - predicted state x̂ₖ = Fₖ * x̂ₖ₋₁
@@ -125,6 +125,7 @@ void	KalmanFilter<K>::update(Vector<K> measurement)
 	Matrix<K>	innovation_covariance = this->_observation_matrix * this->_covariance * this->_observation_matrix.transpose()
 						+ this->_measurement_noise_covariance;
 	Matrix<K>	kalman_gain = this->_covariance * this->_observation_matrix.transpose() * innovation_covariance.inverse();
+
 	this->_state = this->_state + kalman_gain * innovation;
 	this->_covariance = (identity<double>(this->_state.getSize()) - kalman_gain * _observation_matrix)
 				* this->_covariance;
