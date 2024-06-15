@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 21:55:02 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/15 16:47:37 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/15 17:35:43 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,12 @@ void	AdaptiveKalmanFilter<K>::update(Vector<K> measurement)
 	adaptNoiseCovariance(innovation_covariance);
 }
 
+/* - adaptive measurement noise covariance Rₖ = (1 − α) * Rₖ + α * Sₖ
+   - adaptive process noise covariance Qₖ = (1 - α) * Qₖ + α * Pₖ
+   (α: adaptation rate,
+    R: measurement noise covariance matrix,
+    Q: process noise covariance)
+*/
 template <typename K>
 void	AdaptiveKalmanFilter<K>::adaptNoiseCovariance(Matrix<K> innovation_covariance)
 {

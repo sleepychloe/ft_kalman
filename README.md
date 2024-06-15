@@ -1,4 +1,8 @@
-currently working on the project
+Mandatory part + every Optional part
+
+Tested on Linux
+
+finished but not submitted yet
 
 ## Lists
  ⋅ [Demo](#demo) <br>
@@ -14,10 +18,14 @@ currently working on the project
 &nbsp;&nbsp;&nbsp;- [Sections](#graphics-sections) <br>
 &nbsp;&nbsp;&nbsp;- [Keyboard and Mouse Control](#graphics-control) <br>
  ⋅ [Kalman Filter](#kalman-filter) <br>
+&nbsp;&nbsp;&nbsp;- [Kalman Filter and Adaptive Kalman filter<K>](#kalman-filter-kalman-filter) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[kalman filter](#kalman-filter-kalman) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[adaptive kalman filter](#kalman-filter-adaptive-kalman) <br>
 &nbsp;&nbsp;&nbsp;- [Class Template KalmanFilter<K>](#kalman-filter-class-template) <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[predict without control input](#kalman-filter-class-template-1) <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[predict with control input](#kalman-filter-class-template-2) <br> 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[update](#kalman-filter-class-template-3) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[kalman filter update](#kalman-filter-class-template-3) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[adaptive kalman filter update](#kalman-filter-class-template-4) <br>
 &nbsp;&nbsp;&nbsp;- [How To Calculate](#kalman-filter-how-to-calculate) <br>
 &nbsp;&nbsp;&nbsp;- [How To Initialize](#kalman-filter-how-to-initialize) <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x̂ₖ, Fₖ](#kalman-filter-how-to-initialize-1) <br>
@@ -77,6 +85,7 @@ The filter must be optimized to prevent timeouts and maintain an estimation accu
 &nbsp;&nbsp;&nbsp;(mean computation time in milliseconds)<br>
  ⋅ Enhance the filter to handle higher noise levels than default noise amount<br>
  ⋅ Introduce additional innovative functionalities beyond the basic requirements<br>
+&nbsp;&nbsp;&nbsp;: Implementing adaptive kalman filter<br>
 <br>
 
 ## Installation & Usage <a name="installation-usage"></a>
@@ -207,6 +216,23 @@ Every mouse and keyboard control depends on the cursor's position relative to th
 <br>
 
 ## Kalman filter <a name="kalman-filter"></a>
+### Kalman Kilter and Adaptive Kalman Filter <a name="kalman-filter-kalman-filter"></a>
+#### kalman filter <a name="kalman-filter-kalman"></a>
+
+The Kalman Filter is a recursive algorithm used to estimate the state of a dynamic system from a series of noisy measurements.<br>
+It operates in two steps: prediction and update.<br>
+<br>
+ ⋅ Prediction: The filter predicts the state of the system and its uncertainty using the process model.<br>
+ ⋅ Update: The filter updates the predicted state and uncertainty with new measurements using the observation model.<br>
+The Kalman Filter is widely used in navigation, control systems, and time-series analysis due to its efficiency and ability to provide accurate estimates in real-time.<br>
+<br>
+
+#### adaptive kalman filter <a name="kalman-filter-adaptive-kalman"></a>
+
+The Adaptive Kalman Filter extends the standard Kalman Filter by dynamically adjusting the process and measurement noise covariances.<br>
+This adaptation allows the filter to maintain optimal performance even when the noise characteristics change over time.<br>
+The adaptive Kalman Filter is particularly useful in environments with varying noise levels, enhancing the robustness and accuracy of state estimation.<br>
+<br>
 
 ### Class Template KalmanFilter<K> <a name="kalman-filter-class-template"></a>
 #### predict without control input <a name="kalman-filter-class-template-1"></a>
@@ -246,7 +272,7 @@ void	KalmanFilter<K>::predict(Vector<K> control_input)
 ```
 <br>
 
-#### update  <a name="kalman-filter-class-template-3"></a>
+#### kalman filter update  <a name="kalman-filter-class-template-3"></a>
  ⋅ innovation ỹₖ = zₖ - Hₖ * x̂ₖ<br>
  ⋅ innovation covariance Sₖ = Hₖ * Pₖ * Hₖᵀ + Rₖ<br>
  ⋅ kalman gain Kₖ = Pₖ * Hₖᵀ * Sₖ⁻¹<br>
@@ -266,6 +292,38 @@ void	KalmanFilter<K>::update(Vector<K> measurement)
 	this->_state = this->_state + kalman_gain * innovation;
 	this->_covariance = (identity<double>(this->_state.getSize()) - kalman_gain * _observation_matrix)
 				* this->_covariance;
+}
+```
+<br>
+
+### adaptive kalman filter update <a name="kalman-filter-class-template-4">
+ ⋅ adaptive measurement noise covariance Rₖ = (1 − α) * Rₖ + α * Sₖ<br>
+ ⋅ adaptive process noise covariance Qₖ = (1 - α) * Qₖ + α * Pₖ<br>
+&nbsp;&nbsp;(α: adaptation rate,<br>
+&nbsp;&nbsp;&nbsp;R: measurement noise covariance matrix,<br>
+&nbsp;&nbsp;&nbsp;Q: process noise covariance)<br>
+```
+template <typename K>
+void	AdaptiveKalmanFilter<K>::update(Vector<K> measurement)
+{
+	Vector<K>	innovation = measurement - this->_observation_matrix * this->_state;
+	Matrix<K>	innovation_covariance = this->_observation_matrix * this->_covariance * this->_observation_matrix.transpose()
+						+ this->_measurement_noise_covariance;
+	Matrix<K>	kalman_gain = this->_covariance * this->_observation_matrix.transpose() * innovation_covariance.inverse();
+
+	this->_state = this->_state + kalman_gain * innovation;
+	this->_covariance = (identity<double>(this->_state.getSize()) - kalman_gain * this->_observation_matrix)
+				* this->_covariance;
+	adaptNoiseCovariance(innovation_covariance);
+}
+
+template <typename K>
+void	AdaptiveKalmanFilter<K>::adaptNoiseCovariance(Matrix<K> innovation_covariance)
+{
+	this->_measurement_noise_covariance = (1 - this->_adaptation_rate) * this->_measurement_noise_covariance
+						+ this->_adaptation_rate * innovation_covariance;
+	this->_process_noise_covariance = (1 - this->_adaptation_rate) * this->_process_noise_covariance
+						+ this->_adaptation_rate * this->_covariance;
 }
 ```
 <br>
