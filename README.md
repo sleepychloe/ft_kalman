@@ -39,7 +39,7 @@ finished but not submitted yet
 <br>
 
 ## Demo <a name="demo"></a>
-![Animated GIF](https://github.com/sleepychloe/ft_kalman/blob/main/img/graph.gif)
+![Animated GIF](https://github.com/sleepychloe/ft_kalman/blob/main/img/gif00_graph.gif)
 
 ## Project ft_kalman <a name="project-ft-kalman"></a>
 
@@ -211,7 +211,7 @@ Every mouse and keyboard control depends on the cursor's position relative to th
 ```
 <br>
 
-![Animated GIF](https://github.com/sleepychloe/ft_kalman/blob/main/img/control.gif)
+![Animated GIF](https://github.com/sleepychloe/ft_kalman/blob/main/img/gif01_control.gif)
 ###### ↳ control position graph: cursor is on the position section(left half of the window)<br>
 <br>
 
