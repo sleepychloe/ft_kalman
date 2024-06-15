@@ -42,36 +42,61 @@ finished but not submitted yet
 ![Animated GIF](https://github.com/sleepychloe/ft_kalman/blob/main/img/gif00_graph.gif)
 ###### ↳ trajectory duration: 42, seed: 42, filter speed: no, graph: yes, noise: default, adaptive kalman filter: no
 
+<br>
+
+### seed
+
 <img src="https://github.com/sleepychloe/ft_kalman/assets/78352910/faa4414a-8d07-4ab8-9756-bfe0475f8392" width="600" height="400">
 
 ###### ↳ trajectory duration: 90, seed: 42, filter speed: no, graph: yes, noise: default, adaptive kalman filter: no
+
+<br>
 
 <img src="https://github.com/sleepychloe/ft_kalman/assets/78352910/4bf70ff8-3863-4ea8-83d5-2161892b9dae" width="600" height="400">
 
 ###### ↳ trajectory duration: 90, seed: entropy, filter speed: no, graph: yes, noise: default, adaptive kalman filter: no
 
+<br>
+
 <img src="https://github.com/sleepychloe/ft_kalman/assets/78352910/7696646e-e81e-43cd-8793-d7565599d994" width="600" height="400">
 
 ###### ↳ trajectory duration: 90, seed: entropy, filter speed: no, graph: yes, noise: default, adaptive kalman filter: no
+
+<br>
+<br>
+
+### filter speed
 
 <img src="https://github.com/sleepychloe/ft_kalman/assets/78352910/d7fd4bde-b6cd-4627-b351-990f3f0ff86f" width="600" height="400">
 
 ###### ↳ trajectory duration: 5, seed: 42, filter speed: yes, graph: no, noise: default, adaptive kalman filter: no
 
+<br>
+<br>
+
+### noise
+
 <img src="https://github.com/sleepychloe/ft_kalman/assets/78352910/1a41cf64-f977-42a7-9003-5dea84ea2890" width="600" height="400">
 
 ###### ↳ trajectory duration: 2, seed: 42, filter speed: no, graph: no, noise: 2, adaptive kalman filter: no
 
+<br>
+<br>
+
+### adaptive kalman filter
+
 <img src="https://github.com/sleepychloe/ft_kalman/assets/78352910/f80caeef-ca25-4700-8792-61aa7ffcd025" width="600" height="400">
 
 ###### ↳ trajectory duration: 90, seed: 42, filter speed: no, graph: no, noise: 0, adaptive kalman filter: no
+
+<br>
 
 <img src="https://github.com/sleepychloe/ft_kalman/assets/78352910/de4201cd-d545-4068-b381-f0f8af165925" width="600" height="400">
 
 ###### ↳ trajectory duration: 90, seed: 42, filter speed: no, graph: no, noise: 0, adaptive kalman filter: yes
 
 <br>
-
+<br>
 
 ## Project ft_kalman <a name="project-ft-kalman"></a>
 
