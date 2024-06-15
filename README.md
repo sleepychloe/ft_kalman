@@ -220,10 +220,11 @@ Every mouse and keyboard control depends on the cursor's position relative to th
 #### kalman filter <a name="kalman-filter-kalman"></a>
 
 The Kalman Filter is a recursive algorithm used to estimate the state of a dynamic system from a series of noisy measurements.<br>
-It operates in two steps: prediction and update.<br>
 <br>
+It operates in two steps: prediction and update.<br>
  ⋅ Prediction: The filter predicts the state of the system and its uncertainty using the process model.<br>
  ⋅ Update: The filter updates the predicted state and uncertainty with new measurements using the observation model.<br>
+<br>
 The Kalman Filter is widely used in navigation, control systems, and time-series analysis due to its efficiency and ability to provide accurate estimates in real-time.<br>
 <br>
 
@@ -231,7 +232,9 @@ The Kalman Filter is widely used in navigation, control systems, and time-series
 
 The Adaptive Kalman Filter extends the standard Kalman Filter by dynamically adjusting the process and measurement noise covariances.<br>
 This adaptation allows the filter to maintain optimal performance even when the noise characteristics change over time.<br>
+<br>
 The adaptive Kalman Filter is particularly useful in environments with varying noise levels, enhancing the robustness and accuracy of state estimation.<br>
+<br>
 <br>
 
 ### Class Template KalmanFilter<K> <a name="kalman-filter-class-template"></a>
