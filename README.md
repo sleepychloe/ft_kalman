@@ -189,7 +189,7 @@ When you are done testing, do not forget to disable root access via
 
 ### Sections <a name="graphics-sections"></a>
 
-<img src="https://github.com/sleepychloe/ft_kalman/assets/78352910/915540a0-8688-4c47-bf19-71116264ff77" width="600" height="400">
+<img src="https://github.com/sleepychloe/ft_kalman/assets/78352910/5c77aa95-e608-44a5-ba49-68092bbf946d" width="600" height="400">
 
 <br>
 <br>
