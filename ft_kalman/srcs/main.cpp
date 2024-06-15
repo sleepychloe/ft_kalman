@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/15 11:31:26 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/15 17:11:20 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,15 +148,15 @@ int	main(int argc, char **argv)
 
 	if (!flag_graph) /* without graph */
 	{
-		std::function<void(int)>	exit_program = [&](int exit_code)
+		std::function<void(void)>	exit_program = [&](void)
 		{
 			delete kalman;
 			close(client_sock);
-			exit(exit_code);
+			exit(0);
 		};
 
 		if (!sendPos(client_sock, servaddr, position, 1))
-			exit_program(1);
+			return (exit_program(), 1);
 
 		while (g_running_flag)
 		{
@@ -168,14 +168,17 @@ int	main(int argc, char **argv)
 					break ;
 				}
 				else
-					exit_program(1);
+				{
+					std::cout << YELLOW << "* DELTA IS TOO HIGH, TRAJECTORY TERMINATES *" << BLACK << std::endl;
+					exit_program();
+				}
 			}
 		}
-		exit_program(0);
+		exit_program();
 	}
 	else /* with graph */
 	{
-		std::function<void(t_opengl, int)>	exit_program = [&](t_opengl ctx, int exit_code)
+		std::function<void(t_opengl)>	exit_program = [&](t_opengl ctx)
 		{
 			delete kalman;
 			close(client_sock);
@@ -187,7 +190,7 @@ int	main(int argc, char **argv)
 				glfwDestroyWindow(ctx.window);
 				glfwTerminate();
 			}
-			exit(exit_code);
+			exit(0);
 		};
 
 		t_opengl	ctx;
@@ -196,7 +199,7 @@ int	main(int argc, char **argv)
 			return (close(client_sock), 1);
 
 		if (!sendPos(client_sock, servaddr, position, 1))
-			exit_program(ctx, 1);
+			exit_program(ctx);
 		
 		update_position_graph(ctx, position);
 		update_covariance_graph(ctx, covariance);
@@ -213,7 +216,10 @@ int	main(int argc, char **argv)
 					break ;
 				}
 				else
-					exit_program(ctx, 1);
+				{
+					std::cout << YELLOW << "* DELTA IS TOO HIGH, TRAJECTORY TERMINATES *" << BLACK << std::endl;
+					exit_program(ctx);
+				}
 			}
 			update_position_graph(ctx, position);
 			update_covariance_graph(ctx, covariance);
@@ -225,7 +231,7 @@ int	main(int argc, char **argv)
 			glfwPollEvents();
 			render(ctx);
 		}
-		exit_program(ctx, 0);
+		exit_program(ctx);
 	}
 	return (0);
 }
