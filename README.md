@@ -144,6 +144,7 @@ The filter must be optimized to prevent timeouts and maintain an estimation accu
  ⋅ Introduce additional innovative functionalities beyond the basic requirements<br>
 &nbsp;&nbsp;&nbsp;: Implementing adaptive kalman filter<br>
 <br>
+<br>
 
 ## Installation & Usage <a name="installation-usage"></a>
 
@@ -240,7 +241,7 @@ When you are done testing, do not forget to disable root access via
   xhost -local:root
 ```
 <br>
-
+<br>
 
 ## Graphics <a name="graphics"></a>
 
@@ -270,6 +271,7 @@ Every mouse and keyboard control depends on the cursor's position relative to th
 
 ![Animated GIF](https://github.com/sleepychloe/ft_kalman/blob/main/img/gif01_control.gif)
 ###### ↳ control position graph: cursor is on the position section(left half of the window)<br>
+<br>
 <br>
 
 ## Kalman filter <a name="kalman-filter"></a>
@@ -846,6 +848,7 @@ kalman = KalmanFilter<double>(init_state, init_covariance,
 ```
 </details>
 
+<br>
 <br>
 
 ### PDFs <a name="kalman-filter-pdfs"></a>
