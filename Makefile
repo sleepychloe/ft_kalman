@@ -6,7 +6,7 @@
 #    By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/19 14:24:38 by yhwang            #+#    #+#              #
-#    Updated: 2024/06/13 23:56:16 by yhwang           ###   ########.fr        #
+#    Updated: 2024/06/15 10:38:20 by yhwang           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ DURATION	?= 90
 FILTERSPEED	?= 0
 GRAPH		?= 1
 NOISE		?= 1
+ADAPTIVE	?= 0
 
 # allow overriding variables via command line
 ifneq ($(d),)
@@ -43,6 +44,10 @@ ifneq ($(n),)
 	NOISE = $(n)
 endif
 
+ifneq ($(adaptive),)
+	ADAPTIVE = $(adaptive)
+endif
+
 all: up
 
 up:
@@ -51,6 +56,7 @@ up:
 		FILTERSPEED=$(FILTERSPEED) \
 		GRAPH=$(GRAPH) \
 		NOISE=$(NOISE) \
+		ADAPTIVE=$(ADAPTIVE) \
 		docker-compose -f $(COMPOSE_FILE) up --build -d
 	@echo "$(YELLOW)Containers succesfully created and started$(RESET)"
 	@docker attach kalman

@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 07:16:15 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/14 23:07:32 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/15 11:19:03 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,6 @@ bool			parseElement(int sock, Parse &p, std::string element, int &end_flag);
 /* FilterUtils.cpp */
 void			computeVelocity(std::vector<double> d,
 				std::vector<double> a, std::vector<double> &v);
-AdaptiveKalmanFilter<double>	*initFilter(Parse &p, std::vector<double> v);
+KalmanFilter<double>	*initFilter(Parse &p, std::vector<double> v, bool flag_adaptive);
 
 #endif

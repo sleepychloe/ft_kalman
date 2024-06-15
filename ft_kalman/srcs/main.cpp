@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 01:27:37 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/14 22:55:43 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/15 11:31:26 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,37 +20,51 @@ bool	g_running_flag;
 
 int	main(int argc, char **argv)
 {
-	if (!(argc == 2 || argc == 3))
+	/* parse argv */
+	std::function<void(void)>	print_errmsg = [&](void)
 	{
-		std::cerr << RED << "error: invalid argument" << BLACK << std::endl;
-		std::cerr << RED << "usage: ./ft_kalman [duration] (--graph)" << BLACK << std::endl;
-		std::cerr << RED << "       (1 <= duration <= 90)" << BLACK << std::endl;
-		return (1);
-	}
+		std::cerr << RED << "error: invalid argument" << BLACK << std::endl << std::endl;
+		std::cerr << "USAGE:\n\t./ft_kalman [DURATION] ([OPTIONS])" << std::endl << std::endl;
+		std::cerr << "DURATION:\n\tSpecify trajectory duration in minutes from 1 to 90" << std::endl << std::endl;
+		std::cerr << "OPTIONS:\n\t--graph:" << std::endl;
+		std::cerr << "\t\tshow trajectory visualizer with position and covariance display" << std::endl << std::endl;
+		std::cerr << "\t--adaptive:" << std::endl;
+		std::cerr << "\t\tcompute with adaptive kalman filter" << std::endl;
+	};
+
+	if (!(argc == 2 || argc == 3 || argc == 4))
+		return (print_errmsg(), 1);
 
 	if (!(argv[1] && 1 <= atoi(argv[1]) && atoi(argv[1]) <= 90))
-	{
-		std::cerr << RED << "error: invalid range of duration" << BLACK << std::endl;
-		std::cerr << RED << "usage: ./ft_kalman [duration] (--graph)" << BLACK << std::endl;
-		std::cerr << RED << "       (1 <= duration <= 90)" << BLACK << std::endl;
-		return (1);
-	}
+		return (print_errmsg(), 1);
+
 	int	duration = atoi(argv[1]);
+	bool	flag_graph = false;
+	bool	flag_adaptive = false;
 
-	bool	flag = false;
-
-	if (argv[2] && strlen(argv[2]) == 7 && !strncmp(argv[2], "--graph", 7))
-		flag = true;
-	else if (argc == 2)
-		flag = false;
-	else
+	if (argv[2])
 	{
-		std::cerr << RED << "error: invalid argument" << BLACK << std::endl;
-		std::cerr << RED << "usage: ./ft_kalman [duration] (--graph)" << BLACK << std::endl;
-		std::cerr << RED << "       (1 <= duration <= 90)" << BLACK << std::endl;
-		return (1);
+		if (strlen(argv[2]) == strlen("--graph") && !strncmp(argv[2], "--graph", strlen("--graph")))
+			flag_graph = true;
+		else if (strlen(argv[2]) == strlen("--adaptive") && !strncmp(argv[2], "--adaptive", strlen("--adaptive")))
+			flag_adaptive = true;
+		else
+			return (print_errmsg(), 1);
+
+		if (argv[3])
+		{
+			if (flag_graph == true
+				&& strlen(argv[3]) == strlen("--adaptive") && !strncmp(argv[3], "--adaptive", strlen("--adaptive")))
+				flag_adaptive = true;
+			else if (flag_adaptive == true
+				&& strlen(argv[3]) == strlen("--graph") && !strncmp(argv[3], "--graph", strlen("--graph")))
+				flag_graph = true;
+			else
+				return (print_errmsg(), 1);
+		}
 	}
 
+	/* recieve init values from server */
 	g_running_flag = true;
 
 	int			client_sock = createSock();
@@ -78,21 +92,8 @@ int	main(int argc, char **argv)
 	std::vector<double>	velocity({p.getSpeed(), 0, 0});
 	computeVelocity(p.getDir(), p.getAcc(), velocity);
 
-	std::function<void(t_opengl, int)>	exit_program = [&](t_opengl ctx, int exit_code)
-	{
-		close(client_sock);
-		if (flag)
-		{
-			glDeleteBuffers(1, &ctx.VBO_position);
-			glDeleteBuffers(1, &ctx.VBO_covariance_p);
-			glDeleteBuffers(1, &ctx.VBO_covariance_v);
-			glfwDestroyWindow(ctx.window);
-			glfwTerminate();
-		}
-		exit(exit_code);
-	};
-
-	AdaptiveKalmanFilter<double>	*kalman = initFilter(p, velocity);
+	/* kalman filter */
+	KalmanFilter<double>	*kalman = initFilter(p, velocity, flag_adaptive);
 
 	std::vector<double>	position({kalman->getState().getVector()[0], kalman->getState().getVector()[1], kalman->getState().getVector()[2]});
 	std::vector<std::vector<double>>	covariance = kalman->getCovariance().getMatrix();
@@ -145,7 +146,7 @@ int	main(int argc, char **argv)
 		return (true);	
 	};
 
-	if (!flag)
+	if (!flag_graph) /* without graph */
 	{
 		std::function<void(int)>	exit_program = [&](int exit_code)
 		{
@@ -172,13 +173,13 @@ int	main(int argc, char **argv)
 		}
 		exit_program(0);
 	}
-	else
+	else /* with graph */
 	{
 		std::function<void(t_opengl, int)>	exit_program = [&](t_opengl ctx, int exit_code)
 		{
 			delete kalman;
 			close(client_sock);
-			if (flag)
+			if (flag_graph)
 			{
 				glDeleteBuffers(1, &ctx.VBO_position);
 				glDeleteBuffers(1, &ctx.VBO_covariance_p);

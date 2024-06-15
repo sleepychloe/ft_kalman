@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 21:55:02 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/14 23:47:50 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/15 10:33:54 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ AdaptiveKalmanFilter<K>::AdaptiveKalmanFilter(Vector<K> initial_state, Matrix<K>
 						process_noise_covariance, measurement_noise_covariance)
 
 {
-	this->_adaptation_rate = 0.0000001;
+	this->_adaptation_rate = 0.00000155;
 }
 
 template <typename K>
@@ -37,7 +37,7 @@ AdaptiveKalmanFilter<K>::AdaptiveKalmanFilter(Vector<K> initial_state, Matrix<K>
 						transition_matrix, control_transition_matrix, observation_matrix,
 						process_noise_covariance, measurement_noise_covariance)
 {
-	this->_adaptation_rate = 0.0000001;
+	this->_adaptation_rate = 0.00000155;
 }
 
 template <typename K>

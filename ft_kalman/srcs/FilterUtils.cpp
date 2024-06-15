@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 07:58:26 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/14 23:07:59 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/15 11:18:57 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ Matrix<double>	integrate(Matrix<double> m, double start, double end)
 	return (Matrix<double>(res));
 }
 
-AdaptiveKalmanFilter<double>	*initFilter(Parse &p, std::vector<double> v)
+KalmanFilter<double>	*initFilter(Parse &p, std::vector<double> v, bool flag_adaptive)
 {
 	/* init state: n(pos, v) */
 	Vector<double>	init_state({p.getPos()[0], p.getPos()[1], p.getPos()[2], v[0], v[1], v[2]});
@@ -142,10 +142,14 @@ AdaptiveKalmanFilter<double>	*initFilter(Parse &p, std::vector<double> v)
 						{0, variance_p, 0},
 						{0, 0, variance_p}});
 
-	// return (new KalmanFilter<double>(init_state, init_covariance,
-	// 				transition_matrix, observation_matrix, control_transition_model,
-	// 				process_noise_covariance, measurement_noise_covariance));
-	return (new AdaptiveKalmanFilter<double>(init_state, init_covariance,
+	KalmanFilter<double>	*kalman;
+	if (!flag_adaptive)
+		kalman = new KalmanFilter<double>(init_state, init_covariance,
 					transition_matrix, observation_matrix, control_transition_model,
-					process_noise_covariance, measurement_noise_covariance));
+					process_noise_covariance, measurement_noise_covariance);
+	else
+		kalman = new AdaptiveKalmanFilter<double>(init_state, init_covariance,
+					transition_matrix, observation_matrix, control_transition_model,
+					process_noise_covariance, measurement_noise_covariance);
+	return (kalman);
 }
