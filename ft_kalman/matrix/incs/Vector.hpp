@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 02:18:30 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/06 10:49:10 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/15 19:32:09 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ public:
 	Vector();
 	Vector(size_t size);
 	Vector(const std::vector<K> &vector);
+	Vector(std::initializer_list<K> list);
 	Vector(const Vector<K> &vector);
 	Vector& operator=(const Vector<K> &vector);
 	~Vector();

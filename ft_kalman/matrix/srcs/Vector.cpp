@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 18:55:36 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/06 10:49:06 by yhwang           ###   ########.fr       */
+/*   Updated: 2024/06/15 19:32:23 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,11 @@ Vector<K>::Vector(size_t size): _size(size)
 
 template <typename K>
 Vector<K>::Vector(const std::vector<K> &vector): _size(vector.size()), _vector(vector)
+{
+}
+
+template <typename K>
+Vector<K>::Vector(std::initializer_list<K> list) : _size(list.size()), _vector(list)
 {
 }
 
