@@ -1,4 +1,4 @@
-Mandatory part + every Optional part 
+Mandatory part + every Optional part
 
 Tested on Linux
 
