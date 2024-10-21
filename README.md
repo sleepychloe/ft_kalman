@@ -2,7 +2,7 @@ Mandatory part + every Optional part
 
 Tested on Linux
 
-finished but not submitted yet
+Success 123/100
 
 ## Lists
  * [Demo](#demo) <br>
