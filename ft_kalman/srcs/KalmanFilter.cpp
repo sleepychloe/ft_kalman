@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 01:15:54 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/14 22:57:50 by yhwang           ###   ########.fr       */
+/*   Updated: 2025/04/14 19:35:56 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@ KalmanFilter<K>::KalmanFilter()
 }
 
 template <typename K>
-KalmanFilter<K>::KalmanFilter(Vector<K> initial_satate, Matrix<K> initial_covariance,
+KalmanFilter<K>::KalmanFilter(Vector<K> initial_state, Matrix<K> initial_covariance,
 		Matrix<K> transition_matrix, Matrix<K> observation_matrix,
 		Matrix<K> process_noise_covariance, Matrix<K> measurement_noise_covariance)
 {
-	this->_state = initial_satate;
+	this->_state = initial_state;
 	this->_covariance = initial_covariance;
 	this->_transition_matrix = transition_matrix;
 	this->_observation_matrix = observation_matrix;
@@ -31,11 +31,11 @@ KalmanFilter<K>::KalmanFilter(Vector<K> initial_satate, Matrix<K> initial_covari
 }
 
 template <typename K>
-KalmanFilter<K>::KalmanFilter(Vector<K> initial_satate, Matrix<K> initial_covariance,
+KalmanFilter<K>::KalmanFilter(Vector<K> initial_state, Matrix<K> initial_covariance,
 		Matrix<K> transition_matrix, Matrix<K> observation_matrix, Matrix<K> control_transition_matrix,
 		Matrix<K> process_noise_covariance, Matrix<K> measurement_noise_covariance)
 {
-	this->_state = initial_satate;
+	this->_state = initial_state;
 	this->_covariance = initial_covariance;
 	this->_transition_matrix = transition_matrix;
 	this->_control_transition_model = control_transition_matrix;

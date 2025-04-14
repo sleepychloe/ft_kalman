@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 09:05:26 by yhwang            #+#    #+#             */
-/*   Updated: 2024/05/27 15:14:25 by yhwang           ###   ########.fr       */
+/*   Updated: 2025/04/14 19:35:21 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-# define	WINODW_WIDTH	850
+# define	WINDOW_WIDTH	850
 # define	WINDOW_HEIGHT	600
 
 # define	POS		0

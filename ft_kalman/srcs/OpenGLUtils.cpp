@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 16:06:59 by yhwang            #+#    #+#             */
-/*   Updated: 2024/06/14 01:14:56 by yhwang           ###   ########.fr       */
+/*   Updated: 2025/04/14 19:35:21 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ bool	init_opengl(t_opengl &ctx)
 		return (false);
 	}
 
-	ctx.window = glfwCreateWindow(WINODW_WIDTH, WINDOW_HEIGHT, "Kalman Filter", NULL, NULL);
+	ctx.window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Kalman Filter", NULL, NULL);
 	if (!ctx.window)
 	{
 		glfwTerminate();

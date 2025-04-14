@@ -275,7 +275,7 @@ Every mouse and keyboard control depends on the cursor's position relative to th
 <br>
 
 ## Kalman filter <a name="kalman-filter"></a>
-### Kalman Kilter and Adaptive Kalman Filter <a name="kalman-filter-kalman-filter"></a>
+### Kalman Filter and Adaptive Kalman Filter <a name="kalman-filter-kalman-filter"></a>
 #### kalman filter <a name="kalman-filter-kalman"></a>
 
 The Kalman Filter is a recursive algorithm used to estimate the state of a dynamic system from a series of noisy measurements.<br>
