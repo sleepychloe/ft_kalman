@@ -6,7 +6,7 @@
 #    By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/19 14:24:38 by yhwang            #+#    #+#              #
-#    Updated: 2024/06/15 17:21:50 by yhwang           ###   ########.fr        #
+#    Updated: 2025/12/14 03:08:25 by yhwang           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,15 @@ YELLOW		:= $(shell tput -Txterm setaf 3)
 BLUE		:= $(shell tput -Txterm setaf 6)
 
 COMPOSE_FILE	= ./docker-compose.yml
+
+COMPOSE_COMMAND	?= unknown
+
+ifeq ($(shell docker-compose version 2>/dev/null \
+		| grep -c '^docker-compose version 1\.'), 1)
+	COMPOSE_COMMAND := docker-compose
+else
+	COMPOSE_COMMAND := docker compose
+endif
 
 ENTROPY		?= 0
 DURATION	?= 90
@@ -57,7 +66,7 @@ up:
 		GRAPH=$(GRAPH) \
 		NOISE=$(NOISE) \
 		ADAPTIVE=$(ADAPTIVE) \
-		docker-compose -f $(COMPOSE_FILE) up --build -d
+		$(COMPOSE_COMMAND) -f $(COMPOSE_FILE) up --build -d
 	@echo "$(YELLOW)Containers succesfully created and started$(RESET)"
 	@docker attach kalman
 ifneq ($(FILTERSPEED), 0)
@@ -83,12 +92,12 @@ list:
 
 logs:
 	@echo "$(BLUE)OUTPUTS OF CONTAINERS:$(RESET)"
-	@docker-compose -f $(COMPOSE_FILE) logs
+	@$(COMPOSE_COMMAND) -f $(COMPOSE_FILE) logs
 
 stop:
 ifneq ($(shell docker ps -a | wc -l), 1)
 	@echo "$(BLUE)Stopping container..$(RESET)"
-	@docker-compose -f $(COMPOSE_FILE) stop -t1
+	@$(COMPOSE_COMMAND) -f $(COMPOSE_FILE) stop -t1
 	@echo "$(YELLOW)Containers succesfully stopped$(RESET)"
 else
 	@echo "$(YELLOW)There is no container to stop$(RESET)"
@@ -97,7 +106,7 @@ endif
 restart:
 ifneq ($(shell docker ps -a | wc -l), 1)
 	@echo "$(BLUE)Restarting container..$(RESET)"
-	@docker-compose -f $(COMPOSE_FILE) restart
+	@$(COMPOSE_COMMAND) -f $(COMPOSE_FILE) restart
 	@echo "$(YELLOW)Containers succesfully restarted$(RESET)"
 else
 	@echo "$(YELLOW)There is no container to restart$(RESET)"
@@ -105,7 +114,7 @@ endif
 
 fclean:
 	@echo "$(BLUE)Removing everything..$(RESET)"
-	@docker-compose -f $(COMPOSE_FILE) stop -t1
+	@$(COMPOSE_COMMAND) -f $(COMPOSE_FILE) stop -t1
 	@echo "$(YELLOW)Containers succesfully stopped$(RESET)"
 
 ifneq ($(shell docker container ls -a | wc -l), 1)
