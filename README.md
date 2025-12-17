@@ -415,21 +415,21 @@ Even though server does not give us vehicle's velocity directly,<br>
 you can calculate it from direction and acceleration.<br>
 
 ```
-	┏                     ┓
-	┃   1      0      0   ┃
+        ┏                     ┓
+        ┃   1      0      0   ┃
 Rx(ψ) = ┃   0     cosψ  −sinψ ┃
-	┃   0     sinψ   cosψ ┃
-	┗                     ┛
-	┏                     ┓
-	┃  cosθ    0     sinθ ┃
+        ┃   0     sinψ   cosψ ┃
+        ┗                     ┛
+        ┏                     ┓
+        ┃  cosθ    0     sinθ ┃
 Ry(θ) = ┃   0      1      0   ┃
-	┃ −sinθ    0     cosθ ┃
-	┗                     ┛
-	┏                     ┓
-	┃  cosφ  −sinφ    0   ┃
+        ┃ −sinθ    0     cosθ ┃
+        ┗                     ┛
+        ┏                     ┓
+        ┃  cosφ  −sinφ    0   ┃
 Rz(φ) = ┃  sinφ   cosφ    0   ┃
-	┃   0      0      1   ┃
-	┗                     ┛
+        ┃   0      0      1   ┃
+        ┗                     ┛
 
 R = Rz(φ)Ry(θ)Rx(ψ)
  ₂
