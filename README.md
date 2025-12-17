@@ -538,7 +538,9 @@ Since the noise is changing continuously, and we want to know how much noise is 
 you need to integrate FQcFᵀ.<br>
 
 ```
-Q =  ∫₀ΔᵗFQcFᵀ
+      Δₜ
+Q =  ∫ FQcFᵀ
+      ⁰
 (Qc: continuous noise)
 ```
 when I tried, filter worked as expected with following matrix Qc:<br>
@@ -597,9 +599,9 @@ Nₐ = ┃   0      σ²ₐ∆t     0  ┃
 
 To express definite integral of the expression I used Riemann sum method:<br>
 ```
-	    ₙ
-∫ₐᵇf(x)dx ≈ ∑f(a + i*(b - a)/n) * (b-a)/n
-	   ⁱ⁼¹
+            ₙ
+∫ₐᵇf(x)dx ≈ ∑ f(a + i*(b - a)/n) * (b-a)/n
+           ⁱ⁼¹
 ```
 ```
 Matrix<double>	integrate(Matrix<double> m, double start, double end)
